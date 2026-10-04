@@ -206,7 +206,21 @@ select option{background:#14172b;color:var(--ink)}
 .chip:hover{background:var(--glass-strong);border-color:rgba(255,255,255,.28)}
 
 /* composer */
-.composer{padding:8px 16px 16px}
+.composer{padding:8px 16px 16px;position:relative}
+.jump{position:absolute;right:16px;bottom:100%;margin-bottom:6px;display:none;flex-direction:column;gap:8px;z-index:5}
+.jump.show{display:flex}
+.jump button{width:40px;height:40px;border-radius:50%;border:1px solid var(--glass-edge);background:var(--glass-strong);color:var(--ink);cursor:pointer;display:grid;place-items:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.jump button:hover{background:rgba(255,255,255,.28)}
+.jump button:focus-visible{outline:2px solid var(--accent-2)}
+.jump svg{width:18px;height:18px}
+dialog#runDlg{width:min(960px,calc(100vw - 20px));max-width:none}
+.run-panel{display:flex;flex-direction:column;height:min(78vh,720px);border-radius:var(--radius);overflow:hidden;background:linear-gradient(145deg,rgba(40,44,80,.9),rgba(22,25,50,.92));border:1px solid var(--glass-edge)}
+.run-panel.full{position:fixed;inset:0;height:100%;border-radius:0;z-index:200}
+.run-bar{display:flex;align-items:center;gap:4px;padding:8px 10px 8px 16px;font-size:13.5px;color:var(--ink-dim)}
+.run-bar b{flex:1;color:var(--ink);font-weight:600}
+.run-bar button{font:inherit;font-size:13px;color:var(--ink-dim);background:none;border:0;cursor:pointer;padding:6px 10px;border-radius:9px}
+.run-bar button:hover{background:rgba(255,255,255,.12);color:var(--ink)}
+.run-panel iframe{flex:1;width:100%;border:0;background:#fff}
 .box{max-width:780px;margin:0 auto;display:flex;align-items:flex-end;gap:8px;padding:8px;border-radius:20px;background:rgba(8,11,24,.38);border:1px solid var(--glass-edge);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
 .box:focus-within{border-color:rgba(255,255,255,.4)}
 textarea{
@@ -297,6 +311,10 @@ dialog::backdrop{background:rgba(4,6,16,.55);backdrop-filter:blur(6px)}
     </header>
     <section class="feed" id="feed"><div class="col" id="col"></div></section>
     <div class="composer">
+      <div class="jump" id="jump">
+        <button type="button" id="jTop" aria-label="Ke awal jawaban terbaru" title="Awal jawaban terbaru"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11l6-6 6 6M6 19l6-6 6 6"/></svg></button>
+        <button type="button" id="jBot" aria-label="Ke paling bawah" title="Paling bawah"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5l6 6 6-6M6 13l6 6 6-6"/></svg></button>
+      </div>
       <div class="box">
         <textarea id="input" rows="1" placeholder="Tulis pesan…" aria-label="Pesan"></textarea>
         <button class="send" id="send" aria-label="Kirim"></button>
@@ -305,6 +323,14 @@ dialog::backdrop{background:rgba(4,6,16,.55);backdrop-filter:blur(6px)}
     </div>
   </main>
 </div>
+
+<dialog id="runDlg"><div class="run-panel" id="runPanel">
+  <div class="run-bar"><b>Hasil Run</b>
+    <button type="button" id="runFull">Layar penuh</button>
+    <button type="button" id="runTab">Tab baru</button>
+    <button type="button" id="runClose">Tutup</button></div>
+  <iframe id="runFrame" sandbox="allow-scripts allow-modals allow-popups" title="Hasil Run"></iframe>
+</div></dialog>
 
 <dialog id="dlg">
   <div class="dlg glass">
@@ -717,17 +743,44 @@ input.addEventListener("keydown",function(e){
 });
 col.addEventListener("click",function(e){
   var rb=e.target.closest("[data-run]");
-  if(rb){
-    var box=rb.closest(".code"),old=box.querySelector(".code-run");
-    if(old){old.remove();rb.textContent="Run";return}
-    var src=box.querySelector("code").textContent;
-    var w=document.createElement("div");w.className="code-run";
-    var f=document.createElement("iframe");f.setAttribute("sandbox","allow-scripts allow-modals");f.title="Hasil Run";f.srcdoc=src;
-    w.appendChild(f);box.appendChild(w);rb.textContent="Tutup";return;
-  }
+  if(rb){openRun(rb.closest(".code").querySelector("code").textContent);return}
   var b=e.target.closest("[data-copy]");
   if(b){var code=b.closest(".code").querySelector("code").textContent;copy(code,b)}
 });
+
+/* ---------- run di popup ---------- */
+var runDlg=$("runDlg"),runPanel=$("runPanel"),runFrame=$("runFrame"),runSrc="";
+function openRun(src){runSrc=src;runFrame.srcdoc=src;runPanel.classList.remove("full");$("runFull").textContent="Layar penuh";if(!runDlg.open)runDlg.showModal()}
+function closeRun(){if(document.fullscreenElement)document.exitFullscreen().catch(function(){});runDlg.close();runFrame.srcdoc=""}
+$("runClose").onclick=closeRun;
+runDlg.addEventListener("click",function(e){if(e.target===runDlg)closeRun()});
+$("runFull").onclick=function(){
+  var on=!runPanel.classList.contains("full");
+  runPanel.classList.toggle("full",on);$("runFull").textContent=on?"Perkecil":"Layar penuh";
+  if(on&&runPanel.requestFullscreen)runPanel.requestFullscreen().catch(function(){});
+  else if(!on&&document.fullscreenElement)document.exitFullscreen().catch(function(){});
+};
+document.addEventListener("fullscreenchange",function(){
+  if(!document.fullscreenElement&&runPanel.classList.contains("full")){runPanel.classList.remove("full");$("runFull").textContent="Layar penuh"}
+});
+$("runTab").onclick=function(){
+  var wrap='<!DOCTYPE html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hasil Run</title><style>html,body{margin:0;height:100%}iframe{border:0;width:100%;height:100%}</style><iframe sandbox="allow-scripts allow-modals allow-popups" srcdoc="'+runSrc.replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'"></iframe>';
+  var u=URL.createObjectURL(new Blob([wrap],{type:"text/html"}));
+  window.open(u,"_blank");setTimeout(function(){URL.revokeObjectURL(u)},60000);
+};
+
+/* ---------- tombol lompat ---------- */
+var jump=$("jump");
+function updJump(){jump.classList.toggle("show",feed.scrollHeight-feed.clientHeight>120)}
+feed.addEventListener("scroll",updJump,{passive:true});
+window.addEventListener("resize",updJump);
+new MutationObserver(updJump).observe(col,{childList:true,subtree:true,characterData:true});
+$("jBot").onclick=function(){feed.scrollTo({top:feed.scrollHeight,behavior:"smooth"})};
+$("jTop").onclick=function(){
+  var bots=col.querySelectorAll(".msg.bot");if(!bots.length)return;
+  var el=bots[bots.length-1];
+  feed.scrollTo({top:feed.scrollTop+el.getBoundingClientRect().top-feed.getBoundingClientRect().top-10,behavior:"smooth"});
+};
 
 /* ---------- login (1 akun) ---------- */
 var loginEl=$("login");
