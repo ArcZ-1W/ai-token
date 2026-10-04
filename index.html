@@ -636,7 +636,7 @@ function send(text){
   if(session&&!session.admin){
     if(session.exp&&Date.now()>=session.exp){acctQuota();return}
     var mm=modelSel.value||settings.model;
-    if(remOf(mm)<=0){alert("Jatah pakai "+(mm==="auto":"model lain")+" Anda sudah habis. Hubungi admin.");return}
+    if(remOf(mm)<=0){alert("Jatah pakai "+(mm==="auto"?"ArcZ Ai":"model lain")+" Anda sudah habis. Hubungi admin.");return}
   }
   var c=active();
   if(!c){c={id:uid(),title:"Obrolan baru",model:modelSel.value||settings.model,messages:[]};chats.unshift(c);activeId=c.id}
@@ -880,7 +880,7 @@ function showAcct(){
   if(rem<=0)qCard.classList.add("crit");else if(pct<=30)qCard.classList.add("low");
   qFill.style.width=pct.toFixed(1)+"%";qBar.setAttribute("aria-valuenow",Math.round(pct));
   qMeta.innerHTML="";
-  var l=document.createElement("span");l.textContent=(auto:"Model lain")+" · "+rem+"/"+lim+" · "+Math.round(pct)+"%";qMeta.appendChild(l);
+  var l=document.createElement("span");l.textContent=(auto?"ArcZ Ai":"Model lain")+" · "+rem+"/"+lim+" · "+Math.round(pct)+"%";qMeta.appendChild(l);
   if(session.exp){var r=document.createElement("span");var left=session.exp-Date.now();
     if(left<=0){r.className="bad";r.textContent="Masa aktif habis"}else{r.textContent="Aktif "+fmtLeft(session.exp)}
     r.title="Sampai "+new Date(session.exp).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"});qMeta.appendChild(r)}
@@ -970,7 +970,7 @@ $("admForm").onsubmit=async function(e){
 
 /* ---------- dropdown model ---------- */
 var dd=$("dd"),ddBtn=$("ddBtn"),ddMenu=$("ddMenu");
-function mlabel(m){return m==="auto":m}
+function mlabel(m){return m==="auto"?"ArcZ Ai":m}
 function syncDD(){
   $("ddLabel").textContent=mlabel(modelSel.value);ddMenu.innerHTML="";
   MODELS.forEach(function(m){
