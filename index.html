@@ -110,7 +110,8 @@ body{
 .qbar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .4s}
 .qbar.low i{background:linear-gradient(90deg,#ff7a8a,#ffb36b)}
 .qsub{font-size:12px;color:var(--ink-faint);margin-top:7px;line-height:1.4;word-break:break-word}
-.side-foot{display:flex;gap:8px}
+.side-foot{display:flex;gap:8px;flex-wrap:wrap}
+.side-foot #adminBtn{flex-basis:100%}
 .side-foot .btn{flex:1;font-size:13.5px;padding:9px 10px}
 
 /* kartu sisa token */
@@ -207,6 +208,27 @@ select option{background:#14172b;color:var(--ink)}
 
 /* composer */
 .composer{padding:8px 16px 16px;position:relative}
+.attach{background:none;border:0;color:var(--ink-dim);cursor:pointer;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;flex:none}
+.attach:hover{background:rgba(255,255,255,.12);color:var(--ink)}
+.attach svg{width:20px;height:20px}
+.chips{max-width:780px;margin:0 auto 8px;display:none;flex-wrap:wrap;gap:6px}
+.fchip{display:inline-flex;align-items:center;gap:4px;padding:5px 6px 5px 11px;border-radius:999px;font-size:12.5px;background:var(--glass);border:1px solid var(--glass-edge)}
+.fchip button{background:none;border:0;color:var(--ink-dim);cursor:pointer;font-size:16px;line-height:1;padding:0 4px}
+.fchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.fchips span{padding:3px 10px;border-radius:999px;font-size:12px;background:rgba(255,255,255,.18)}
+dialog#admDlg{width:min(720px,calc(100vw - 20px))}
+.adm-new{display:grid;grid-template-columns:1fr 1fr 130px auto;gap:8px;align-items:end;margin-bottom:6px}
+.adm-new .field{margin-bottom:0}
+.adm-err{min-height:18px;font-size:13px;color:var(--danger);margin:4px 0}
+.adm-list{max-height:48vh;overflow-y:auto}
+.adm-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:10px 0;border-top:1px solid rgba(255,255,255,.12);font-size:13.5px}
+.adm-row small{display:block;color:var(--ink-dim);margin-top:2px}
+.adm-ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.adm-ctl input{width:110px;padding:6px 9px;border-radius:9px;border:1px solid var(--glass-edge);background:rgba(8,11,24,.38);color:var(--ink);font:inherit;font-size:13px}
+.mini{font:inherit;font-size:12.5px;padding:6px 10px;border-radius:9px;border:1px solid var(--glass-edge);background:var(--glass);color:var(--ink);cursor:pointer}
+.mini:hover{background:rgba(255,255,255,.2)}
+.mini.del{color:var(--danger)}
+@media (max-width:640px){.adm-new{grid-template-columns:1fr}}
 .jump{position:absolute;right:16px;bottom:100%;margin-bottom:6px;display:none;flex-direction:column;gap:8px;z-index:5}
 .jump.show{display:flex}
 .jump button{width:40px;height:40px;border-radius:50%;border:1px solid var(--glass-edge);background:var(--glass-strong);color:var(--ink);cursor:pointer;display:grid;place-items:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 6px 18px rgba(0,0,0,.3)}
@@ -299,6 +321,7 @@ dialog::backdrop{background:rgba(4,6,16,.55);backdrop-filter:blur(6px)}
       <button class="btn" id="openSettings">Pengaturan</button>
       <button class="btn" id="clearAll">Hapus semua</button>
       <button class="btn" id="logout">Keluar</button>
+      <button class="btn" id="adminBtn" style="display:none">Dashboard Admin</button>
     </div>
   </aside>
   <div class="scrim" id="scrim"></div>
@@ -315,7 +338,10 @@ dialog::backdrop{background:rgba(4,6,16,.55);backdrop-filter:blur(6px)}
         <button type="button" id="jTop" aria-label="Ke awal jawaban terbaru" title="Awal jawaban terbaru"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11l6-6 6 6M6 19l6-6 6 6"/></svg></button>
         <button type="button" id="jBot" aria-label="Ke paling bawah" title="Paling bawah"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5l6 6 6-6M6 13l6 6 6-6"/></svg></button>
       </div>
+      <div class="chips" id="chips"></div>
       <div class="box">
+        <input type="file" id="fileIn" multiple hidden accept=".txt,.md,.csv,.tsv,.json,.html,.htm,.css,.js,.jsx,.ts,.tsx,.py,.java,.c,.cpp,.h,.cs,.go,.rs,.php,.rb,.sh,.sql,.xml,.yml,.yaml,.toml,.ini,.log,.svg,text/*">
+        <button type="button" class="attach" id="attachBtn" aria-label="Lampirkan file" title="Lampirkan file teks/kode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11l-8.6 8.6a5 5 0 0 1-7-7l8.6-8.6a3.4 3.4 0 0 1 5 5L10.3 17.6a1.8 1.8 0 0 1-2.5-2.5L15 8"/></svg></button>
         <textarea id="input" rows="1" placeholder="Tulis pesan…" aria-label="Pesan"></textarea>
         <button class="send" id="send" aria-label="Kirim"></button>
       </div>
@@ -324,6 +350,18 @@ dialog::backdrop{background:rgba(4,6,16,.55);backdrop-filter:blur(6px)}
   </main>
 </div>
 
+<dialog id="admDlg"><div class="dlg">
+  <h2>Dashboard Admin</h2>
+  <form class="adm-new" id="admForm" autocomplete="off">
+    <div class="field"><label>Username</label><input type="text" id="aU" autocapitalize="off"></div>
+    <div class="field"><label>Password</label><input type="text" id="aP"></div>
+    <div class="field"><label>Limit token</label><input type="text" id="aL" inputmode="numeric" value="500000"></div>
+    <button class="btn primary" type="submit" style="margin-bottom:0">Buat akun</button>
+  </form>
+  <div class="adm-err" id="admErr" role="alert"></div>
+  <div class="adm-list" id="admList"></div>
+  <div style="margin-top:14px;text-align:right"><button class="btn" type="button" id="admClose">Tutup</button></div>
+</div></dialog>
 <dialog id="runDlg"><div class="run-panel" id="runPanel">
   <div class="run-bar"><b>Hasil Run</b>
     <button type="button" id="runFull">Layar penuh</button>
@@ -359,6 +397,9 @@ var DEFAULTS={
   temp:0.7,
   model:"glm-5.3"
 };
+/* Isi dengan data proyek Supabase Anda (Project Settings > API) */
+var SUPA_URL="https://beqlxnlhvarjhkuxndmr.supabase.co";   /* contoh: https://abcd1234.supabase.co */
+var SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJlcWx4bmxodmFyamhrdXhuZG1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMjQ4ODgsImV4cCI6MjEwNjcwMDg4OH0.FxPj-dfPf6OnfPotgQxFafd7Fx9yIM6oqMm25xMRslw";   /* anon public key */
 var MODELS=["auto","glm-5.3","glm-5.3-flash","glm-5.3-flashx","glm-5.3-mod","deepseek-v4-flash","deepseek-v4-flash-0731","deepseek-v4-flash-vision-exp","deepseek-v4-pro-0813","deepseek-v4.1-flash","gpt-5.6","gpt-5.6-luna","kimi-k3","mimo-v2.5-pro","mimo-v2.6-flash","mimo-v2.6-pro"];
 var SUGGEST=[
   "Jelaskan cara kerja blockchain dengan bahasa sederhana",
@@ -442,7 +483,8 @@ function renderHist(){
 function bubbleFor(m,isLast){
   var w=document.createElement("div");w.className="msg "+(m.role==="user"?"user":"bot");
   var b=document.createElement("div");b.className="bubble";
-  if(m.role==="user"){b.textContent=m.content}
+  if(m.role==="user"){b.textContent=m.files?(m.text||""):m.content;
+    if(m.files&&m.files.length){var fc=document.createElement("div");fc.className="fchips";m.files.forEach(function(f){var t=document.createElement("span");t.textContent="📄 "+f.name;fc.appendChild(t)});b.appendChild(fc)}}
   else{
     if(m.error){b.classList.add("err");b.textContent=m.content}
     else if(!m.content){b.innerHTML='<span class="dots"><i></i><i></i><i></i></span>'}
@@ -516,7 +558,7 @@ async function stream(c){
   if(settings.system&&settings.system.trim())history.unshift({role:"system",content:settings.system.trim()});
   ctrl=new AbortController();
   var status=0,raw="";
-  var pending=false;
+  var pending=false,usageTok=null;
   function paint(){
     if(pending)return;pending=true;
     requestAnimationFrame(function(){
@@ -536,7 +578,7 @@ async function stream(c){
     if(!res.ok){raw=await res.text().catch(function(){return ""});throw new Error("http")}
     var ctype=res.headers.get("content-type")||"";
     if(ctype.indexOf("text/event-stream")===-1&&ctype.indexOf("json")!==-1){
-      var j=await res.json();
+      var j=await res.json();if(j.usage&&j.usage.total_tokens)usageTok=j.usage.total_tokens;
       asst.content=(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||"";
       paint();
     }else{
@@ -552,6 +594,7 @@ async function stream(c){
           if(!data||data==="[DONE]")continue;
           try{
             var obj=JSON.parse(data),ch=obj.choices&&obj.choices[0];
+            if(obj.usage&&obj.usage.total_tokens)usageTok=obj.usage.total_tokens;
             var piece=ch&&ch.delta&&ch.delta.content;
             if(piece){asst.content+=piece;paint()}
           }catch(e){}
@@ -565,16 +608,21 @@ async function stream(c){
     else{asst.content=asst.content?asst.content+"\n\n"+msg:msg;asst.error=!asst.content.replace(msg,"").trim()||undefined}
   }finally{
     ctrl=null;setBusy(false);persist();renderMsgs();toBottom(true);
+    if(asst.content&&!asst.error)recordUsage(history,asst.content,usageTok);
     setTimeout(fetchQuota,900);
   }
 }
 function send(text){
-  text=(text||"").trim();if(!text||busy)return;
+  text=(text||"").trim();if((!text&&!attach.length)||busy)return;
+  if(session&&!session.admin&&session.used>=session.limit){alert("Limit token akun Anda sudah habis. Hubungi admin.");return}
   var c=active();
   if(!c){c={id:uid(),title:"Obrolan baru",model:modelSel.value||settings.model,messages:[]};chats.unshift(c);activeId=c.id}
   c.model=modelSel.value||c.model||settings.model;
-  if(!c.messages.length)c.title=text.length>42?text.slice(0,42)+"…":text;
-  c.messages.push({role:"user",content:text});
+  var tl=text||(attach[0]&&attach[0].name)||"Obrolan";if(!c.messages.length)c.title=tl.length>42?tl.slice(0,42)+"…":tl;
+  var full=text;
+  attach.forEach(function(f){full+="\n\n[File: "+f.name+"]\n"+f.text+"\n[Akhir file: "+f.name+"]"});
+  c.messages.push({role:"user",content:full.trim(),text:text,files:attach.map(function(f){return{name:f.name,size:f.size}})});
+  attach=[];renderChips();
   c.messages.push({role:"assistant",content:""});
   input.value="";autosize();
   setBusy(true);persist();renderAll();toBottom(true);
@@ -677,6 +725,7 @@ function showQuota(q){
 }
 async function fetchQuota(){
   if(qLoading)return;
+  if(session&&!session.admin)return acctQuota();
   if(!settings.apiKey){qMessage("Isi API key di Pengaturan.",true);return}
   qLoading=true;qRefresh.classList.add("spin");
   try{
@@ -782,17 +831,110 @@ $("jTop").onclick=function(){
   feed.scrollTo({top:feed.scrollTop+el.getBoundingClientRect().top-feed.getBoundingClientRect().top-10,behavior:"smooth"});
 };
 
-/* ---------- login (1 akun) ---------- */
+/* ---------- supabase & akun ---------- */
+var session=load("glassai.auth",null);if(!session||typeof session!=="object")session=null;
+async function rpc(fn,args){
+  if(!SUPA_URL||!SUPA_KEY)throw new Error("Supabase belum dikonfigurasi (isi SUPA_URL dan SUPA_KEY di kode).");
+  var r=await fetch(SUPA_URL.replace(/\/+$/,"")+"/rest/v1/rpc/"+fn,{method:"POST",headers:{apikey:SUPA_KEY,Authorization:"Bearer "+SUPA_KEY,"Content-Type":"application/json"},body:JSON.stringify(args)});
+  var t=await r.text(),j=null;try{j=t?JSON.parse(t):null}catch(e){}
+  if(!r.ok)throw new Error((j&&j.message)||("Error "+r.status));
+  return j;
+}
+function setSession(a,p){session={u:a.username,p:p||session.p,admin:!!a.is_admin,limit:+a.token_limit,used:+a.token_used};save("glassai.auth",session)}
+function showAcct(){showQuota({remaining:Math.max(0,session.limit-session.used),total:session.limit})}
+async function acctQuota(){
+  qRefresh.classList.add("spin");
+  try{var a=await rpc("app_login",{u:session.u,p:session.p});setSession(a)}
+  catch(e){if(/login gagal/i.test(e.message)){logout();return}}
+  finally{qRefresh.classList.remove("spin")}
+  showAcct();
+}
+async function recordUsage(history,out,real){
+  if(!session||session.admin)return;
+  var n=real||Math.ceil((JSON.stringify(history).length+out.length)/3.5);
+  try{var a=await rpc("app_add_usage",{u:session.u,p:session.p,n:n});setSession(a)}
+  catch(e){session.used+=n;save("glassai.auth",session)}
+  showAcct();
+}
 var loginEl=$("login");
-function authed(){return load("glassai.auth",false)===true}
-function gate(){loginEl.classList.toggle("show",!authed());if(!authed())setTimeout(function(){$("lUser").focus()},50)}
-$("loginForm").onsubmit=function(e){
+function gate(){
+  loginEl.classList.toggle("show",!session);
+  $("adminBtn").style.display=session&&session.admin?"":"none";
+  if(!session)setTimeout(function(){$("lUser").focus()},50);
+}
+function logout(){session=null;save("glassai.auth",null);closeSide();gate()}
+$("loginForm").onsubmit=async function(e){
   e.preventDefault();
-  if($("lUser").value.trim()==="admin"&&$("lPass").value==="admin"){save("glassai.auth",true);$("lErr").textContent="";$("lPass").value="";gate();fetchQuota()}
-  else{$("lErr").textContent="Username atau password salah."}
+  var u=$("lUser").value.trim().toLowerCase(),p=$("lPass").value;if(!u||!p)return;
+  $("lErr").textContent="Memeriksa…";
+  try{var a=await rpc("app_login",{u:u,p:p});setSession(a,p);$("lErr").textContent="";$("lPass").value="";gate();fetchQuota()}
+  catch(err){$("lErr").textContent=err.message}
 };
-$("logout").onclick=function(){save("glassai.auth",false);closeSide();gate()};
+$("logout").onclick=logout;
 gate();
+
+/* ---------- dashboard admin ---------- */
+var admDlg=$("admDlg");
+function admErr(m){$("admErr").textContent=m||""}
+async function admCall(fn,args){admErr();try{var r=await rpc(fn,Object.assign({au:session.u,ap:session.p},args||{}));return r}catch(e){admErr(e.message);return undefined}}
+async function admRefresh(){
+  var list=await admCall("app_admin_list");if(!list)return;
+  var box=$("admList");box.innerHTML="";
+  list.forEach(function(a){
+    var row=document.createElement("div");row.className="adm-row";
+    row.innerHTML='<div><b>'+esc(a.username)+'</b>'+(a.is_admin?' (admin)':'')+'<small>Terpakai '+nf(a.token_used)+' / '+(a.is_admin?'tanpa batas':nf(a.token_limit))+' token</small></div>';
+    if(!a.is_admin){
+      var ctl=document.createElement("div");ctl.className="adm-ctl";
+      var inp=document.createElement("input");inp.type="text";inp.inputMode="numeric";inp.value=a.token_limit;inp.setAttribute("aria-label","Limit token "+a.username);
+      function btn(t,cls,fn){var b=document.createElement("button");b.type="button";b.className="mini "+(cls||"");b.textContent=t;b.onclick=fn;ctl.appendChild(b)}
+      ctl.appendChild(inp);
+      btn("Simpan",0,async function(){var n=parseInt(inp.value,10);if(!(n>=0)){admErr("Limit tidak valid.");return}if(await admCall("app_admin_update",{nu:a.username,nl:n,reset:false,np:null})!==undefined)admRefresh()});
+      btn("Reset pakai",0,async function(){if(await admCall("app_admin_update",{nu:a.username,nl:null,reset:true,np:null})!==undefined)admRefresh()});
+      btn("Ganti pass",0,async function(){var np=prompt("Password baru untuk "+a.username+":");if(!np)return;if(await admCall("app_admin_update",{nu:a.username,nl:null,reset:false,np:np})!==undefined)admErr("Password diganti.")});
+      btn("Hapus","del",async function(){if(!confirm("Hapus akun "+a.username+"?"))return;if(await admCall("app_admin_delete",{nu:a.username})!==undefined)admRefresh()});
+      row.appendChild(ctl);
+    }
+    box.appendChild(row);
+  });
+}
+$("adminBtn").onclick=function(){closeSide();admErr();admDlg.showModal();admRefresh()};
+$("admClose").onclick=function(){admDlg.close()};
+$("admForm").onsubmit=async function(e){
+  e.preventDefault();
+  var u=$("aU").value.trim().toLowerCase(),p=$("aP").value,l=parseInt($("aL").value,10);
+  if(!u||!p){admErr("Username dan password wajib diisi.");return}
+  if(!(l>=0)){admErr("Limit tidak valid.");return}
+  if(await admCall("app_admin_create",{nu:u,np:p,nl:l})!==undefined){$("aU").value="";$("aP").value="";$("aL").value="500000";admRefresh()}
+};
+
+/* ---------- lampiran file ---------- */
+var attach=[],fileIn=$("fileIn"),chips=$("chips");
+function fsz(n){return n<1024?n+" B":n<1048576?(n/1024).toFixed(1)+" KB":(n/1048576).toFixed(2)+" MB"}
+function renderChips(){
+  chips.innerHTML="";
+  attach.forEach(function(f,i){
+    var sp=document.createElement("span");sp.className="fchip";sp.textContent=f.name+" · "+fsz(f.size);
+    var x=document.createElement("button");x.type="button";x.textContent="×";x.setAttribute("aria-label","Hapus "+f.name);
+    x.onclick=function(){attach.splice(i,1);renderChips()};sp.appendChild(x);chips.appendChild(sp);
+  });
+  chips.style.display=attach.length?"flex":"none";
+}
+$("attachBtn").onclick=function(){fileIn.click()};
+fileIn.onchange=async function(){
+  var fl=Array.prototype.slice.call(fileIn.files);fileIn.value="";
+  for(var i=0;i<fl.length;i++){
+    var f=fl[i],txt;
+    try{txt=await f.text()}catch(e){alert("Gagal membaca "+f.name);continue}
+    if(txt.indexOf("\u0000")!==-1){alert(f.name+" bukan file teks, dilewati.");continue}
+    var tk=Math.ceil(txt.length/3.5);
+    if(f.size>100*1024){
+      var sisa=session&&!session.admin?" (sisa token Anda "+nf(Math.max(0,session.limit-session.used))+")":"";
+      if(!confirm("File besar: "+f.name+" ("+fsz(f.size)+", sekitar "+nf(tk)+" token).\nIsinya dikirim utuh tanpa dipotong dan akan memakai banyak token"+sisa+".\n\nLanjutkan?"))continue;
+    }
+    attach.push({name:f.name,size:f.size,text:txt});
+  }
+  renderChips();
+};
 
 /* ---------- mulai ---------- */
 if(activeId&&!active())activeId=null;
