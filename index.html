@@ -147,6 +147,22 @@ select{
   border-radius:12px;padding:9px 12px;max-width:190px;cursor:pointer;
 }
 select option{background:#14172b;color:var(--ink)}
+.top{position:relative;z-index:30}
+.dd{position:relative;flex:none}
+.dd-btn{display:flex;align-items:center;gap:8px;font:inherit;font-size:13.5px;color:var(--ink);background:var(--glass-strong);border:1px solid var(--glass-edge);border-radius:12px;padding:9px 12px;cursor:pointer;max-width:200px}
+.dd-btn:hover{background:rgba(255,255,255,.22)}
+.dd-btn:focus-visible,.dd-item:focus-visible{outline:2px solid var(--accent-2);outline-offset:1px}
+.dd-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dd-btn svg{width:14px;height:14px;flex:none;transition:transform .2s}
+.dd-btn[aria-expanded=true] svg{transform:rotate(180deg)}
+.dd-menu{position:absolute;right:0;top:calc(100% + 8px);min-width:230px;max-height:min(60vh,380px);overflow-y:auto;padding:6px;border-radius:16px;background:linear-gradient(145deg,rgba(40,44,80,.96),rgba(22,25,50,.97));border:1px solid var(--glass-edge);box-shadow:0 18px 44px rgba(0,0,0,.45);animation:ddIn .16s ease}
+.dd-menu[hidden]{display:none}
+.dd-item{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;font:inherit;font-size:13.5px;color:var(--ink);background:none;border:0;border-radius:10px;padding:9px 12px;cursor:pointer}
+.dd-item:hover{background:rgba(255,255,255,.12)}
+.dd-item.on{background:rgba(255,255,255,.18);font-weight:600}
+.dd-item.on::after{content:"✓";color:var(--accent-2)}
+@keyframes ddIn{from{opacity:0;transform:translateY(-6px) scale(.98)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.dd-menu{animation:none}.dd-btn svg{transition:none}}
 .feed{flex:1;min-height:0;overflow-y:auto;padding:22px 18px 10px;scroll-behavior:smooth}
 .col{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
 .msg{display:flex;flex-direction:column;gap:6px;max-width:100%}
@@ -217,14 +233,14 @@ select option{background:#14172b;color:var(--ink)}
 .fchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .fchips span{padding:3px 10px;border-radius:999px;font-size:12px;background:rgba(255,255,255,.18)}
 dialog#admDlg{width:min(720px,calc(100vw - 20px))}
-.adm-new{display:grid;grid-template-columns:1fr 1fr 130px auto;gap:8px;align-items:end;margin-bottom:6px}
+.adm-new{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-items:end;margin-bottom:6px}
 .adm-new .field{margin-bottom:0}
 .adm-err{min-height:18px;font-size:13px;color:var(--danger);margin:4px 0}
 .adm-list{max-height:48vh;overflow-y:auto}
 .adm-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:10px 0;border-top:1px solid rgba(255,255,255,.12);font-size:13.5px}
 .adm-row small{display:block;color:var(--ink-dim);margin-top:2px}
 .adm-ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.adm-ctl input{width:110px;padding:6px 9px;border-radius:9px;border:1px solid var(--glass-edge);background:rgba(8,11,24,.38);color:var(--ink);font:inherit;font-size:13px}
+.adm-ctl input{width:84px;padding:6px 9px;border-radius:9px;border:1px solid var(--glass-edge);background:rgba(8,11,24,.38);color:var(--ink);font:inherit;font-size:13px}
 .mini{font:inherit;font-size:12.5px;padding:6px 10px;border-radius:9px;border:1px solid var(--glass-edge);background:var(--glass);color:var(--ink);cursor:pointer}
 .mini:hover{background:rgba(255,255,255,.2)}
 .mini.del{color:var(--danger)}
@@ -310,11 +326,11 @@ dialog::backdrop{background:rgba(4,6,16,.55);backdrop-filter:blur(6px)}
     <div class="hist" id="hist" role="list"></div>
 
     <div class="qcard" id="qCard">
-      <div class="q-head"><span>Sisa token</span>
+      <div class="q-head"><span id="qTitle">Sisa token</span>
         <button class="q-refresh" id="qRefresh" type="button" aria-label="Muat ulang sisa token"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
       </div>
       <div class="q-num" id="qNum">—</div>
-      <div class="q-bar" id="qBar" role="progressbar" aria-label="Sisa kuota token" aria-valuemin="0" aria-valuemax="100"><div class="q-fill" id="qFill"></div></div>
+      <div class="q-bar" id="qBar" role="progressbar" aria-label="Sisa pemakaian" aria-valuemin="0" aria-valuemax="100"><div class="q-fill" id="qFill"></div></div>
       <div class="q-meta" id="qMeta"><span>Memuat…</span></div>
     </div>
     <div class="side-foot">
@@ -330,7 +346,8 @@ dialog::backdrop{background:rgba(4,6,16,.55);backdrop-filter:blur(6px)}
     <header class="top">
       <button class="icon menu-btn" id="menuBtn" aria-label="Buka daftar obrolan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
       <div class="title" id="chatTitle">Obrolan baru</div>
-      <select id="model" aria-label="Pilih model"></select>
+      <div class="dd" id="dd"><button type="button" class="dd-btn" id="ddBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Pilih model"><span id="ddLabel">ArcZ Ai</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="dd-menu" id="ddMenu" role="listbox" hidden></div></div>
+      <select id="model" hidden></select>
     </header>
     <section class="feed" id="feed"><div class="col" id="col"></div></section>
     <div class="composer">
@@ -355,8 +372,10 @@ dialog::backdrop{background:rgba(4,6,16,.55);backdrop-filter:blur(6px)}
   <form class="adm-new" id="admForm" autocomplete="off">
     <div class="field"><label>Username</label><input type="text" id="aU" autocapitalize="off"></div>
     <div class="field"><label>Password</label><input type="text" id="aP"></div>
-    <div class="field"><label>Limit token</label><input type="text" id="aL" inputmode="numeric" value="500000"></div>
-    <button class="btn primary" type="submit" style="margin-bottom:0">Buat akun</button>
+    <div class="field"><label>Masa aktif (s m h d y)</label><input type="text" id="aT" value="30d" placeholder="30d, 12h, 1y"></div>
+    <div class="field"><label>Limit ArcZ Ai (x)</label><input type="text" id="aA" inputmode="numeric" value="10"></div>
+    <div class="field"><label>Limit model lain (x)</label><input type="text" id="aO" inputmode="numeric" value="5"></div>
+    <button class="btn primary" type="submit" style="margin-bottom:0;align-self:end">Buat akun</button>
   </form>
   <div class="adm-err" id="admErr" role="alert"></div>
   <div class="adm-list" id="admList"></div>
@@ -398,8 +417,8 @@ var DEFAULTS={
   model:"glm-5.3"
 };
 /* Isi dengan data proyek Supabase Anda (Project Settings > API) */
-var SUPA_URL="https://beqlxnlhvarjhkuxndmr.supabase.co";   /* contoh: https://abcd1234.supabase.co */
-var SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJlcWx4bmxodmFyamhrdXhuZG1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMjQ4ODgsImV4cCI6MjEwNjcwMDg4OH0.FxPj-dfPf6OnfPotgQxFafd7Fx9yIM6oqMm25xMRslw";   /* anon public key */
+var SUPA_URL="";   /* contoh: https://abcd1234.supabase.co */
+var SUPA_KEY="";   /* anon public key */
 var MODELS=["auto","glm-5.3","glm-5.3-flash","glm-5.3-flashx","glm-5.3-mod","deepseek-v4-flash","deepseek-v4-flash-0731","deepseek-v4-flash-vision-exp","deepseek-v4-pro-0813","deepseek-v4.1-flash","gpt-5.6","gpt-5.6-luna","kimi-k3","mimo-v2.5-pro","mimo-v2.6-flash","mimo-v2.6-pro"];
 var SUGGEST=[
   "Jelaskan cara kerja blockchain dengan bahasa sederhana",
@@ -464,8 +483,8 @@ function md(src){
 /* ---------- render ---------- */
 function renderModels(){
   modelSel.innerHTML="";
-  MODELS.forEach(function(m){var o=document.createElement("option");o.value=m;o.textContent=m;modelSel.appendChild(o)});
-  var c=active();modelSel.value=(c&&c.model)||settings.model;
+  MODELS.forEach(function(m){var o=document.createElement("option");o.value=m;o.textContent=mlabel(m);modelSel.appendChild(o)});
+  var c=active();modelSel.value=(c&&c.model)||settings.model;syncDD();
 }
 function renderHist(){
   hist.innerHTML="";
@@ -608,13 +627,17 @@ async function stream(c){
     else{asst.content=asst.content?asst.content+"\n\n"+msg:msg;asst.error=!asst.content.replace(msg,"").trim()||undefined}
   }finally{
     ctrl=null;setBusy(false);persist();renderMsgs();toBottom(true);
-    if(asst.content&&!asst.error)recordUsage(history,asst.content,usageTok);
+    if(asst.content&&!asst.error)recordUsage(c.model||settings.model);
     setTimeout(fetchQuota,900);
   }
 }
 function send(text){
   text=(text||"").trim();if((!text&&!attach.length)||busy)return;
-  if(session&&!session.admin&&session.used>=session.limit){alert("Limit token akun Anda sudah habis. Hubungi admin.");return}
+  if(session&&!session.admin){
+    if(session.exp&&Date.now()>=session.exp){acctQuota();return}
+    var mm=modelSel.value||settings.model;
+    if(remOf(mm)<=0){alert("Jatah pakai "+(mm==="auto"?"ArcZ Ai":"model lain")+" Anda sudah habis. Hubungi admin.");return}
+  }
   var c=active();
   if(!c){c={id:uid(),title:"Obrolan baru",model:modelSel.value||settings.model,messages:[]};chats.unshift(c);activeId=c.id}
   c.model=modelSel.value||c.model||settings.model;
@@ -840,34 +863,62 @@ async function rpc(fn,args){
   if(!r.ok)throw new Error((j&&j.message)||("Error "+r.status));
   return j;
 }
-function setSession(a,p){session={u:a.username,p:p||session.p,admin:!!a.is_admin,limit:+a.token_limit,used:+a.token_used};save("glassai.auth",session)}
-function showAcct(){showQuota({remaining:Math.max(0,session.limit-session.used),total:session.limit})}
+function setSession(a,p){session={u:a.username,p:p||session.p,admin:!!a.is_admin,la:+a.limit_auto,lo:+a.limit_other,ua:+a.used_auto,uo:+a.used_other,exp:a.expires_at?Date.parse(a.expires_at):null};save("glassai.auth",session)}
+function remOf(m){return m==="auto"?session.la-session.ua:session.lo-session.uo}
+function fmtLeft(ms){
+  var s=Math.floor((ms-Date.now())/1000);if(s<=0)return"kedaluwarsa";
+  var u=[["y",31536000],["d",86400],["h",3600],["m",60],["s",1]],o=[];
+  for(var i=0;i<u.length&&o.length<2;i++){var v=Math.floor(s/u[i][1]);if(v>0||o.length){o.push(v+u[i][0]);s-=v*u[i][1]}}
+  return o.join(" ");
+}
+function showAcct(){
+  var m=modelSel.value||settings.model,auto=m==="auto";
+  var lim=auto?session.la:session.lo,rem=Math.max(0,remOf(m)),pct=lim>0?Math.min(100,rem/lim*100):0;
+  qNum.innerHTML="";qNum.appendChild(document.createTextNode(rem));
+  var sm=document.createElement("small");sm.textContent="x pakai";qNum.appendChild(sm);
+  qCard.classList.remove("low","crit","unk");
+  if(rem<=0)qCard.classList.add("crit");else if(pct<=30)qCard.classList.add("low");
+  qFill.style.width=pct.toFixed(1)+"%";qBar.setAttribute("aria-valuenow",Math.round(pct));
+  qMeta.innerHTML="";
+  var l=document.createElement("span");l.textContent=(auto?"ArcZ Ai":"Model lain")+" · "+rem+"/"+lim+" · "+Math.round(pct)+"%";qMeta.appendChild(l);
+  if(session.exp){var r=document.createElement("span");var left=session.exp-Date.now();
+    if(left<=0){r.className="bad";r.textContent="Masa aktif habis"}else{r.textContent="Aktif "+fmtLeft(session.exp)}
+    r.title="Sampai "+new Date(session.exp).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"});qMeta.appendChild(r)}
+}
 async function acctQuota(){
   qRefresh.classList.add("spin");
-  try{var a=await rpc("app_login",{u:session.u,p:session.p});setSession(a)}
-  catch(e){if(/login gagal/i.test(e.message)){logout();return}}
+  try{
+    var a=await rpc("app_login",{u:session.u,p:session.p});
+    if(a&&a.expired){logout("Masa aktif akun habis. Akun sudah dihapus.");return}
+    setSession(a);
+  }catch(e){if(/login gagal/i.test(e.message)){logout("Akun tidak ditemukan atau sudah kedaluwarsa.");return}}
   finally{qRefresh.classList.remove("spin")}
   showAcct();
 }
-async function recordUsage(history,out,real){
+async function recordUsage(model){
   if(!session||session.admin)return;
-  var n=real||Math.ceil((JSON.stringify(history).length+out.length)/3.5);
-  try{var a=await rpc("app_add_usage",{u:session.u,p:session.p,n:n});setSession(a)}
-  catch(e){session.used+=n;save("glassai.auth",session)}
+  var k=model==="auto"?"auto":"other";
+  try{var a=await rpc("app_add_usage",{u:session.u,p:session.p,k:k});if(a&&a.username)setSession(a)}
+  catch(e){if(k==="auto")session.ua++;else session.uo++;save("glassai.auth",session)}
   showAcct();
 }
+setInterval(function(){
+  if(!session||session.admin)return;
+  if(session.exp&&Date.now()>=session.exp)acctQuota();else showAcct();
+},15000);
 var loginEl=$("login");
 function gate(){
   loginEl.classList.toggle("show",!session);
   $("adminBtn").style.display=session&&session.admin?"":"none";
+  $("qTitle").textContent=session&&!session.admin?"Sisa pemakaian":"Sisa token";
   if(!session)setTimeout(function(){$("lUser").focus()},50);
 }
-function logout(){session=null;save("glassai.auth",null);closeSide();gate()}
+function logout(msg){session=null;save("glassai.auth",null);closeSide();gate();if(typeof msg==="string")$("lErr").textContent=msg}
 $("loginForm").onsubmit=async function(e){
   e.preventDefault();
   var u=$("lUser").value.trim().toLowerCase(),p=$("lPass").value;if(!u||!p)return;
   $("lErr").textContent="Memeriksa…";
-  try{var a=await rpc("app_login",{u:u,p:p});setSession(a,p);$("lErr").textContent="";$("lPass").value="";gate();fetchQuota()}
+  try{var a=await rpc("app_login",{u:u,p:p});if(a&&a.expired){$("lErr").textContent="Masa aktif akun habis. Akun sudah dihapus.";return}setSession(a,p);$("lErr").textContent="";$("lPass").value="";gate();fetchQuota()}
   catch(err){$("lErr").textContent=err.message}
 };
 $("logout").onclick=logout;
@@ -877,20 +928,29 @@ gate();
 var admDlg=$("admDlg");
 function admErr(m){$("admErr").textContent=m||""}
 async function admCall(fn,args){admErr();try{var r=await rpc(fn,Object.assign({au:session.u,ap:session.p},args||{}));return r}catch(e){admErr(e.message);return undefined}}
+var UNIT={s:1,m:60,h:3600,d:86400,y:31536000};
+function parseDur(t){t=(t||"").trim().toLowerCase().replace(/\s+/g,"");if(!/^(\d+[smhdy])+$/.test(t))return null;var n=0;t.replace(/(\d+)([smhdy])/g,function(_,x,u){n+=x*UNIT[u]});return n>0?n:null}
+var DURERR="Masa aktif tidak valid. Contoh: 30d, 12h, 1y, 1d12h.";
 async function admRefresh(){
   var list=await admCall("app_admin_list");if(!list)return;
   var box=$("admList");box.innerHTML="";
   list.forEach(function(a){
     var row=document.createElement("div");row.className="adm-row";
-    row.innerHTML='<div><b>'+esc(a.username)+'</b>'+(a.is_admin?' (admin)':'')+'<small>Terpakai '+nf(a.token_used)+' / '+(a.is_admin?'tanpa batas':nf(a.token_limit))+' token</small></div>';
+    var exp=a.expires_at?Date.parse(a.expires_at):null;
+    row.innerHTML='<div><b>'+esc(a.username)+'</b>'+(a.is_admin?' (admin)':'')+'<small>ArcZ Ai '+a.used_auto+'/'+a.limit_auto+' · Lain '+a.used_other+'/'+a.limit_other+'</small><small>'+(exp?'Aktif '+fmtLeft(exp)+' lagi (sampai '+esc(new Date(exp).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"}))+')':'Tanpa batas waktu')+'</small></div>';
     if(!a.is_admin){
       var ctl=document.createElement("div");ctl.className="adm-ctl";
-      var inp=document.createElement("input");inp.type="text";inp.inputMode="numeric";inp.value=a.token_limit;inp.setAttribute("aria-label","Limit token "+a.username);
+      function inp(v,label,ph){var i=document.createElement("input");i.type="text";i.value=v;i.placeholder=ph||"";i.setAttribute("aria-label",label+" "+a.username);ctl.appendChild(i);return i}
       function btn(t,cls,fn){var b=document.createElement("button");b.type="button";b.className="mini "+(cls||"");b.textContent=t;b.onclick=fn;ctl.appendChild(b)}
-      ctl.appendChild(inp);
-      btn("Simpan",0,async function(){var n=parseInt(inp.value,10);if(!(n>=0)){admErr("Limit tidak valid.");return}if(await admCall("app_admin_update",{nu:a.username,nl:n,reset:false,np:null})!==undefined)admRefresh()});
-      btn("Reset pakai",0,async function(){if(await admCall("app_admin_update",{nu:a.username,nl:null,reset:true,np:null})!==undefined)admRefresh()});
-      btn("Ganti pass",0,async function(){var np=prompt("Password baru untuk "+a.username+":");if(!np)return;if(await admCall("app_admin_update",{nu:a.username,nl:null,reset:false,np:np})!==undefined)admErr("Password diganti.")});
+      var ia=inp(a.limit_auto,"Limit ArcZ Ai"),io=inp(a.limit_other,"Limit model lain"),it=inp("","Ubah masa aktif","ubah: 30d");it.style.width="100px";
+      btn("Simpan",0,async function(){
+        var x=parseInt(ia.value,10),y=parseInt(io.value,10),ns=null;
+        if(!(x>=0)||!(y>=0)){admErr("Limit tidak valid.");return}
+        if(it.value.trim()){ns=parseDur(it.value);if(!ns){admErr(DURERR);return}}
+        if(await admCall("app_admin_update",{nu:a.username,la:x,lo:y,ns:ns,reset:false,np:null})!==undefined)admRefresh();
+      });
+      btn("Reset pakai",0,async function(){if(await admCall("app_admin_update",{nu:a.username,la:null,lo:null,ns:null,reset:true,np:null})!==undefined)admRefresh()});
+      btn("Ganti pass",0,async function(){var np=prompt("Password baru untuk "+a.username+":");if(!np)return;if(await admCall("app_admin_update",{nu:a.username,la:null,lo:null,ns:null,reset:false,np:np})!==undefined)admErr("Password diganti.")});
       btn("Hapus","del",async function(){if(!confirm("Hapus akun "+a.username+"?"))return;if(await admCall("app_admin_delete",{nu:a.username})!==undefined)admRefresh()});
       row.appendChild(ctl);
     }
@@ -901,11 +961,38 @@ $("adminBtn").onclick=function(){closeSide();admErr();admDlg.showModal();admRefr
 $("admClose").onclick=function(){admDlg.close()};
 $("admForm").onsubmit=async function(e){
   e.preventDefault();
-  var u=$("aU").value.trim().toLowerCase(),p=$("aP").value,l=parseInt($("aL").value,10);
+  var u=$("aU").value.trim().toLowerCase(),p=$("aP").value,ns=parseDur($("aT").value),la=parseInt($("aA").value,10),lo=parseInt($("aO").value,10);
   if(!u||!p){admErr("Username dan password wajib diisi.");return}
-  if(!(l>=0)){admErr("Limit tidak valid.");return}
-  if(await admCall("app_admin_create",{nu:u,np:p,nl:l})!==undefined){$("aU").value="";$("aP").value="";$("aL").value="500000";admRefresh()}
+  if(!ns){admErr(DURERR);return}
+  if(!(la>=0)||!(lo>=0)){admErr("Limit tidak valid.");return}
+  if(await admCall("app_admin_create",{nu:u,np:p,ns:ns,la:la,lo:lo})!==undefined){$("aU").value="";$("aP").value="";$("aT").value="30d";$("aA").value="10";$("aO").value="5";admRefresh()}
 };
+
+/* ---------- dropdown model ---------- */
+var dd=$("dd"),ddBtn=$("ddBtn"),ddMenu=$("ddMenu");
+function mlabel(m){return m==="auto"?"ArcZ Ai":m}
+function syncDD(){
+  $("ddLabel").textContent=mlabel(modelSel.value);ddMenu.innerHTML="";
+  MODELS.forEach(function(m){
+    var on=m===modelSel.value,b=document.createElement("button");b.type="button";b.className="dd-item"+(on?" on":"");
+    b.setAttribute("role","option");b.setAttribute("aria-selected",on);b.textContent=mlabel(m);
+    b.onclick=function(){modelSel.value=m;modelSel.onchange();syncDD();closeDD();ddBtn.focus()};
+    ddMenu.appendChild(b);
+  });
+  if(session&&!session.admin)showAcct();
+}
+function openDD(){ddMenu.hidden=false;ddBtn.setAttribute("aria-expanded","true");var on=ddMenu.querySelector(".on");if(on)on.scrollIntoView({block:"nearest"})}
+function closeDD(){ddMenu.hidden=true;ddBtn.setAttribute("aria-expanded","false")}
+ddBtn.onclick=function(){ddMenu.hidden?openDD():closeDD()};
+document.addEventListener("click",function(e){if(!dd.contains(e.target))closeDD()});
+dd.addEventListener("keydown",function(e){
+  if(e.key==="Escape"){closeDD();ddBtn.focus();return}
+  if(e.key==="ArrowDown"||e.key==="ArrowUp"){
+    e.preventDefault();if(ddMenu.hidden)openDD();
+    var it=[].slice.call(ddMenu.children),i=it.indexOf(document.activeElement);
+    i=e.key==="ArrowDown"?Math.min(it.length-1,i+1):Math.max(0,i-1);it[i].focus();
+  }
+});
 
 /* ---------- lampiran file ---------- */
 var attach=[],fileIn=$("fileIn"),chips=$("chips");
@@ -928,7 +1015,7 @@ fileIn.onchange=async function(){
     if(txt.indexOf("\u0000")!==-1){alert(f.name+" bukan file teks, dilewati.");continue}
     var tk=Math.ceil(txt.length/3.5);
     if(f.size>100*1024){
-      var sisa=session&&!session.admin?" (sisa token Anda "+nf(Math.max(0,session.limit-session.used))+")":"";
+      var sisa="";
       if(!confirm("File besar: "+f.name+" ("+fsz(f.size)+", sekitar "+nf(tk)+" token).\nIsinya dikirim utuh tanpa dipotong dan akan memakai banyak token"+sisa+".\n\nLanjutkan?"))continue;
     }
     attach.push({name:f.name,size:f.size,text:txt});
