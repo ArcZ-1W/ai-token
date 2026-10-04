@@ -357,8 +357,8 @@ dialog::backdrop{background:rgba(4,6,16,.55);backdrop-filter:blur(6px)}
       </div>
       <div class="chips" id="chips"></div>
       <div class="box">
-        <input type="file" id="fileIn" multiple hidden accept=".txt,.md,.csv,.tsv,.json,.html,.htm,.css,.js,.jsx,.ts,.tsx,.py,.java,.c,.cpp,.h,.cs,.go,.rs,.php,.rb,.sh,.sql,.xml,.yml,.yaml,.toml,.ini,.log,.svg,text/*">
-        <button type="button" class="attach" id="attachBtn" aria-label="Lampirkan file" title="Lampirkan file teks/kode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11l-8.6 8.6a5 5 0 0 1-7-7l8.6-8.6a3.4 3.4 0 0 1 5 5L10.3 17.6a1.8 1.8 0 0 1-2.5-2.5L15 8"/></svg></button>
+        <input type="file" id="fileIn" multiple hidden>
+        <button type="button" class="attach" id="attachBtn" aria-label="Lampirkan file" title="Lampirkan file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11l-8.6 8.6a5 5 0 0 1-7-7l8.6-8.6a3.4 3.4 0 0 1 5 5L10.3 17.6a1.8 1.8 0 0 1-2.5-2.5L15 8"/></svg></button>
         <textarea id="input" rows="1" placeholder="Tulis pesan…" aria-label="Pesan"></textarea>
         <button class="send" id="send" aria-label="Kirim"></button>
       </div>
@@ -419,7 +419,8 @@ var DEFAULTS={
 /* Isi dengan data proyek Supabase Anda (Project Settings > API) */
 var SUPA_URL="https://beqlxnlhvarjhkuxndmr.supabase.co";   /* contoh: https://abcd1234.supabase.co */
 var SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJlcWx4bmxodmFyamhrdXhuZG1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMjQ4ODgsImV4cCI6MjEwNjcwMDg4OH0.FxPj-dfPf6OnfPotgQxFafd7Fx9yIM6oqMm25xMRslw";   /* anon public key */
-var MODELS=["auto","glm-5.3","glm-5.3-flash","glm-5.3-flashx","glm-5.3-mod","deepseek-v4-flash","deepseek-v4-flash-0731","deepseek-v4-flash-vision-exp","deepseek-v4-pro-0813","deepseek-v4.1-flash","gpt-5.6","gpt-5.6-luna","kimi-k3","mimo-v2.5-pro","mimo-v2.6-flash","mimo-v2.6-pro"];
+var LITE_URL="https://api.siputzx.my.id/api/ai/gptoss120b";
+var MODELS=["auto","minimumlite","glm-5.3","glm-5.3-flash","glm-5.3-flashx","glm-5.3-mod","deepseek-v4-flash","deepseek-v4-flash-0731","deepseek-v4-flash-vision-exp","deepseek-v4-pro-0813","deepseek-v4.1-flash","gpt-5.6","gpt-5.6-luna","kimi-k3","mimo-v2.5-pro","mimo-v2.6-flash","mimo-v2.6-pro"];
 var SUGGEST=[
   "Jelaskan cara kerja blockchain dengan bahasa sederhana",
   "Buatkan fungsi JavaScript untuk debounce beserta contohnya",
@@ -571,7 +572,36 @@ function friendlyError(err,status,body){
   if(status)return "Server mengembalikan error "+status+(body?": "+body.slice(0,300):"")+".";
   return "Tidak bisa terhubung ke server. Periksa koneksi internet dan Base URL di Pengaturan. Jika halaman ini dibuka dari file lokal dan tetap gagal, server mungkin memblokir akses browser (CORS).";
 }
+/* MinimumLite: model gratis, tanpa memory (hanya pesan terakhir yang dikirim) */
+async function streamLite(c){
+  var asst=c.messages[c.messages.length-1],last=c.messages[c.messages.length-2];
+  ctrl=new AbortController();
+  var status=0,raw="";
+  try{
+    var qs="prompt="+encodeURIComponent(last.content)
+      +"&system="+encodeURIComponent((settings.system&&settings.system.trim())||"You are a helpful assistant.")
+      +"&temperature="+encodeURIComponent(settings.temp);
+    if(qs.length>7000){
+      asst.content="Pesan atau file terlalu panjang untuk MinimumLite (batas sekitar 7.000 karakter). Pakai ArcZ Ai untuk teks panjang.";
+      asst.error=true;return;
+    }
+    var r=await fetch(LITE_URL+"?"+qs,{signal:ctrl.signal});
+    status=r.status;
+    if(!r.ok){raw=await r.text().catch(function(){return ""});throw new Error("http")}
+    var j=await r.json(),d=j&&j.data;
+    asst.content=(typeof d==="string"?d:(d&&(d.response||d.result||d.message||d.content)))||(j&&(j.result||j.response||j.message))||"";
+    if(typeof asst.content!=="string")asst.content=JSON.stringify(asst.content);
+    if(!asst.content){asst.content="(Model tidak mengirim jawaban.)";asst.error=true}
+  }catch(err){
+    var msg=friendlyError(err,status,raw);
+    if(msg===null){c.messages.pop()}
+    else{asst.content=msg;asst.error=true}
+  }finally{
+    ctrl=null;setBusy(false);persist();renderMsgs();toBottom(true);
+  }
+}
 async function stream(c){
+  if((c.model||settings.model)==="minimumlite")return streamLite(c);
   var asst=c.messages[c.messages.length-1];
   var history=c.messages.slice(0,-1).map(function(m){return {role:m.role,content:m.content}});
   if(settings.system&&settings.system.trim())history.unshift({role:"system",content:settings.system.trim()});
@@ -636,7 +666,7 @@ function send(text){
   if(session&&!session.admin){
     if(session.exp&&Date.now()>=session.exp){acctQuota();return}
     var mm=modelSel.value||settings.model;
-    if(remOf(mm)<=0){alert("Jatah pakai "+(mm==="auto"?"ArcZ Ai":"model lain")+" Anda sudah habis. Hubungi admin.");return}
+    if(mm!=="minimumlite"&&remOf(mm)<=0){alert("Jatah pakai "+(mm==="auto"?"ArcZ Ai":"model lain")+" Anda sudah habis. Hubungi admin.");return}
   }
   var c=active();
   if(!c){c={id:uid(),title:"Obrolan baru",model:modelSel.value||settings.model,messages:[]};chats.unshift(c);activeId=c.id}
@@ -896,7 +926,7 @@ async function acctQuota(){
   showAcct();
 }
 async function recordUsage(model){
-  if(!session||session.admin)return;
+  if(!session||session.admin||model==="minimumlite")return;
   var k=model==="auto"?"auto":"other";
   try{var a=await rpc("app_add_usage",{u:session.u,p:session.p,k:k});if(a&&a.username)setSession(a)}
   catch(e){if(k==="auto")session.ua++;else session.uo++;save("glassai.auth",session)}
@@ -970,13 +1000,18 @@ $("admForm").onsubmit=async function(e){
 
 /* ---------- dropdown model ---------- */
 var dd=$("dd"),ddBtn=$("ddBtn"),ddMenu=$("ddMenu");
-function mlabel(m){return m==="auto"?"ArcZ Ai":m}
+function mlabel(m){return m==="auto"?"ArcZ Ai":m==="minimumlite"?"MinimumLite (Gratis)":m}
+function pickModel(m){
+  closeDD();
+  if(m==="minimumlite"&&modelSel.value!=="minimumlite"&&!confirm("MinimumLite adalah model gratis.\n\nTidak ada memory: model tidak mengingat pesan sebelumnya, tiap pesan dijawab sendiri-sendiri.\n\nLanjut pakai MinimumLite?")){ddBtn.focus();return}
+  modelSel.value=m;modelSel.onchange();syncDD();ddBtn.focus();
+}
 function syncDD(){
   $("ddLabel").textContent=mlabel(modelSel.value);ddMenu.innerHTML="";
   MODELS.forEach(function(m){
     var on=m===modelSel.value,b=document.createElement("button");b.type="button";b.className="dd-item"+(on?" on":"");
     b.setAttribute("role","option");b.setAttribute("aria-selected",on);b.textContent=mlabel(m);
-    b.onclick=function(){modelSel.value=m;modelSel.onchange();syncDD();closeDD();ddBtn.focus()};
+    b.onclick=function(){pickModel(m)};
     ddMenu.appendChild(b);
   });
   if(session&&!session.admin)showAcct();
@@ -1012,11 +1047,16 @@ fileIn.onchange=async function(){
   for(var i=0;i<fl.length;i++){
     var f=fl[i],txt;
     try{txt=await f.text()}catch(e){alert("Gagal membaca "+f.name);continue}
-    if(txt.indexOf("\u0000")!==-1){alert(f.name+" bukan file teks, dilewati.");continue}
+    if(txt.indexOf("\u0000")!==-1){
+      if(!confirm(f.name+" adalah file biner (gambar, PDF, zip, dll). Model hanya menerima teks, jadi yang dikirim hanya nama, tipe, dan ukuran file. Isinya tidak terbaca.\n\nLanjutkan?"))continue;
+      txt="(file biner, "+(f.type||"tipe tidak diketahui")+", "+fsz(f.size)+"; isi tidak bisa dibaca sebagai teks)";
+    }
     var tk=Math.ceil(txt.length/3.5);
-    if(f.size>100*1024){
-      var sisa="";
-      if(!confirm("File besar: "+f.name+" ("+fsz(f.size)+", sekitar "+nf(tk)+" token).\nIsinya dikirim utuh tanpa dipotong dan akan memakai banyak token"+sisa+".\n\nLanjutkan?"))continue;
+    var sum=attach.reduce(function(a,x){return a+Math.ceil(x.text.length/3.5)},0)+tk;
+    if(sum>1000000){
+      if(!confirm("PERINGATAN: perkiraan "+nf(sum)+" token, lebih dari 1 juta. Ini akan memakai token sangat banyak dan bisa gagal.\n\nTetap lanjutkan?"))continue;
+    }else if(f.size>100*1024){
+      if(!confirm("File besar: "+f.name+" ("+fsz(f.size)+", sekitar "+nf(tk)+" token).\nIsinya dikirim utuh tanpa dipotong dan akan memakai banyak token.\n\nLanjutkan?"))continue;
     }
     attach.push({name:f.name,size:f.size,text:txt});
   }
