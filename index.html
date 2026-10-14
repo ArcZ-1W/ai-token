@@ -496,6 +496,15 @@ html[data-theme="neu"]:root{
 @media (min-width:821px){
   html[data-theme] .login,html[data-theme] dialog::backdrop,html[data-theme] .scrim.show{-webkit-backdrop-filter:none;backdrop-filter:none}
 }
+
+/* garis menu (sidebar + dropdown) */
+html[data-theme="glass"]{--menu-line:rgba(185,218,255,.42)}
+html[data-theme="neu"]{--menu-line:rgba(255,255,255,.13)}
+html[data-theme="neulight"]{--menu-line:rgba(40,48,68,.15)}
+html[data-theme] .side{border:1px solid var(--menu-line)}
+html[data-theme] .dd-menu{border:1px solid var(--menu-line)}
+html[data-theme] .brand{border-bottom:1px solid var(--menu-line);margin-bottom:12px;padding-bottom:12px}
+html[data-theme] .side-foot{border-top:1px solid var(--menu-line);padding-top:10px}
 </style>
 </head>
 <body>
