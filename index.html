@@ -1509,4 +1509,29 @@ async function faceLoop(run){
       if(run!==FS.run)return;
       if(has&&/tidak cocok/i.test(err.message)){
         FS.fails++;
-        if(FS.fails>=5
+        if(FS.fails>=5){stopFace();fStat("Wajah tidak cocok. Percobaan habis.",true,"bad");fRetry.hidden=false;return}
+        fStat("Wajah tidak cocok ("+FS.fails+"/5). Coba lagi.",true,"bad");await sleep(1000);
+        if(run===FS.run)fStat("Mencari wajah\\u2026");
+        continue;
+      }
+      stopFace();fStat(err.message||"Terjadi kesalahan.",true,"bad");fRetry.hidden=false;return;
+    }
+  }
+}
+async function finishFace(res){
+  var ctx=FS.ctx;stopFace();
+  setSession(res.account,ctx.p,res.token);
+  $("lPass").value="";$("lErr").textContent="";
+  faceBox.classList.remove("show");gate();
+  await boot();
+}
+fRetry.onclick=function(){openFace(FS.ctx)};
+$("fCancel").onclick=closeFace;
+
+/* ---------- mulai ---------- */
+if(session&&!session.t){session=null;save("glassai.auth",null);gate()}   /* sesi lama tanpa verifikasi wajah */
+if(session)boot();else renderAll();
+})();
+</script>
+</body>
+</html>
