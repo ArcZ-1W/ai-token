@@ -1469,4 +1469,179 @@ async function syncPins(){
     if(!l){chats.push({id:p.id,title:p.title,model:p.model,messages:p.messages||[],pinned:true,synced:+p.updated})}
     else{
       l.pinned=true;
-      if(+p.updated>(l.synced||0)&&!(busy&&l.id===activeId)){l.title=p.titl
+      if(+p.updated>(l.synced||0)&&!(busy&&l.id===activeId)){l.title=p.title;l.model=p.model;l.messages=p.messages||[];l.synced=+p.updated}
+    }
+  });
+  chats.forEach(function(c){if(c.pinned&&c.synced&&!ids[c.id])c.pinned=false});
+  persist();
+}
+async function syncPinsUI(){
+  if(!session||busy)return;
+  var a=active(),before=a&&a.synced;
+  await syncPins();
+  if(busy||!session)return;
+  renderHist();
+  var a2=active();
+  if(a2&&a2.synced!==before){renderMsgs();toBottom(true)}
+}
+document.addEventListener("visibilitychange",function(){if(!document.hidden)syncPinsUI()});
+window.addEventListener("focus",syncPinsUI);
+setInterval(syncPinsUI,45000);
+async function boot(){
+  chats=load(ckey("chats"),[]);activeId=load(ckey("active"),null);
+  await loadCfg();if(!session)return;
+  await syncPins();if(!session)return;
+  if(activeId&&!active())activeId=null;
+  renderAll();fetchQuota();
+}
+
+/* ---------- face recognition (face-api.js, diproses di browser) ---------- */
+var FACE_LIB="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.js";
+var FACE_MODELS="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/model/";
+var faceBox=$("faceBox"),faceCard=$("faceCard"),fVideo=$("fVideo"),fVid=$("fVid"),fStatEl=$("fStat"),fRetry=$("fRetry");
+var FS={stream:null,run:0,ctx:null,samples:[],fails:0},facePromise=null;
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
+function fStat(msg,bad,cls){fStatEl.textContent=msg;fStatEl.classList.toggle("bad",!!bad);fVid.className="fvid"+(cls?" "+cls:" scan")}
+function loadFace(){
+  if(facePromise)return facePromise;
+  var pr=new Promise(function(res,rej){
+    function models(){
+      Promise.all([
+        faceapi.nets.tinyFaceDetector.loadFromUri(FACE_MODELS),
+        faceapi.nets.faceLandmark68Net.loadFromUri(FACE_MODELS),
+        faceapi.nets.faceRecognitionNet.loadFromUri(FACE_MODELS)
+      ]).then(res,function(){rej(new Error("Gagal memuat model wajah. Periksa koneksi internet."))});
+    }
+    if(window.faceapi)return models();
+    var sc=document.createElement("script");sc.src=FACE_LIB;sc.onload=models;
+    sc.onerror=function(){rej(new Error("Gagal memuat pustaka wajah. Periksa koneksi internet."))};
+    document.head.appendChild(sc);
+  });
+  facePromise=pr;pr.catch(function(){facePromise=null});
+  return pr;
+}
+function stopFace(){
+  FS.run++;
+  if(FS.stream){FS.stream.getTracks().forEach(function(t){t.stop()});FS.stream=null}
+  fVideo.srcObject=null;
+}
+function lockSize(c){c.style.width=c.offsetWidth+"px";c.style.height=c.offsetHeight+"px";void c.offsetWidth}
+function resetBox(c){c.style.transition="none";c.classList.remove("shrink","ok","bad","pop","shake");c.style.width="";c.style.height="";void c.offsetWidth;c.style.transition=""}
+function closeFace(){stopFace();faceBox.classList.remove("show");resetBox(faceCard);gate()}
+function popFace(){
+  loginEl.classList.remove("show");faceBox.classList.add("show");
+  faceCard.classList.remove("pop");void faceCard.offsetWidth;faceCard.classList.add("pop");
+}
+function edist(a,b){var s=0;for(var i=0;i<a.length;i++){var d=a[i]-b[i];s+=d*d}return Math.sqrt(s)}
+function avgDesc(arr){var o=new Array(128).fill(0);arr.forEach(function(d){for(var i=0;i<128;i++)o[i]+=d[i]});return o.map(function(v){return v/arr.length})}
+async function openFace(ctx){
+  stopFace();FS.ctx=ctx;FS.samples=[];FS.fails=0;var run=FS.run;
+  $("fTitle").textContent=ctx.has?"Konfirmasi wajah":"Daftarkan wajah";
+  $("fSub").textContent=ctx.has?"Hadapkan wajah ke kamera untuk memastikan ini akun Anda.":"Wajah Anda belum terdaftar. Hadapkan wajah ke kamera, kami ambil 3 sampel.";
+  fRetry.hidden=true;
+  var shown=faceBox.classList.contains("show"),err=null;
+  if(shown)fStat("Menyiapkan kamera\u2026");
+  try{
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw {name:"NoMedia"};
+    var camP=navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:{ideal:640},height:{ideal:480}},audio:false});   /* izin kamera diminta dulu */
+    camP.catch(function(){});
+    try{await loadFace()}catch(e){camP.then(function(st){st.getTracks().forEach(function(t){t.stop()})},function(){});throw e}
+    var stream=await camP;
+    if(run!==FS.run){stream.getTracks().forEach(function(t){t.stop()});return}
+    FS.stream=stream;fVideo.srcObject=stream;await fVideo.play();
+  }catch(e){err=e}
+  if(run!==FS.run)return;
+  if(!shown){                                   /* dari login: izin sudah beres, baru tampilkan pop-up scan */
+    var f=$("loginForm");
+    if(!err){f.classList.add("ok");await sleep(550)}
+    if(run!==FS.run)return;
+    popFace();
+    resetBox(f);
+  }
+  if(err){
+    var m=err.name==="NotAllowedError"?"Izin kamera ditolak. Aktifkan izin kamera untuk situs ini lalu coba lagi."
+      :err.name==="NotFoundError"?"Kamera tidak ditemukan."
+      :err.name==="NoMedia"?"Kamera tidak tersedia. Buka halaman ini lewat HTTPS."
+      :err.message||"Tidak bisa mengakses kamera.";
+    stopFace();fStat(m,true,"bad");fRetry.hidden=false;return;
+  }
+  faceLoop(run);
+}
+async function faceLoop(run){
+  var has=FS.ctx.has,opts=new faceapi.TinyFaceDetectorOptions({inputSize:320,scoreThreshold:.5});
+  fStat(has?"Mencari wajah\u2026":"Mencari wajah\u2026");
+  while(run===FS.run){
+    await sleep(has?350:650);if(run!==FS.run)return;
+    var det;
+    try{det=await faceapi.detectSingleFace(fVideo,opts).withFaceLandmarks().withFaceDescriptor()}catch(e){continue}
+    if(run!==FS.run)return;
+    if(!det){FS.samples=[];fStat("Wajah tidak terdeteksi. Pastikan wajah terlihat dan cukup terang.");continue}
+    if(det.detection.box.width/fVideo.videoWidth<.28){fStat("Dekatkan wajah ke kamera.");continue}
+    var d=Array.from(det.descriptor);
+    try{
+      if(has){
+        fStat("Memverifikasi\u2026");
+        var res=await rpc("app_face_login",{u:FS.ctx.u,p:FS.ctx.p,d:d});
+        if(run!==FS.run)return;
+        fStat("Wajah cocok",false,"ok");await sleep(350);
+        return finishFace(res);
+      }
+      if(FS.samples.length&&edist(FS.samples[0],d)>.45)FS.samples=[];
+      FS.samples.push(d);
+      if(FS.samples.length<3){fStat("Sampel "+FS.samples.length+"/3. Tahan posisi\u2026");continue}
+      fStat("Menyimpan wajah\u2026");
+      var r2=await rpc("app_face_enroll",{u:FS.ctx.u,p:FS.ctx.p,d:avgDesc(FS.samples)});
+      if(run!==FS.run)return;
+      fStat("Wajah terdaftar",false,"ok");await sleep(450);
+      return finishFace(r2);
+    }catch(err){
+      if(run!==FS.run)return;
+      if(has&&/tidak cocok/i.test(err.message)){
+        FS.fails++;
+        if(FS.fails>=3)return faceFailToLogin();
+        fStat("Wajah tidak cocok ("+FS.fails+"/3). Coba lagi.",true,"bad");await sleep(1000);
+        if(run===FS.run)fStat("Mencari wajah\u2026");
+        continue;
+      }
+      stopFace();fStat(err.message||"Terjadi kesalahan.",true,"bad");fRetry.hidden=false;return;
+    }
+  }
+}
+var IRIS=!!(window.CSS&&CSS.registerProperty);
+async function finishFace(res){
+  var ctx=FS.ctx;stopFace();
+  setSession(res.account,ctx.p,res.token);
+  $("lPass").value="";$("lErr").textContent="";
+  gate();var bootP=boot();                          /* siapkan halaman utama di bawah */
+  lockSize(faceCard);faceCard.classList.add("shrink");  /* mengecil jadi bulat */
+  await sleep(520);faceCard.classList.add("ok");
+  await Promise.all([bootP,sleep(850)]);
+  faceBox.classList.add(IRIS?"reveal":"reveal-fade");   /* membesar: halaman utama terbuka */
+  await sleep(IRIS?850:500);
+  faceBox.classList.remove("show","reveal","reveal-fade");resetBox(faceCard);
+}
+async function faceFailToLogin(){                    /* salah 3x: kembali ke login */
+  stopFace();
+  lockSize(faceCard);faceCard.classList.add("shrink","bad");
+  await sleep(1000);
+  faceBox.classList.remove("show");resetBox(faceCard);
+  var f=$("loginForm");
+  loginEl.classList.add("show");
+  f.style.transition="none";lockSize(f);f.classList.add("shrink");void f.offsetWidth;f.style.transition="";
+  await sleep(500);                                  /* lingkaran loading sebentar */
+  f.classList.remove("shrink");await sleep(480);
+  f.style.width="";f.style.height="";
+  $("lErr").textContent="Wajah tidak cocok 3 kali. Silakan login ulang.";
+  f.classList.remove("shake");void f.offsetWidth;f.classList.add("shake");
+  $("lPass").value="";$("lPass").focus();
+}
+fRetry.onclick=function(){openFace(FS.ctx)};
+$("fCancel").onclick=closeFace;
+
+/* ---------- mulai ---------- */
+if(session&&!session.t){session=null;save("glassai.auth",null);gate()}   /* sesi lama tanpa verifikasi wajah */
+if(session)boot();else renderAll();
+})();
+</script>
+</body>
+</html>
