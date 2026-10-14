@@ -433,6 +433,14 @@ dialog::backdrop{background:var(--overlay);-webkit-backdrop-filter:blur(6px);bac
 
 @media (max-width:820px){.side{background:var(--bg);box-shadow:var(--raise)}}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.glass{background:var(--bg)}}
+
+/* perbaikan layer: sidebar mobile harus di atas bar atas */
+@media (max-width:820px){
+  .side{z-index:60}
+  .scrim.show{z-index:50}
+  .side:not(.open){visibility:hidden}
+  .side.open{visibility:visible}
+}
 </style>
 </head>
 <body>
