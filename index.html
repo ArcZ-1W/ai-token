@@ -496,73 +496,19 @@ html[data-theme="neu"]:root{
 @media (min-width:821px){
   html[data-theme] .login,html[data-theme] dialog::backdrop,html[data-theme] .scrim.show{-webkit-backdrop-filter:none;backdrop-filter:none}
 }
-
-/* garis menu (sidebar + dropdown) */
-html[data-theme="glass"]{--menu-line:rgba(185,218,255,.42)}
-html[data-theme="neu"]{--menu-line:rgba(255,255,255,.13)}
-html[data-theme="neulight"]{--menu-line:rgba(40,48,68,.15)}
-html[data-theme] .side{border:1px solid var(--menu-line)}
-html[data-theme] .dd-menu{border:1px solid var(--menu-line)}
-html[data-theme] .brand{border-bottom:1px solid var(--menu-line);margin-bottom:12px;padding-bottom:12px}
-html[data-theme] .side-foot{border-top:1px solid var(--menu-line);padding-top:10px}
-
-
-/* animasi kotak login: bulat + mengecil + loading */
-.login form{position:relative;overflow:hidden;transition:width .45s cubic-bezier(.7,0,.2,1),height .45s cubic-bezier(.7,0,.2,1),border-radius .45s cubic-bezier(.7,0,.2,1),padding .45s cubic-bezier(.7,0,.2,1)}
-.login form>*:not(.lspin){transition:opacity .2s}
-.login form.shrink{width:96px!important;height:96px!important;border-radius:50%;padding:0}
-.login form.shrink>*:not(.lspin){opacity:0;pointer-events:none}
-.lspin{position:absolute;inset:0;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .25s .15s}
-.login form.shrink .lspin{opacity:1}
-.lspin i{width:44px;height:44px;border-radius:50%;border:4px solid rgba(128,128,128,.28);border-top-color:var(--accent);animation:lspin .8s linear infinite}
-.lspin svg{position:absolute;width:34px;height:34px;opacity:0;stroke:#2fb86a;stroke-dasharray:30;stroke-dashoffset:30}
-.login form.ok .lspin i{animation:none;border-color:#2fb86a}
-.login form.ok .lspin svg{opacity:1;animation:lcheck .4s .05s forwards}
-.login form.shake{animation:lshake .42s}
-@keyframes lspin{to{transform:rotate(360deg)}}
-@keyframes lcheck{to{stroke-dashoffset:0}}
-@keyframes lshake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
-@media (prefers-reduced-motion:reduce){.login form{transition:none}.lspin i{animation-duration:2.2s}.login form.shake{animation:none}}
-
-/* face: pop-up, garis scan, bulat, iris */
-.face-card{position:relative;overflow:hidden;transition:width .45s cubic-bezier(.7,0,.2,1),height .45s cubic-bezier(.7,0,.2,1),border-radius .45s cubic-bezier(.7,0,.2,1),padding .45s cubic-bezier(.7,0,.2,1)}
-.face-card>*:not(.lspin){transition:opacity .2s}
-.face-card.shrink{width:96px!important;height:96px!important;border-radius:50%;padding:0}
-.face-card.shrink>*:not(.lspin){opacity:0;pointer-events:none}
-.face-card.shrink .lspin{opacity:1}
-.face-card.ok .lspin i{animation:none;border-color:#2fb86a}
-.face-card.ok .lspin svg.ck{opacity:1;animation:lcheck .4s .05s forwards}
-.face-card.bad .lspin i{animation:none;border-color:var(--danger)}
-.lspin svg.xx{stroke:var(--danger)}
-.face-card.bad .lspin svg.xx{opacity:1;animation:lcheck .4s .05s forwards}
-.face-card.pop{animation:fpop .55s cubic-bezier(.2,.9,.3,1.15)}
-@keyframes fpop{0%{opacity:0;transform:scale(.7) translateY(18px)}60%{opacity:1;transform:scale(1.04)}100%{opacity:1;transform:none}}
-.fvid{position:relative}
-.fscan{position:absolute;left:0;right:0;top:6%;height:3px;opacity:0;pointer-events:none;background:linear-gradient(90deg,transparent,var(--accent-2),transparent);box-shadow:0 0 16px 4px var(--accent-2)}
-.fvid.scan .fscan{opacity:1;animation:fscan 1.5s ease-in-out infinite alternate}
-@keyframes fscan{from{top:6%}to{top:93%}}
-.fvid.scan{animation:fring 1.5s ease-in-out infinite alternate}
-@keyframes fring{from{border-color:var(--bg)}to{border-color:var(--accent)}}
-@property --hole{syntax:"<length>";inherits:false;initial-value:0px}
-.login.reveal{-webkit-mask-image:radial-gradient(circle at 50% 50%,transparent var(--hole),#000 calc(var(--hole) + 1px));mask-image:radial-gradient(circle at 50% 50%,transparent var(--hole),#000 calc(var(--hole) + 1px));animation:iris .8s cubic-bezier(.55,0,.75,.45) forwards}
-@keyframes iris{from{--hole:48px}to{--hole:160vmax}}
-.login.reveal-fade{opacity:0;transition:opacity .45s}
-@media (prefers-reduced-motion:reduce){.face-card{transition:none}.face-card.pop{animation:none}.fvid.scan,.fvid.scan .fscan{animation:none}}
 </style>
 </head>
 <body>
 <div class="login" id="login"><form class="glass" id="loginForm" autocomplete="off">
-  <div class="lspin" aria-hidden="true"><i></i><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
   <h2>Masuk ke Arcz AI</h2><p>Login untuk melanjutkan.</p>
   <div class="field"><label for="lUser">Username</label><input type="text" id="lUser" autocomplete="username" autocapitalize="off"></div>
   <div class="field"><label for="lPass">Password</label><input type="password" id="lPass" autocomplete="current-password"></div>
   <div class="err" id="lErr" role="alert"></div>
   <button class="btn primary" type="submit">Masuk</button>
 </form></div>
-<div class="login" id="faceBox"><div class="glass face-card" id="faceCard">
-  <div class="lspin" aria-hidden="true"><i></i><svg class="ck" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><svg class="xx" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+<div class="login" id="faceBox"><div class="glass face-card">
   <h2 id="fTitle">Verifikasi wajah</h2><p id="fSub"></p>
-  <div class="fvid" id="fVid"><video id="fVideo" playsinline muted autoplay></video><div class="fscan"></div></div>
+  <div class="fvid" id="fVid"><video id="fVideo" playsinline muted autoplay></video></div>
   <div class="fstat" id="fStat" role="status" aria-live="polite"></div>
   <div class="fbtns"><button class="btn primary" type="button" id="fRetry" hidden>Coba lagi</button><button class="btn" type="button" id="fCancel">Batal</button></div>
 </div></div>
@@ -1232,34 +1178,17 @@ function logout(msg){
   session=null;save("glassai.auth",null);chats=[];activeId=null;pinLimit=null;closeSide();gate();renderAll();
   if(typeof msg==="string")$("lErr").textContent=msg;
 }
-var loginBusy=false;
 $("loginForm").onsubmit=async function(e){
-  e.preventDefault();if(loginBusy)return;
-  var f=this,u=$("lUser").value.trim().toLowerCase(),p=$("lPass").value;
-  if(!u||!p){$("lErr").textContent="Isi username dan password.";return}
-  loginBusy=true;$("lErr").textContent="";f.setAttribute("aria-busy","true");
-  f.style.width=f.offsetWidth+"px";f.style.height=f.offsetHeight+"px";void f.offsetWidth;   /* ukuran awal agar bisa dianimasikan */
-  f.classList.add("shrink");                                                                  /* bulat + mengecil */
-  var res=null,err=null,minWait=sleep(950);
+  e.preventDefault();
+  var u=$("lUser").value.trim().toLowerCase(),p=$("lPass").value;if(!u||!p)return;
+  $("lErr").textContent="Memeriksa\u2026";
   try{
     var a=await rpc("app_login",{u:u,p:p});
-    if(a&&a.expired)throw new Error("Masa aktif akun habis. Akun sudah dihapus.");
+    if(a&&a.expired){$("lErr").textContent="Masa aktif akun habis. Akun sudah dihapus.";return}
     var has=await rpc("app_face_status",{u:u,p:p});
-    res={u:u,p:p,has:!!has};
-  }catch(ex){err=ex}
-  await minWait;
-  f.removeAttribute("aria-busy");
-  if(err){                                   /* salah: kotak membesar lagi, ulangi */
-    f.classList.remove("shrink");await sleep(480);
-    f.style.width="";f.style.height="";
-    $("lErr").textContent=err.message;
-    f.classList.remove("shake");void f.offsetWidth;f.classList.add("shake");
-    $("lPass").value="";$("lPass").focus();
-    loginBusy=false;return;
-  }
-  await openFace(res);                       /* benar: tunggu izin kamera, centang, lalu pop-up scan */
-  resetBox(f);
-  loginBusy=false;
+    $("lErr").textContent="";
+    openFace({u:u,p:p,has:!!has});
+  }catch(err){$("lErr").textContent=err.message}
 };
 $("logout").onclick=logout;
 gate();
@@ -1498,10 +1427,10 @@ async function boot(){
 /* ---------- face recognition (face-api.js, diproses di browser) ---------- */
 var FACE_LIB="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.js";
 var FACE_MODELS="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/model/";
-var faceBox=$("faceBox"),faceCard=$("faceCard"),fVideo=$("fVideo"),fVid=$("fVid"),fStatEl=$("fStat"),fRetry=$("fRetry");
+var faceBox=$("faceBox"),fVideo=$("fVideo"),fVid=$("fVid"),fStatEl=$("fStat"),fRetry=$("fRetry");
 var FS={stream:null,run:0,ctx:null,samples:[],fails:0},facePromise=null;
 function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
-function fStat(msg,bad,cls){fStatEl.textContent=msg;fStatEl.classList.toggle("bad",!!bad);fVid.className="fvid"+(cls?" "+cls:" scan")}
+function fStat(msg,bad,cls){fStatEl.textContent=msg;fStatEl.classList.toggle("bad",!!bad);fVid.className="fvid"+(cls?" "+cls:"")}
 function loadFace(){
   if(facePromise)return facePromise;
   var pr=new Promise(function(res,rej){
@@ -1525,51 +1454,33 @@ function stopFace(){
   if(FS.stream){FS.stream.getTracks().forEach(function(t){t.stop()});FS.stream=null}
   fVideo.srcObject=null;
 }
-function lockSize(c){c.style.width=c.offsetWidth+"px";c.style.height=c.offsetHeight+"px";void c.offsetWidth}
-function resetBox(c){c.style.transition="none";c.classList.remove("shrink","ok","bad","pop","shake");c.style.width="";c.style.height="";void c.offsetWidth;c.style.transition=""}
-function closeFace(){stopFace();faceBox.classList.remove("show");resetBox(faceCard);gate()}
-function popFace(){
-  loginEl.classList.remove("show");faceBox.classList.add("show");
-  faceCard.classList.remove("pop");void faceCard.offsetWidth;faceCard.classList.add("pop");
-}
+function closeFace(){stopFace();faceBox.classList.remove("show");gate()}
 function edist(a,b){var s=0;for(var i=0;i<a.length;i++){var d=a[i]-b[i];s+=d*d}return Math.sqrt(s)}
 function avgDesc(arr){var o=new Array(128).fill(0);arr.forEach(function(d){for(var i=0;i<128;i++)o[i]+=d[i]});return o.map(function(v){return v/arr.length})}
 async function openFace(ctx){
   stopFace();FS.ctx=ctx;FS.samples=[];FS.fails=0;var run=FS.run;
   $("fTitle").textContent=ctx.has?"Konfirmasi wajah":"Daftarkan wajah";
   $("fSub").textContent=ctx.has?"Hadapkan wajah ke kamera untuk memastikan ini akun Anda.":"Wajah Anda belum terdaftar. Hadapkan wajah ke kamera, kami ambil 3 sampel.";
-  fRetry.hidden=true;
-  var shown=faceBox.classList.contains("show"),err=null;
-  if(shown)fStat("Menyiapkan kamera\u2026");
+  fRetry.hidden=true;fStat("Menyiapkan kamera\\u2026");
+  loginEl.classList.remove("show");faceBox.classList.add("show");
   try{
     if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw {name:"NoMedia"};
-    var camP=navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:{ideal:640},height:{ideal:480}},audio:false});   /* izin kamera diminta dulu */
-    camP.catch(function(){});
-    try{await loadFace()}catch(e){camP.then(function(st){st.getTracks().forEach(function(t){t.stop()})},function(){});throw e}
-    var stream=await camP;
-    if(run!==FS.run){stream.getTracks().forEach(function(t){t.stop()});return}
-    FS.stream=stream;fVideo.srcObject=stream;await fVideo.play();
-  }catch(e){err=e}
-  if(run!==FS.run)return;
-  if(!shown){                                   /* dari login: izin sudah beres, baru tampilkan pop-up scan */
-    var f=$("loginForm");
-    if(!err){f.classList.add("ok");await sleep(550)}
-    if(run!==FS.run)return;
-    popFace();
-    resetBox(f);
-  }
-  if(err){
-    var m=err.name==="NotAllowedError"?"Izin kamera ditolak. Aktifkan izin kamera untuk situs ini lalu coba lagi."
-      :err.name==="NotFoundError"?"Kamera tidak ditemukan."
-      :err.name==="NoMedia"?"Kamera tidak tersedia. Buka halaman ini lewat HTTPS."
-      :err.message||"Tidak bisa mengakses kamera.";
+    await loadFace();
+    FS.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:{ideal:640},height:{ideal:480}},audio:false});
+    if(run!==FS.run){FS.stream.getTracks().forEach(function(t){t.stop()});return}
+    fVideo.srcObject=FS.stream;await fVideo.play();
+  }catch(err){
+    var m=err&&err.name==="NotAllowedError"?"Izin kamera ditolak. Aktifkan izin kamera untuk situs ini lalu coba lagi."
+      :err&&err.name==="NotFoundError"?"Kamera tidak ditemukan."
+      :err&&err.name==="NoMedia"?"Kamera tidak tersedia. Buka halaman ini lewat HTTPS."
+      :(err&&err.message)||"Tidak bisa mengakses kamera.";
     stopFace();fStat(m,true,"bad");fRetry.hidden=false;return;
   }
   faceLoop(run);
 }
 async function faceLoop(run){
   var has=FS.ctx.has,opts=new faceapi.TinyFaceDetectorOptions({inputSize:320,scoreThreshold:.5});
-  fStat(has?"Mencari wajah\u2026":"Mencari wajah\u2026");
+  fStat(has?"Mencari wajah\\u2026":"Mencari wajah\\u2026");
   while(run===FS.run){
     await sleep(has?350:650);if(run!==FS.run)return;
     var det;
@@ -1580,16 +1491,16 @@ async function faceLoop(run){
     var d=Array.from(det.descriptor);
     try{
       if(has){
-        fStat("Memverifikasi\u2026");
+        fStat("Memverifikasi\\u2026");
         var res=await rpc("app_face_login",{u:FS.ctx.u,p:FS.ctx.p,d:d});
         if(run!==FS.run)return;
-        fStat("Wajah cocok",false,"ok");await sleep(350);
+        fStat("Wajah cocok",false,"ok");await sleep(450);
         return finishFace(res);
       }
       if(FS.samples.length&&edist(FS.samples[0],d)>.45)FS.samples=[];
       FS.samples.push(d);
-      if(FS.samples.length<3){fStat("Sampel "+FS.samples.length+"/3. Tahan posisi\u2026");continue}
-      fStat("Menyimpan wajah\u2026");
+      if(FS.samples.length<3){fStat("Sampel "+FS.samples.length+"/3. Tahan posisi\\u2026");continue}
+      fStat("Menyimpan wajah\\u2026");
       var r2=await rpc("app_face_enroll",{u:FS.ctx.u,p:FS.ctx.p,d:avgDesc(FS.samples)});
       if(run!==FS.run)return;
       fStat("Wajah terdaftar",false,"ok");await sleep(450);
@@ -1598,42 +1509,21 @@ async function faceLoop(run){
       if(run!==FS.run)return;
       if(has&&/tidak cocok/i.test(err.message)){
         FS.fails++;
-        if(FS.fails>=3)return faceFailToLogin();
-        fStat("Wajah tidak cocok ("+FS.fails+"/3). Coba lagi.",true,"bad");await sleep(1000);
-        if(run===FS.run)fStat("Mencari wajah\u2026");
+        if(FS.fails>=5){stopFace();fStat("Wajah tidak cocok. Percobaan habis.",true,"bad");fRetry.hidden=false;return}
+        fStat("Wajah tidak cocok ("+FS.fails+"/5). Coba lagi.",true,"bad");await sleep(1000);
+        if(run===FS.run)fStat("Mencari wajah\\u2026");
         continue;
       }
       stopFace();fStat(err.message||"Terjadi kesalahan.",true,"bad");fRetry.hidden=false;return;
     }
   }
 }
-var IRIS=!!(window.CSS&&CSS.registerProperty);
 async function finishFace(res){
   var ctx=FS.ctx;stopFace();
   setSession(res.account,ctx.p,res.token);
   $("lPass").value="";$("lErr").textContent="";
-  gate();var bootP=boot();                          /* siapkan halaman utama di bawah */
-  lockSize(faceCard);faceCard.classList.add("shrink");  /* mengecil jadi bulat */
-  await sleep(520);faceCard.classList.add("ok");
-  await Promise.all([bootP,sleep(850)]);
-  faceBox.classList.add(IRIS?"reveal":"reveal-fade");   /* membesar: halaman utama terbuka */
-  await sleep(IRIS?850:500);
-  faceBox.classList.remove("show","reveal","reveal-fade");resetBox(faceCard);
-}
-async function faceFailToLogin(){                    /* salah 3x: kembali ke login */
-  stopFace();
-  lockSize(faceCard);faceCard.classList.add("shrink","bad");
-  await sleep(1000);
-  faceBox.classList.remove("show");resetBox(faceCard);
-  var f=$("loginForm");
-  loginEl.classList.add("show");
-  f.style.transition="none";lockSize(f);f.classList.add("shrink");void f.offsetWidth;f.style.transition="";
-  await sleep(500);                                  /* lingkaran loading sebentar */
-  f.classList.remove("shrink");await sleep(480);
-  f.style.width="";f.style.height="";
-  $("lErr").textContent="Wajah tidak cocok 3 kali. Silakan login ulang.";
-  f.classList.remove("shake");void f.offsetWidth;f.classList.add("shake");
-  $("lPass").value="";$("lPass").focus();
+  faceBox.classList.remove("show");gate();
+  await boot();
 }
 fRetry.onclick=function(){openFace(FS.ctx)};
 $("fCancel").onclick=closeFace;
