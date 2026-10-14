@@ -26,7 +26,7 @@
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
+html,body{height:100%} 
 body{
   font-family:var(--font);color:var(--ink);background:var(--bg);
   overflow:hidden;-webkit-font-smoothing:antialiased;
@@ -1523,7 +1523,7 @@ var UGUU="https://uguu.se/upload",UGUU_MAX=128*1024*1024;
 function fsz(n){return n<1024?n+" B":n<1048576?(n/1024).toFixed(1)+" KB":(n/1048576).toFixed(2)+" MB"}
 function uploading(){return attach.some(function(f){return f.up})}
 async function uguuUpload(file){
-  var eps=[UGUU,UGUU+".php"],last=null;
+  var eps=[UGUU+"?output=json"],last=null;
   for(var i=0;i<eps.length;i++){
     try{
       var fd=new FormData();fd.append("files[]",file,file.name);
