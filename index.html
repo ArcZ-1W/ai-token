@@ -3,11 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ArcZ AI</title>
+<title>Xozen AI</title>
+<!-- pratinjau saat tautan dibagikan (WhatsApp, Telegram, Facebook, X, Discord) -->
+<meta name="description" content="Xozen AI — asisten AI dalam satu aplikasi. Chat cepat dengan banyak pilihan model (kimi, glm, deepseek, gpt, dan lainnya). Paket Basic mulai Rp 3.000.">
+<meta name="theme-color" content="#0b1020">
+<meta name="application-name" content="Xozen AI">
+<meta name="apple-mobile-web-app-title" content="Xozen AI">
+<link rel="icon" type="image/png" href="https://i.ibb.co.com/8gqQS0t0/xozen.png">
+<link rel="apple-touch-icon" href="https://i.ibb.co.com/8gqQS0t0/xozen.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Xozen AI">
+<meta property="og:locale" content="id_ID">
+<meta property="og:title" content="Xozen AI — Asisten AI dalam Satu Aplikasi">
+<meta property="og:description" content="Chat cepat dengan banyak pilihan model AI, langsung dari browser tanpa install. Paket Basic mulai Rp 3.000, paket Best Value mulai Rp 5.000.">
+<meta property="og:image" content="https://i.ibb.co.com/8gqQS0t0/xozen.png">
+<meta property="og:image:secure_url" content="https://i.ibb.co.com/8gqQS0t0/xozen.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Logo Xozen AI">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Xozen AI — Asisten AI dalam Satu Aplikasi">
+<meta name="twitter:description" content="Chat cepat dengan banyak pilihan model AI, langsung dari browser tanpa install. Paket Basic mulai Rp 3.000.">
+<meta name="twitter:image" content="https://i.ibb.co.com/8gqQS0t0/xozen.png">
+<meta name="twitter:image:alt" content="Logo Xozen AI">
+
 <script>try{var __o=JSON.parse(localStorage.getItem("glassai.settings")||"{}")||{},__t=__o.themeV===2?__o.theme:null;document.documentElement.setAttribute("data-theme",["glass","glassold","glasswhite","neu","neulight"].indexOf(__t)>-1?__t:"neulight")}catch(e){document.documentElement.setAttribute("data-theme","neu")}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@400..800&display=swap" rel="stylesheet">
 <style>
 :root{
   --ink:#f4f6ff;
@@ -23,6 +45,7 @@
   --bg:#080b18;
   --radius:22px;
   --font:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-display:"Syne","Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -506,7 +529,6 @@ html[data-theme] .dd-menu{border:1px solid var(--menu-line)}
 html[data-theme] .brand{border-bottom:1px solid var(--menu-line);margin-bottom:12px;padding-bottom:12px}
 html[data-theme] .side-foot{border-top:1px solid var(--menu-line);padding-top:10px}
 
-
 /* animasi kotak login: bulat + mengecil + loading */
 .login form{position:relative;overflow:hidden;transition:width .45s cubic-bezier(.7,0,.2,1),height .45s cubic-bezier(.7,0,.2,1),border-radius .45s cubic-bezier(.7,0,.2,1),padding .45s cubic-bezier(.7,0,.2,1)}
 .login form>*:not(.lspin){transition:opacity .2s}
@@ -623,17 +645,242 @@ html[data-theme="glasswhite"] .fvid.bad{border-color:var(--danger)}
 html[data-theme="glasswhite"] .jump button{background:rgba(255,255,255,.92);box-shadow:0 6px 18px rgba(25,40,90,.2)}
 html[data-theme="glasswhite"] .tbtn{background:rgba(20,30,60,.05)}
 @media (max-width:820px){html[data-theme="glasswhite"] .side{background:rgba(255,255,255,.97)!important}}
+/* ===== halaman paket & harga ===== */
+.lalt{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;font-size:13.5px;color:var(--ink-dim)}
+.lalt button{font:inherit;font-size:13.5px;font-weight:600;color:var(--accent-2);background:none;border:0;cursor:pointer;padding:3px 4px;border-radius:8px;text-decoration:underline;text-underline-offset:3px}
+.lalt button:hover{color:var(--accent)}
+.lalt button:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+#pricePage .price{position:relative;width:min(880px,100%);max-height:calc(100dvh - 28px);overflow-y:auto;padding:24px 22px}
+.phead{display:flex;gap:14px;align-items:center;margin:2px 30px 6px 0}
+.plogo{width:52px;height:52px;border-radius:14px;flex:none;object-fit:cover;background:rgba(128,128,128,.14)}
+.phead h2{margin:0 0 4px;font-size:20px;letter-spacing:-.01em}
+.phead p{margin:0;font-size:13.5px;line-height:1.5;color:var(--ink-dim)}
+.phead .myplan{margin-top:7px;font-weight:600;color:var(--accent-2)}
+.psec{margin-top:20px;padding-top:16px;border-top:1px solid var(--menu-line)}
+.psec-h{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:3px}
+.psec-h b{font-size:16px}
+.pbin{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--accent);color:#fff}
+.psec>p{margin:0 0 12px;font-size:13px;line-height:1.5;color:var(--ink-dim)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:10px}
+.pcard{position:relative;display:flex;flex-direction:column;gap:9px;padding:16px 15px 15px;border-radius:16px;background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.22)}
+.pcard.best{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.pcard.wide{grid-column:1/-1}
+.ptag{position:absolute;top:-10px;right:12px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--accent);color:#fff;box-shadow:0 4px 12px -4px rgba(0,0,0,.4)}
+.pname{font-size:15.5px;font-weight:650;letter-spacing:-.01em}
+.pmeta{margin-top:-5px;font-size:12.5px;color:var(--ink-dim)}
+.pprice{font-size:23px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.pprice small{margin-left:5px;font-size:12.5px;font-weight:500;color:var(--ink-dim)}
+.pbuy{margin-top:auto;text-align:center;text-decoration:none;font-size:13.5px;padding:9px 12px}
+.pchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.pchips span{font-family:var(--mono);font-size:11.5px;padding:4px 9px;border-radius:999px;background:rgba(128,128,128,.14);border:1px solid rgba(128,128,128,.2);color:var(--ink-dim)}
+details.pmodels{margin-top:10px}
+details.pmodels>summary{cursor:pointer;padding:6px 2px;font-size:13px;font-weight:600;color:var(--accent-2)}
+details.pmodels>summary:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+.pnote{margin-top:20px;padding-top:14px;border-top:1px solid var(--menu-line);font-size:12.5px;line-height:1.6;color:var(--ink-faint)}
+.prow{display:flex;justify-content:flex-end;margin-top:16px}
+.pclose{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:10px;border:0;cursor:pointer;background:rgba(128,128,128,.16);color:var(--ink);font:inherit;font-size:19px;line-height:1;display:grid;place-items:center}
+.pclose:hover{background:rgba(128,128,128,.28)}
+.pclose:focus-visible,.prow .btn:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+html[data-theme^="neu"] .pcard{background:var(--bg);border:0;box-shadow:var(--raise-xs)}
+html[data-theme^="neu"] .pcard.best{box-shadow:var(--raise-xs),inset 0 0 0 1.5px var(--accent)}
+html[data-theme^="neu"] .pchips span{background:var(--bg);border:0;box-shadow:var(--inset-xs)}
+html[data-theme^="neu"] .pclose{background:var(--bg);box-shadow:var(--raise-xs)}
+
+/* ===== pemilih model (popup) ===== */
+.mpick{position:fixed;inset:0;z-index:120;display:none;background:rgba(4,6,16,.55);opacity:0;transition:opacity .26s}
+.mpick.show{display:flex;align-items:center;justify-content:center;padding:18px;opacity:1}
+.mpick.closing{opacity:0}
+.mpanel{display:flex;flex-direction:column;width:min(920px,100%);max-height:min(84dvh,780px);border-radius:22px;overflow:hidden;background:var(--bg);border:1px solid var(--glass-edge);box-shadow:0 28px 70px -24px rgba(0,0,0,.7);transform:translateY(36px);opacity:0;animation:mIn .3s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes mIn{to{transform:none;opacity:1}}
+.mpick.closing .mpanel{animation:mOut .18s ease forwards}
+@keyframes mOut{to{transform:translateY(26px);opacity:0}}
+html[data-theme^="neu"] .mpanel{box-shadow:var(--raise)}
+.mhead{padding:16px 18px 12px;border-bottom:1px solid var(--menu-line)}
+.mtop{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px}
+.mtop b{font-size:16.5px;letter-spacing:-.01em}
+.msub{margin-top:3px;font-size:12.5px;color:var(--ink-faint)}
+.msearch{position:relative}
+.msearch input{width:100%;font:inherit;font-size:14px;color:var(--ink);background:rgba(128,128,128,.14);border:1px solid var(--glass-edge);border-radius:12px;padding:10px 12px 10px 36px}
+.msearch input:focus{outline:2px solid var(--accent-2);outline-offset:1px}
+.msearch svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;opacity:.55;pointer-events:none}
+.mfilters{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.mchip2{font:inherit;font-size:12.5px;color:var(--ink);background:var(--glass);border:1px solid var(--glass-edge);border-radius:999px;padding:6px 11px;cursor:pointer}
+.mchip2:hover{background:rgba(128,128,128,.22)}
+.mchip2.on{background:var(--accent);color:#fff;border-color:transparent}
+.mlist{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));gap:9px;padding:14px 18px}
+.mcard{display:flex;align-items:center;gap:10px;text-align:left;font:inherit;color:var(--ink);background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.22);border-radius:14px;padding:12px 13px;cursor:pointer;transition:background .15s,border-color .15s}
+.mcard:hover{background:rgba(128,128,128,.18)}
+.mcard:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+.mcard.on{border-color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--accent)}
+.mcard .mi{flex:1;min-width:0}
+.mcard .mn{font-size:14px;font-weight:650;letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mcard .md{margin-top:2px;font-size:11.8px;line-height:1.4;color:var(--ink-dim);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mtags{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.mtags i{font-style:normal;font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:999px;background:rgba(128,128,128,.18);color:var(--ink-dim)}
+.mplan{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(128,128,128,.2)}
+.mplan.xozen{background:var(--accent);color:#fff}
+.mplan.gratis{background:rgba(47,184,106,.24)}
+.mplan.basic{background:rgba(53,214,255,.24)}
+.mplan.best{background:rgba(143,123,255,.3)}
+.mcheck{flex:none;width:20px;text-align:center;font-size:15px;color:var(--accent)}
+.mempty{grid-column:1/-1;padding:26px 6px;text-align:center;font-size:13.5px;color:var(--ink-faint)}
+.mfoot{padding:10px 18px 14px;border-top:1px solid var(--menu-line);font-size:12.5px;line-height:1.5;color:var(--ink-faint)}
+html[data-theme^="neu"] .msearch input,html[data-theme^="neu"] .mchip2,html[data-theme^="neu"] .mcard{background:var(--bg);border:0;box-shadow:var(--raise-xs)}
+html[data-theme^="neu"] .mchip2.on{background:var(--acc-grad);color:#fff}
+html[data-theme^="neu"] .mtags i,html[data-theme^="neu"] .mplan{box-shadow:var(--inset-xs)}
+html[data-theme^="neu"] .mplan.xozen{box-shadow:none}
+@media (max-width:640px){
+  .mpick.show{align-items:flex-end;padding:0}
+  .mpanel{width:100%;max-height:88dvh;border-radius:22px 22px 0 0;transform:translateY(70px)}
+  .mlist{grid-template-columns:1fr;padding:12px}
+  .mhead{padding:14px 14px 10px}
+}
+
+/* ===== tutorial pengguna baru ===== */
+.tour{position:fixed;inset:0;z-index:130;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(4,6,16,.55);opacity:0;transition:opacity .3s}
+.tour.show{display:flex;opacity:1}
+.tcard{position:relative;width:min(440px,100%);padding:22px 22px 16px;border-radius:22px;background:var(--bg);border:1px solid var(--glass-edge);box-shadow:0 26px 66px -22px rgba(0,0,0,.65);transform:translateY(22px) scale(.97);opacity:0;animation:tIn .34s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes tIn{to{transform:none;opacity:1}}
+html[data-theme^="neu"] .tcard{box-shadow:var(--raise)}
+.tic{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:23px;background:rgba(128,128,128,.16);margin-bottom:13px}
+.tcard h3{font-size:18px;letter-spacing:-.01em;margin:0 0 8px}
+.tcard p{margin:0;font-size:13.8px;line-height:1.62;color:var(--ink-dim);min-height:70px}
+.tbar{display:flex;align-items:center;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid var(--menu-line);flex-wrap:wrap}
+.tdots{display:flex;gap:6px}
+.tdots i{width:7px;height:7px;border-radius:50%;background:rgba(128,128,128,.42);transition:width .2s,background .2s}
+.tdots i.on{width:19px;border-radius:99px;background:var(--accent)}
+.tbtns{display:flex;gap:7px;flex-wrap:wrap;margin-left:auto}
+.tbtns .btn{font-size:13px;padding:8px 13px}
+.tour-hi{position:relative;z-index:131;border-radius:14px;animation:thi 1.4s ease-in-out infinite alternate}
+@keyframes thi{from{box-shadow:0 0 0 2px var(--accent),0 0 12px -2px var(--accent)}to{box-shadow:0 0 0 3px var(--accent-2),0 0 30px 2px var(--accent-2)}}
+.tour.finish{pointer-events:none}
+.tour.finish .tic,.tour.finish h3,.tour.finish p,.tour.finish .tbar,.tour.finish .pclose{opacity:0;transition:opacity .16s}
+.tour.finish .tcard{background:#fff!important;border-color:#fff!important;box-shadow:none!important;animation:tSwell .62s cubic-bezier(.55,0,.72,.2) forwards}
+@keyframes tSwell{from{transform:none;opacity:1}55%{opacity:1}to{transform:scale(26);opacity:1}}
+.tour.fade{opacity:0;transition:opacity .5s}
+@media (prefers-reduced-motion:reduce){
+  .mpanel,.tcard{animation:none;transform:none;opacity:1}
+  .tour-hi{animation:none;box-shadow:0 0 0 2px var(--accent)}
+  .tour.finish .tcard{animation:none;transform:scale(26)}
+}
+@media (max-width:560px){.pgrid{grid-template-columns:1fr}.phead{flex-direction:column;align-items:flex-start;gap:10px;margin-right:26px}}
+/* ===== wizard buat akun (admin) ===== */
+.adm-new-adm{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.adm-new-adm>span{font-size:12.5px;line-height:1.5;color:var(--ink-faint)}
+.adm-note{margin:8px 0;padding:9px 12px;border-radius:12px;font-size:12.5px;line-height:1.55;background:rgba(128,128,128,.12);color:var(--ink-dim)}
+.adm-note.bad{color:var(--danger);box-shadow:inset 0 0 0 1px rgba(255,122,138,.42)}
+.wplan{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(128,128,128,.18);letter-spacing:.02em}
+.wplan.best{background:var(--accent);color:#fff}
+.wplan.basic{background:rgba(47,184,106,.22)}
+.psel{font:inherit;font-size:12.5px;padding:6px 8px;border-radius:9px;border:1px solid var(--glass-edge);background:var(--glass);color:var(--ink);cursor:pointer}
+#wizDlg{width:min(780px,calc(100vw - 20px))}
+.wiz{position:relative;padding:20px 20px 16px;max-height:calc(100dvh - 28px);overflow-y:auto}
+.wiz-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.wiz-top h2{font-size:19px;letter-spacing:-.01em}
+.wiz-steps{display:flex;gap:6px;list-style:none;margin:0 0 16px;padding:0;flex-wrap:wrap}
+.wiz-steps li{flex:1 1 110px;padding:7px 9px;border-radius:10px;font-size:12px;font-weight:600;text-align:center;color:var(--ink-faint);background:rgba(128,128,128,.12)}
+.wiz-steps li.done{color:var(--ink-dim);background:rgba(128,128,128,.2)}
+.wiz-steps li.on{background:var(--accent);color:#fff}
+.wiz-pane[hidden]{display:none}
+.wiz-hint{margin:10px 0 0;font-size:12.5px;line-height:1.6;color:var(--ink-faint)}
+.wiz-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 12px}
+.wiz-row{display:flex;gap:8px;align-items:center}
+.wiz-row input,.wiz-row select{flex:1;min-width:0}
+.wiz-row .mini{flex:none}
+.wiz-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.wiz-chips button{font:inherit;font-size:12.5px;padding:6px 11px;border-radius:999px;border:1px solid var(--glass-edge);background:var(--glass);color:var(--ink);cursor:pointer}
+.wiz-chips button:hover{background:rgba(128,128,128,.22)}
+.wiz-chips button.on{background:var(--accent);color:#fff;border-color:transparent}
+.wiz-sum{display:flex;flex-direction:column;font-size:13.5px}
+.wiz-sum .r{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--menu-line)}
+.wiz-sum .r>span{color:var(--ink-dim)}
+.wiz-sum .r>b{font-weight:600;text-align:right}
+.wiz-backup{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:12.5px;line-height:1.55;color:var(--danger);background:rgba(255,122,138,.12);box-shadow:inset 0 0 0 1px rgba(255,122,138,.35)}
+.wiz-done{margin-bottom:14px;padding:13px 14px;border-radius:14px;font-size:13.5px;line-height:1.6;background:rgba(47,184,106,.14);box-shadow:inset 0 0 0 1px rgba(47,184,106,.42)}
+.wiz-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#wizMsg{min-height:180px;font-family:var(--mono);font-size:12.5px;line-height:1.55}
+.wiz-foot{display:flex;justify-content:space-between;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid var(--menu-line)}
+.wiz-foot .btn{min-width:112px}
+.wiz-go{margin-top:auto}
+html[data-theme^="neu"] .wiz-steps li,html[data-theme^="neu"] .wiz-chips button,html[data-theme^="neu"] .adm-note,html[data-theme^="neu"] .psel{background:var(--bg);border:0;box-shadow:var(--raise-xs)}
+html[data-theme^="neu"] .wiz-steps li.on,html[data-theme^="neu"] .wiz-chips button.on{background:var(--acc-grad);color:#fff;box-shadow:var(--raise-xs)}
+html[data-theme^="neu"] .wiz-steps li.done{box-shadow:var(--inset-xs)}
+
+
+/* ===== merek pada animasi penutup tur ===== */
+.tbrand{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:13px;opacity:0;transform:scale(.94);pointer-events:none}
+.tbrand img{width:64px;height:64px;border-radius:18px;box-shadow:0 12px 32px -12px rgba(30,60,160,.55)}
+.tbrand b{font-size:21px;letter-spacing:-.01em;color:#283044}
+.tour.finish .tcard{background:linear-gradient(158deg,#fff 0%,#f4f6ff 52%,#e9f5ff 100%)!important}
+.tour.finish .tbrand{animation:tBrand .46s cubic-bezier(.2,.8,.2,1) .38s forwards}
+@keyframes tBrand{to{opacity:1;transform:none}}
+
+/* ===== favorit model ===== */
+.mstar{flex:none;width:30px;height:30px;border:0;border-radius:9px;background:rgba(128,128,128,.16);color:var(--ink-dim);cursor:pointer;font:inherit;font-size:15px;line-height:1;display:grid;place-items:center}
+.mstar:hover{background:rgba(128,128,128,.3);color:var(--ink)}
+.mstar:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+.mstar.on{background:var(--accent);color:#fff}
+.mfavi{font-style:normal;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:999px;background:rgba(128,128,128,.2);color:var(--ink-dim)}
+html[data-theme^="neu"] .mstar{background:var(--bg);box-shadow:var(--raise-xs)}
+html[data-theme^="neu"] .mstar.on{background:var(--acc-grad);box-shadow:var(--raise-xs)}
+@media (prefers-reduced-motion:reduce){.tour.finish .tbrand{animation:none;opacity:1;transform:none}}
+
+/* ===== tipografi merek: Syne (Medium) untuk judul & nama ===== */
+.brand b,.title,.empty h1,.bubble h1,.bubble h2,.bubble h3,.bubble h4,.login h2,dialog h2,.wiz-top h2,.tcard h3,.mtop b,.phead h2,.psec-h b,.pname,.mcard .mn,.pprice,#tourTitle,#fTitle,#priceTitle{font-family:var(--font-display);letter-spacing:-.015em}
+.pprice,.q-num,.qval{font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
 <div class="login" id="login"><form class="glass" id="loginForm" autocomplete="off">
   <div class="lspin" aria-hidden="true"><i></i><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
-  <h2>Masuk ke Arcz AI</h2><p>Login untuk melanjutkan.</p>
+  <h2>Masuk ke Xozen AI</h2><p>Login untuk melanjutkan.</p>
   <div class="field"><label for="lUser">Username</label><input type="text" id="lUser" autocomplete="username" autocapitalize="off"></div>
   <div class="field"><label for="lPass">Password</label><input type="password" id="lPass" autocomplete="current-password"></div>
   <div class="err" id="lErr" role="alert"></div>
   <button class="btn primary" type="submit">Masuk</button>
+  <div class="lalt">Belum punya akun?<button type="button" id="openPrice">Lihat paket &amp; harga</button></div>
 </form></div>
+<div class="login" id="pricePage" aria-hidden="true"><div class="dlg glass price" role="dialog" aria-modal="true" aria-labelledby="priceTitle">
+  <button type="button" class="pclose" id="priceClose" aria-label="Tutup halaman harga">&times;</button>
+  <div class="phead">
+    <img class="plogo" src="https://i.ibb.co.com/8gqQS0t0/xozen.png" alt="Logo Xozen AI" width="52" height="52">
+    <div>
+      <h2 id="priceTitle">Paket &amp; Harga Xozen AI</h2>
+      <p>Sekali bayar, kuota langsung aktif. Satu kuota = satu kali pemakaian model. Ingin mencoba dulu? Model <b>MinimumLite</b> gratis dan tidak memakai kuota.</p>
+      <p class="myplan" id="myPlan" hidden></p>
+    </div>
+  </div>
+
+  <div class="psec">
+    <div class="psec-h"><b>Basic</b><span class="pbin">Hemat</span></div>
+    <p>Pas untuk pemakaian harian. Terbuka <b id="basicCount">9</b> model favorit yang paling sering dipakai.</p>
+    <div class="pgrid" id="planBasic"></div>
+    <div class="pchips" id="planBasicModels"></div>
+  </div>
+
+  <div class="psec">
+    <div class="psec-h"><b>Best Value</b><span class="pbin">Paling untung</span></div>
+    <p>Kuota lebih lega plus akses <b id="bestCount">31</b> model, termasuk seri deepseek-v4, glm-5.3-flashx, dan gpt-5.6.</p>
+    <div class="pgrid" id="planBest"></div>
+    <details class="pmodels"><summary id="bestSummary">Lihat 31 model yang bisa dipakai</summary><div class="pchips" id="planBestModels"></div></details>
+  </div>
+
+  <div class="psec">
+    <div class="psec-h"><b>Ultra</b><span class="pbin">Custom</span></div>
+    <p>Butuh kuota besar, akses penuh semua model, atau paket khusus untuk tim? Semuanya bisa diatur sesuai kebutuhan Anda.</p>
+    <div class="pgrid">
+      <div class="pcard wide">
+        <div class="pname">Paket Ultra (custom)</div>
+        <div class="pmeta">Kuota, model, dan masa aktif menyesuaikan kebutuhan</div>
+        <div class="pprice">Hubungi admin<small>via WhatsApp</small></div>
+        <a class="btn primary pbuy" href="https://wa.me/6289523042979?text=Halo%20admin%2C%20saya%20mau%20tanya%20paket%20Ultra%20Xozen%20AI.%20Boleh%20dibantu%20info%20kuota%2C%20model%2C%20dan%20harganya%3F" target="_blank" rel="noopener noreferrer">Chat admin di WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="pnote">Harga dalam Rupiah. Pembayaran dan aktivasi akun diproses manual oleh admin: setelah transfer, kirim bukti pembayaran ke WhatsApp admin agar akun Anda segera dibuatkan.</div>
+  <div class="prow"><button type="button" class="btn" id="priceBack">Tutup</button></div>
+</div></div>
 <div class="login" id="faceBox"><div class="glass face-card" id="faceCard">
   <div class="lspin" aria-hidden="true"><i></i><svg class="ck" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><svg class="xx" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
   <h2 id="fTitle">Verifikasi wajah</h2><p id="fSub"></p>
@@ -641,6 +888,34 @@ html[data-theme="glasswhite"] .tbtn{background:rgba(20,30,60,.05)}
   <div class="fstat" id="fStat" role="status" aria-live="polite"></div>
   <div class="fbtns"><button class="btn primary" type="button" id="fRetry" hidden>Coba lagi</button><button class="btn" type="button" id="fCancel">Batal</button></div>
 </div></div>
+
+<div class="mpick" id="modelPick" aria-hidden="true"><div class="mpanel" role="dialog" aria-modal="true" aria-labelledby="mpTitle">
+  <div class="mhead">
+    <div class="mtop">
+      <div><b id="mpTitle">Pilih model AI</b><div class="msub" id="mpSub"></div></div>
+      <button type="button" class="pclose" id="mpClose" aria-label="Tutup daftar model">&times;</button>
+    </div>
+    <div class="msearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.2-3.2"/></svg><input type="text" id="mpSearch" placeholder="Cari nama model…" aria-label="Cari nama model" spellcheck="false" autocomplete="off"></div>
+    <div class="mfilters" id="mpFilters" role="group" aria-label="Filter model"></div>
+  </div>
+  <div class="mlist" id="mpList" role="listbox" aria-label="Daftar model"></div>
+  <div class="mfoot" id="mpFoot"></div>
+</div></div>
+
+<div class="tour" id="tour" aria-hidden="true"><div class="tcard" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+  <button type="button" class="pclose" id="tourX" aria-label="Keluar dari tur">&times;</button>
+  <div class="tic" id="tourIc" aria-hidden="true">&#10024;</div>
+  <h3 id="tourTitle">Selamat datang</h3>
+  <p id="tourText"></p>
+  <div class="tbar">
+    <span class="tdots" id="tourDots" aria-hidden="true"></span>
+    <div class="tbtns">
+      <button type="button" class="btn" id="tourSkip">Lewati</button>
+      <button type="button" class="btn" id="tourBack">Kembali</button>
+      <button type="button" class="btn primary" id="tourNext">Lanjut</button>
+    </div>
+  </div>
+</div><div class="tbrand" id="tourBrand" aria-hidden="true"><img src="https://i.ibb.co.com/8gqQS0t0/xozen.png" alt="" width="64" height="64"><b>Xozen AI</b></div></div>
 <canvas id="pfx" aria-hidden="true"></canvas>
 <div class="scene" aria-hidden="true"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="grain"></div></div>
 
@@ -648,7 +923,7 @@ html[data-theme="glasswhite"] .tbtn{background:rgba(20,30,60,.05)}
   <aside class="side glass" id="side">
     <div class="brand">
       <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 16l.7 1.8L21.5 18.5l-1.8.7L19 21l-.7-1.8-1.8-.7 1.8-.7z"/></svg></div>
-      <b>ArcZ AI</b>
+      <b>Xozen AI</b>
     </div>
     <button class="btn primary new" id="newChat"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Obrolan baru</button>
     <div class="hist" id="hist" role="list"></div>
@@ -672,7 +947,7 @@ html[data-theme="glasswhite"] .tbtn{background:rgba(20,30,60,.05)}
     <header class="top">
       <button class="icon menu-btn" id="menuBtn" aria-label="Buka daftar obrolan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
       <div class="title" id="chatTitle">Obrolan baru</div>
-      <div class="dd" id="dd"><button type="button" class="dd-btn" id="ddBtn" aria-haspopup="listbox" aria-expanded="false" aria-label="Pilih model"><span id="ddLabel">ArcZ Ai</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><div class="dd-menu" id="ddMenu" role="listbox" hidden></div></div>
+            <div class="dd" id="dd"><button type="button" class="dd-btn" id="ddBtn" aria-haspopup="dialog" aria-expanded="false" aria-label="Pilih model AI"><span id="ddLabel">Xozen AI</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button></div>
       <select id="model" hidden></select>
     </header>
     <section class="feed" id="feed"><div class="col" id="col"></div></section>
@@ -695,19 +970,60 @@ html[data-theme="glasswhite"] .tbtn{background:rgba(20,30,60,.05)}
 
 <dialog id="admDlg"><div class="dlg">
   <h2>Dashboard Admin</h2>
-  <form class="adm-new" id="admForm" autocomplete="off">
-    <div class="field"><label>Username</label><input type="text" id="aU" autocapitalize="off"></div>
-    <div class="field"><label>Password</label><input type="text" id="aP"></div>
-    <div class="field"><label>Masa aktif (s m h d y)</label><input type="text" id="aT" value="30d" placeholder="30d, 12h, 1y"></div>
-    <div class="field"><label>Limit ArcZ Ai (x)</label><input type="text" id="aA" inputmode="numeric" value="10"></div>
-    <div class="field"><label>Limit model lain (x)</label><input type="text" id="aO" inputmode="numeric" value="5"></div>
-    <div class="field"><label>Limit pin (obrolan)</label><input type="text" id="aPin" inputmode="numeric" value="1"></div>
-    <button class="btn primary" type="submit" style="margin-bottom:0;align-self:end">Buat akun</button>
-  </form>
+  <div class="adm-note" id="planNote"></div>
+  <div class="adm-new-adm">
+    <button class="btn primary" type="button" id="wizOpen">+ Buat akun baru (wizard paket)</button>
+    <button class="btn" type="button" id="tourAdminDash">Tur admin</button>
+    <span>Template Basic/Best sudah tersedia: kuota, harga, dan akses model terisi otomatis.</span>
+  </div></form>
   <div class="adm-sec"><div class="adm-h"><b>Model AI</b><div class="adm-ctl"><button class="mini" type="button" id="mFetch">Ambil dari API</button><button class="mini del" type="button" id="mClear">Hapus semua</button></div></div><div class="mlist" id="mList"></div></div>
   <div class="adm-err" id="admErr" role="alert"></div>
   <div class="adm-list" id="admList"></div>
-  <div style="margin-top:14px;text-align:right"><button class="btn" type="button" id="admClose">Tutup</button></div>
+    <div style="margin-top:14px;text-align:right"><button class="btn danger" type="button" id="wizOpen2">Buat akun (wizard)</button> <button class="btn" type="button" id="admClose">Tutup</button></div>
+</div></dialog>
+
+<dialog id="wizDlg"><div class="dlg glass wiz">
+  <div class="wiz-top"><h2>Buat akun baru</h2><button type="button" class="pclose" id="wizX" aria-label="Tutup wizard">&times;</button></div>
+  <ol class="wiz-steps" id="wizSteps">
+    <li data-s="1">1. Paket</li><li data-s="2">2. Data akun</li><li data-s="3">3. Ringkasan</li><li data-s="4">4. Selesai</li>
+  </ol>
+
+  <section class="wiz-pane" data-pane="1">
+    <p class="wiz-hint">Pilih salah satu template harga di bawah — kuota dan harga langsung terisi.</p>
+    <div class="pgrid" id="wizPlans"></div>
+    <p class="wiz-hint" id="wizPlanInfo"></p>
+  </section>
+
+  <section class="wiz-pane" data-pane="2" hidden>
+    <div class="wiz-grid">
+      <div class="field"><label for="wU">Username</label><input type="text" id="wU" autocapitalize="off" spellcheck="false" placeholder="mis. budi"></div>
+      <div class="field"><label for="wP">Password</label><div class="wiz-row"><input type="text" id="wP" spellcheck="false" placeholder="minimal 6 karakter"><button type="button" class="mini" id="wGen">Acak</button></div></div>
+      <div class="field"><label for="wT">Masa aktif (s m h d y)</label><input type="text" id="wT" value="30d" placeholder="30d, 12h, 1y"></div>
+      <div class="field"><label for="wPin">Limit pin (obrolan)</label><input type="text" id="wPin" value="1" inputmode="numeric"></div>
+    </div>
+    <div class="wiz-chips" id="wDur"></div>
+    <p class="wiz-hint" id="wizAccInfo"></p>
+  </section>
+
+  <section class="wiz-pane" data-pane="3" hidden>
+    <div class="wiz-sum" id="wizSum"></div>
+    <div class="wiz-backup" id="wizWarn" hidden></div>
+  </section>
+
+  <section class="wiz-pane" data-pane="4" hidden>
+    <div class="wiz-done" id="wizDone"></div>
+    <div class="field"><label for="wizMsg">Template pesan untuk pembeli (siap kirim)</label><textarea id="wizMsg" spellcheck="false"></textarea></div>
+    <div class="wiz-actions">
+      <button type="button" class="btn" id="wizCopy">Salin pesan</button>
+      <a class="btn primary" id="wizWa" target="_blank" rel="noopener noreferrer">Kirim via WhatsApp</a>
+      <button type="button" class="btn" id="wizAgain">Buat akun lagi</button>
+    </div>
+  </section>
+
+  <div class="wiz-foot">
+    <button type="button" class="btn" id="wizBack">Kembali</button>
+    <button type="button" class="btn primary" id="wizNext">Lanjut</button>
+  </div>
 </div></dialog>
 <dialog id="runDlg"><div class="run-panel" id="runPanel">
   <div class="run-bar"><b>Hasil Run</b>
@@ -733,6 +1049,10 @@ html[data-theme="glasswhite"] .tbtn{background:rgba(20,30,60,.05)}
     </div>
     <div class="field"><label for="sSys">Instruksi sistem</label><textarea id="sSys" placeholder="Contoh: Jawab singkat dalam bahasa Indonesia."></textarea></div>
     <div class="field"><label for="sTemp">Suhu: <span id="tempVal">0.7</span></label><input type="range" id="sTemp" min="0" max="1.5" step="0.1"></div>
+    <div class="field"><label>Paket &amp; harga</label><button type="button" class="btn" id="openPriceInApp">Lihat paket &amp; harga</button></div>
+    <div class="field"><label>Panduan pemakaian</label>
+      <div class="wiz-row"><button type="button" class="btn" id="tourBtn">Lihat tur pengguna</button><button type="button" class="btn" id="tourAdminBtn" hidden>Tur admin</button></div>
+    </div>
     <div class="field"><label>Data obrolan</label><button type="button" class="btn danger" id="clearAll">Hapus semua obrolan</button></div>
     <div class="quota" id="quotaOut"></div>
     <div class="row">
@@ -753,6 +1073,7 @@ var DEFAULTS={
   system:"",
   temp:0.7,
   model:"glm-5.3",
+  model:"auto",           /* bawaan: Xozen AI */
   theme:"neulight"
 };
 /* Isi dengan data proyek Supabase Anda (Project Settings > API) */
@@ -820,6 +1141,7 @@ function applyTheme(t){t=THEMES.indexOf(t)>-1?t:"neulight";document.documentElem
 function markTheme(t){Array.prototype.forEach.call(document.querySelectorAll("#themePick .tbtn"),function(b){b.setAttribute("aria-checked",b.getAttribute("data-t")===t?"true":"false")})}
 if(settings.themeV!==2){settings.theme="neulight";settings.themeV=2}   /* tema bawaan: Neu Terang */
 applyTheme(settings.theme);   /* base URL & API key hanya dari Supabase */
+if(settings.modelV!==1){settings.model="auto";settings.modelV=1}   /* model bawaan: Xozen AI */
 var chats=[];            /* dimuat per akun setelah login (boot) */
 var activeId=null;
 var busy=false,ctrl=null;
@@ -873,10 +1195,58 @@ function md(src){
 }
 
 /* ---------- render ---------- */
+/* ---------- paket member: daftar model & template harga ---------- */
+var PLAN_MODELS={
+  basic:["kimi-k2.5","kimi-k2.6","kimi-k2.7-code","mimo-v2.5-pro","hy3","hy4","glm-5.3","glm-5.2","deepseek-v4-pro"],
+  best:["deepseek-v4-flash","deepseek-v4-flash-0731","deepseek-v4-mod","deepseek-v4-pro","deepseek-v4-pro-0813","deepseek-v4.1-mod","glm-5.2","glm-5.2-mod","glm-5.3","glm-5.3-mod","hy3","hy4","kimi-k2.5","kimi-k2.6","kimi-k2.7-code","kimi-k2.7-code-highspeed","mimo-v2.5-pro","deepseek-v4-flash-vision-exp","deepseek-v4.1-flash","glm-5.3-flash","glm-5.3-flash-mod","glm-5.3-flashx","glm-5.3-flashx-mod","gpt-5.6","gpt-5.6-luna","gpt-5.6-luna-b","kimi-k2.8","kimi-k3-mod","mimo-v2.6-flash","mimo-v2.6-pro","step-5-preview"],
+  admin:[]
+};
+PLAN_MODELS.admin=PLAN_MODELS.best.slice();
+var PLAN_TEMPLATES=[
+  {plan:"basic",x:5,y:2,price:"Rp 3.000"},
+  {plan:"basic",x:12,y:5,price:"Rp 5.000",tag:"Terlaris",best:true},
+  {plan:"basic",x:20,y:8,price:"Rp 7.000"},
+  {plan:"best",x:10,y:3,price:"Rp 5.000"},
+  {plan:"best",x:15,y:5,price:"Rp 7.000",tag:"Paling pas",best:true},
+  {plan:"best",x:20,y:8,price:"Rp 10.000"}
+];
+var WA_ADMIN="6289523042979";
+var memberPlan=null,planFromServer=false,planApiOk=true;
+function planLabel(p){return p==="best"?"Best Value":p==="basic"?"Basic":"belum diset"}
+function planCount(p){return (PLAN_MODELS[p]||[]).length}
+function planName(p){return p==="admin"?"Admin":planLabel(p)+" ("+planCount(p)+" model)"}
+function planFromLimits(la,lo){
+  var hit=null;
+  PLAN_TEMPLATES.forEach(function(t){if(t.x===+la&&t.y===+lo&&(!hit||t.plan==="best"))hit=t.plan});
+  return hit||"basic";
+}
+function allowedModels(){
+  if(!session||session.admin||!memberPlan)return MODELS.slice();
+  var white=PLAN_MODELS[memberPlan]||[];
+  return MODELS.filter(function(m){return m==="auto"||m==="minimumlite"||white.indexOf(m)>-1});
+}
+function modelAllowed(m){
+  if(!session||session.admin||!memberPlan)return true;
+  if(m==="auto"||m==="minimumlite")return true;
+  return (PLAN_MODELS[memberPlan]||[]).indexOf(m)>-1;
+}
+async function resolvePlan(){
+  if(!session){memberPlan=null;planFromServer=false;return}
+  if(session.admin){memberPlan="admin";planFromServer=false;planApiOk=true;return}
+  var got=null;
+  try{
+    var r=await rpc("app_plan_get",{u:session.u,p:session.p});
+    if(r&&r.plan)got=(r.plan==="best"?"best":"basic");
+    planApiOk=true;
+  }catch(e){if(handleAuthErr(e))return;planApiOk=false}
+  planFromServer=!!got;memberPlan=got||planFromLimits(session.la,session.lo);
+  renderModels();
+}
 function renderModels(){
   modelSel.innerHTML="";
-  MODELS.forEach(function(m){var o=document.createElement("option");o.value=m;o.textContent=mlabel(m);modelSel.appendChild(o)});
-  var c=active(),want=(c&&c.model)||settings.model;if(MODELS.indexOf(want)<0)want="auto";modelSel.value=want;syncDD();
+  var list=allowedModels();
+  list.forEach(function(m){var o=document.createElement("option");o.value=m;o.textContent=mlabel(m);modelSel.appendChild(o)});
+  var c=active(),want=(c&&c.model)||settings.model;if(list.indexOf(want)<0)want="auto";modelSel.value=want;syncDD();
 }
 function canPin(){return !!session&&(session.admin||pinLimit>0)}
 function renderHist(){
@@ -991,7 +1361,7 @@ async function streamLite(c){
       +"&system="+encodeURIComponent((settings.system&&settings.system.trim())||"You are a helpful assistant.")
       +"&temperature="+encodeURIComponent(settings.temp);
     if(qs.length>7000){
-      asst.content="Pesan atau file terlalu panjang untuk MinimumLite (batas sekitar 7.000 karakter). Pakai ArcZ Ai untuk teks panjang.";
+      asst.content="Pesan atau file terlalu panjang untuk MinimumLite (batas sekitar 7.000 karakter). Pakai Xozen AI untuk teks panjang.";
       asst.error=true;return;
     }
     var r=await fetch(LITE_URL+"?"+qs,{signal:ctrl.signal});
@@ -1083,11 +1453,13 @@ function send(text){
   if(session&&!session.admin){
     if(session.exp&&Date.now()>=session.exp){acctQuota();return}
     var mm=modelSel.value||settings.model;
-    if(mm!=="minimumlite"&&remOf(mm)<=0){alert("Jatah pakai "+(mm==="auto"?"ArcZ Ai":"model lain")+" Anda sudah habis. Hubungi admin.");return}
+    if(!modelAllowed(mm)){alert("Model ini tidak termasuk paket "+planLabel(memberPlan)+" Anda. Pilih model lain atau upgrade paket lewat menu Lihat paket & harga.");return}
+    if(mm!=="minimumlite"&&remOf(mm)<=0){alert("Jatah pakai "+(mm==="auto"?"Xozen AI":"model lain")+" Anda sudah habis. Hubungi admin.");return}
   }
   var c=active();
   if(!c){c={id:uid(),title:"Obrolan baru",model:modelSel.value||settings.model,messages:[]};chats.unshift(c);activeId=c.id}
   c.model=modelSel.value||c.model||settings.model;
+  mfPush(c.model);
   var tl=text||(attach[0]&&attach[0].name)||"Obrolan";if(!c.messages.length)c.title=tl.length>42?tl.slice(0,42)+"…":tl;
   var full=text;
   attach.forEach(function(f){
@@ -1205,6 +1577,7 @@ function openSettings(){
   $("sTemp").value=settings.temp;$("tempVal").textContent=settings.temp;$("quotaOut").style.display="none";
   pendingTheme=THEMES.indexOf(settings.theme)>-1?settings.theme:"neulight";markTheme(pendingTheme);
   var adm=!!(session&&session.admin);$("cfgBox").style.display=adm?"":"none";$("checkQuota").style.display=adm?"":"none";
+  $("tourAdminBtn").hidden=!adm;
   closeSide();dlg.showModal();
 }
 $("sTemp").oninput=function(){$("tempVal").textContent=this.value};
@@ -1317,20 +1690,22 @@ function fmtLeft(ms){
 }
 function showAcct(){
   var m=modelSel.value||settings.model;
-  $("qTitle").textContent="Sisa pemakaian \u00b7 "+(m==="auto"?"ArcZ Ai":m==="minimumlite"?"MinimumLite":"Model lain");
+  $("qTitle").textContent="Sisa pemakaian \u00b7 "+(m==="auto"?"Xozen AI":m==="minimumlite"?"MinimumLite":"Model lain");
   qNum.innerHTML="";qCard.classList.remove("low","crit","unk");
   var sm=document.createElement("small");
   if(m==="minimumlite"){qNum.appendChild(document.createTextNode("\u221e"));sm.textContent="gratis"}
   else{var rem=Math.max(0,remOf(m));qNum.appendChild(document.createTextNode(rem));sm.textContent="x pakai";if(rem<=0)qCard.classList.add("crit")}
   qNum.appendChild(sm);
-  qMeta.innerHTML="";if(session.exp)qMeta.appendChild(daysSpan(session.exp));
+  qMeta.innerHTML="";
+  if(session&&!session.admin&&memberPlan){var ps=document.createElement("span");ps.textContent="Paket "+planName(memberPlan);qMeta.appendChild(ps)}
+  if(session.exp)qMeta.appendChild(daysSpan(session.exp));
 }
 async function acctQuota(){
   qRefresh.classList.add("spin");
   try{
     var a=await rpc("app_login",{u:session.u,p:session.p});
     if(a&&a.expired){logout("Masa aktif akun habis. Akun sudah dihapus.");return}
-    setSession(a);
+    setSession(a);await resolvePlan();
   }catch(e){if(/login gagal/i.test(e.message)){logout("Akun tidak ditemukan atau sudah kedaluwarsa.");return}}
   finally{qRefresh.classList.remove("spin")}
   showAcct();
@@ -1387,6 +1762,23 @@ $("loginForm").onsubmit=async function(e){
   resetBox(f);
   loginBusy=false;
 };
+/* ---------- halaman paket & harga ---------- */
+var pricePage=$("pricePage");
+function openPrice(){
+  renderPricing();
+  pricePage.classList.add("show");pricePage.setAttribute("aria-hidden","false");
+  var c=$("priceClose");if(c)setTimeout(function(){c.focus()},30);
+}
+function closePrice(){
+  pricePage.classList.remove("show");pricePage.setAttribute("aria-hidden","true");
+  var t=$("openPrice");if(t&&!session)t.focus();
+}
+$("openPrice").onclick=openPrice;
+$("openPriceInApp").onclick=function(){if(dlg.open)dlg.close();openPrice()};
+$("priceClose").onclick=closePrice;
+$("priceBack").onclick=closePrice;
+pricePage.addEventListener("click",function(e){if(e.target===pricePage)closePrice()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&pricePage.classList.contains("show"))closePrice()});
 $("logout").onclick=logout;
 gate();
 
@@ -1398,20 +1790,61 @@ async function admT(fn,args){admErr();try{return await tcall(fn,args)}catch(e){i
 var UNIT={s:1,m:60,h:3600,d:86400,y:31536000};
 function parseDur(t){t=(t||"").trim().toLowerCase().replace(/\s+/g,"");if(!/^(\d+[smhdy])+$/.test(t))return null;var n=0;t.replace(/(\d+)([smhdy])/g,function(_,x,u){n+=x*UNIT[u]});return n>0?n:null}
 var DURERR="Masa aktif tidak valid. Contoh: 30d, 12h, 1y, 1d12h.";
+/* ---------- paket member di dashboard admin ---------- */
+async function admPlanMap(){
+  try{
+    var list=await rpc("app_plan_list",{u:session.u,p:session.p});
+    var m={};(list||[]).forEach(function(x){m[x.username]=x.plan});
+    planApiOk=true;return m;
+  }catch(e){if(handleAuthErr(e))return{};planApiOk=false;return{}}
+}
+function planNote(){
+  var n=$("planNote");if(!n)return;
+  if(planApiOk){
+    n.className="adm-note ok";
+    n.textContent="Paket per akun aktif: akun Basic hanya melihat "+planCount("basic")+" model, akun Best melihat "+planCount("best")+" model (diatur otomatis dari wizard).";
+  }else{
+    n.className="adm-note bad";
+    n.textContent="Penyimpanan paket per akun belum aktif di server. Jalankan sekali file supabase-member-plan.sql di Supabase SQL Editor agar pembatasan model tersimpan per akun. Sementara ini aplikasi menebak paket dari kuota akun (template Basic 20x/8x dianggap Best).";
+  }
+}
+async function setPlanFor(nu,plan,reload){
+  planNote();
+  try{
+    var r=await rpc("app_plan_set",{u:session.u,p:session.p,nu:nu,plan:plan});
+    planApiOk=true;planNote();
+    if(reload)admRefresh();
+    return r;
+  }catch(e){
+    if(handleAuthErr(e))return;
+    planApiOk=false;planNote();
+    admErr("Gagal menyimpan paket: "+e.message+(/404|does not exist|Could not find/i.test(e.message)?" — jalankan supabase-member-plan.sql di Supabase.":""));
+    return undefined;
+  }
+}
 async function admRefresh(){
   var list=await admCall("app_admin_list");if(!list)return;
   var ex=await admT("app_admin_extra"),em={};(ex||[]).forEach(function(x){em[x.username]=x});
+  var pm=await admPlanMap();
+  planNote();
   var box=$("admList");box.innerHTML="";
   list.forEach(function(a){
     var e=em[a.username]||{},hasFace=!!e.has_face,plim=(e.pin_limit===null||e.pin_limit===undefined)?1:e.pin_limit;
+    var plan=a.is_admin?null:(pm[a.username]||null);
     var row=document.createElement("div");row.className="adm-row";
     var exp=a.expires_at?Date.parse(a.expires_at):null;
-    row.innerHTML='<div><b>'+esc(a.username)+'</b>'+(a.is_admin?' (admin)':'')+'<small>ArcZ Ai '+a.used_auto+'/'+a.limit_auto+' \u00b7 Lain '+a.used_other+'/'+a.limit_other+'</small><small>'+(exp?'Aktif '+fmtLeft(exp)+' lagi (sampai '+esc(new Date(exp).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"}))+')':'Tanpa batas waktu')+'</small><small>Wajah: '+(hasFace?'terdaftar':'belum terdaftar')+(a.is_admin?'':' \u00b7 Pin '+(e.pins||0)+'/'+plim)+'</small></div>';
+    var badge=a.is_admin?'<span class="wplan">Admin</span>':'<span class="wplan '+(plan||"")+'">'+(plan?planName(plan):"paket belum diset")+'</span>';
+    row.innerHTML='<div><b>'+esc(a.username)+'</b> '+badge+'<small>Xozen AI '+a.used_auto+'/'+a.limit_auto+' \u00b7 Lain '+a.used_other+'/'+a.limit_other+'</small><small>'+(exp?'Aktif '+fmtLeft(exp)+' lagi (sampai '+esc(new Date(exp).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"}))+')':'Tanpa batas waktu')+'</small><small>Wajah: '+(hasFace?'terdaftar':'belum terdaftar')+(a.is_admin?'':' \u00b7 Pin '+(e.pins||0)+'/'+plim)+'</small></div>';
     var ctl=document.createElement("div");ctl.className="adm-ctl";
     function inp(v,label,ph){var i=document.createElement("input");i.type="text";i.value=v;i.placeholder=ph||"";i.setAttribute("aria-label",label+" "+a.username);ctl.appendChild(i);return i}
     function btn(t,cls,fn){var b=document.createElement("button");b.type="button";b.className="mini "+(cls||"");b.textContent=t;b.onclick=fn;ctl.appendChild(b)}
     if(!a.is_admin){
-      var ia=inp(a.limit_auto,"Limit ArcZ Ai"),io=inp(a.limit_other,"Limit model lain"),ip=inp(plim,"Limit pin","pin"),it=inp("","Ubah masa aktif","ubah: 30d");it.style.width="100px";ip.style.width="56px";ip.title="Limit pin";
+      var sel=document.createElement("select");sel.className="psel";sel.setAttribute("aria-label","Paket "+a.username);
+      [["","— paket —"],["basic","Basic"],["best","Best"]].forEach(function(o){var op=document.createElement("option");op.value=o[0];op.textContent=o[1];sel.appendChild(op)});
+      sel.value=plan||"";
+      sel.onchange=function(){if(!sel.value)return;setPlanFor(a.username,sel.value,true)};
+      ctl.appendChild(sel);
+      var ia=inp(a.limit_auto,"Limit Xozen AI"),io=inp(a.limit_other,"Limit model lain"),ip=inp(plim,"Limit pin","pin"),it=inp("","Ubah masa aktif","ubah: 30d");it.style.width="100px";ip.style.width="56px";ip.title="Limit pin";
       btn("Simpan",0,async function(){
         var x=parseInt(ia.value,10),y=parseInt(io.value,10),pl=parseInt(ip.value,10),ns=null;
         if(!(x>=0)||!(y>=0)||!(pl>=0)){admErr("Limit tidak valid.");return}
@@ -1435,21 +1868,150 @@ async function admRefresh(){
     row.appendChild(ctl);box.appendChild(row);
   });
 }
-$("adminBtn").onclick=function(){closeSide();admErr();admDlg.showModal();renderMdlList();admRefresh()};
+$("adminBtn").onclick=function(){closeSide();admErr();admDlg.showModal();renderMdlList();wizReset();admRefresh()};
 $("admClose").onclick=function(){admDlg.close()};
-$("admForm").onsubmit=async function(e){
-  e.preventDefault();
-  var u=$("aU").value.trim().toLowerCase(),p=$("aP").value,ns=parseDur($("aT").value),la=parseInt($("aA").value,10),lo=parseInt($("aO").value,10),pn=parseInt($("aPin").value,10);
-  if(!u||!p){admErr("Username dan password wajib diisi.");return}
-  if(!ns){admErr(DURERR);return}
-  if(!(la>=0)||!(lo>=0)||!(pn>=0)){admErr("Limit tidak valid.");return}
-  if(await admCall("app_admin_create",{nu:u,np:p,ns:ns,la:la,lo:lo})!==undefined){
-    await admT("app_admin_setpin",{nu:u,lim:pn});
-    $("aU").value="";$("aP").value="";$("aT").value="30d";$("aA").value="10";$("aO").value="5";$("aPin").value="1";admRefresh();
-  }
-};
 
-/* ---------- kelola model (admin) ---------- */
+/* ---------- wizard buat akun ---------- */
+var wizDlg=$("wizDlg"),wizStep=1,wizPick=null,wizBusy=false,wizCreated=null;
+function wizPane(n){
+  wizStep=n;
+  Array.prototype.forEach.call(document.querySelectorAll("#wizDlg .wiz-pane"),function(p){p.hidden=(+p.getAttribute("data-pane")!==n)});
+  Array.prototype.forEach.call(document.querySelectorAll("#wizSteps li"),function(li){var k=+li.getAttribute("data-s");li.className=k===n?"on":(k<n?"done":"")});
+  $("wizBack").disabled=(n===1||n===4);
+  $("wizNext").textContent=n===1?"Lanjut":n===2?"Lihat ringkasan":n===3?"Buat akun sekarang":"Selesai";
+  if(n===3)wizSummary();
+}
+function wizReset(){
+  wizPick=null;wizCreated=null;wizBusy=false;
+  $("wU").value="";$("wP").value="";$("wT").value="30d";$("wPin").value="1";
+  $("wizWarn").hidden=true;$("wizMsg").value="";$("wizPlanInfo").textContent="";$("wizAccInfo").textContent="";
+  wizBuildPlans();wizBuildDur();wizPane(1);
+}
+function wizBuildDur(){
+  var box=$("wDur");box.innerHTML="";
+  [["7d","7 hari"],["30d","30 hari"],["90d","90 hari"],["180d","6 bulan"],["1y","1 tahun"]].forEach(function(p){
+    var b=document.createElement("button");b.type="button";b.textContent=p[1];
+    b.onclick=function(){$("wT").value=p[0];wizMarkDur()};
+    box.appendChild(b);
+  });
+  wizMarkDur();
+}
+function wizMarkDur(){
+  var v=$("wT").value.trim().toLowerCase();
+  Array.prototype.forEach.call($("wDur").children,function(b){b.className=(b.textContent.replace(/ /g,"")===(v==="30d"?"30hari":v==="7d"?"7hari":v==="90d"?"90hari":v==="180d"?"6bulan":v==="1y"?"1tahun":""))?"on":""});
+}
+function wizBuildPlans(){
+  var box=$("wizPlans");box.innerHTML="";
+  PLAN_TEMPLATES.forEach(function(t){
+    var d=document.createElement("div");d.className="pcard"+(t.best?" best":"");
+    d.innerHTML=(t.tag?'<span class="ptag">'+esc(t.tag)+'</span>':"")+
+      '<div class="pname">'+t.x+'&times; Xozen AI</div>'+
+      '<div class="pmeta">+ '+t.y+'&times; model AI lain \u00b7 '+planLabel(t.plan)+'</div>'+
+      '<div class="pprice">'+esc(t.price)+'<small>/ akun</small></div>'+
+      '<button type="button" class="btn pbuy wiz-go">Pilih paket ini</button>';
+    d.querySelector("button").onclick=function(){wizChoose(t);wizPane(2);$("wU").focus()};
+    box.appendChild(d);
+  });
+  var c=document.createElement("div");c.className="pcard wide";
+  c.innerHTML='<div class="pname">Custom</div><div class="pmeta">Atur kuota dan paket sendiri</div>'+
+    '<div class="wiz-row"><input type="text" id="wcX" inputmode="numeric" value="10" aria-label="Kuota Xozen AI"><input type="text" id="wcY" inputmode="numeric" value="5" aria-label="Kuota model AI lain"><select id="wcPlan" class="psel" aria-label="Paket akses model"><option value="basic">Basic (9 model)</option><option value="best">Best (31 model)</option></select></div>'+
+    '<button type="button" class="btn pbuy wiz-go" id="wcGo">Pakai custom</button>';
+  box.appendChild(c);
+  c.querySelector("#wcGo").onclick=function(){
+    var x=parseInt($("wcX").value,10),y=parseInt($("wcY").value,10);
+    if(!(x>=0)||!(y>=0)){alert("Kuota custom tidak valid.");return}
+    wizChoose({plan:$("wcPlan").value,x:x,y:y,price:"custom",custom:true});wizPane(2);$("wU").focus();
+  };
+}
+function wizChoose(t){
+  wizPick=t;
+  $("wizPlanInfo").innerHTML="Dipilih: <b>"+planLabel(t.plan)+"</b> \u00b7 "+t.x+"&times; Xozen AI + "+t.y+"&times; model AI lain"+(t.custom?" \u00b7 kuota custom":" \u00b7 "+esc(t.price))+" \u00b7 terbuka <b>"+planCount(t.plan)+" model</b>.";
+}
+function wizSummary(){
+  var u=$("wU").value.trim().toLowerCase(),ns=parseDur($("wT").value);
+  var box=$("wizSum");box.innerHTML="";
+  function r(k,v){var d=document.createElement("div");d.className="r";var a=document.createElement("span");a.textContent=k;var b=document.createElement("b");b.innerHTML=v;d.appendChild(a);d.appendChild(b);box.appendChild(d)}
+  r("Paket",planLabel(wizPick.plan)+(wizPick.custom?" (custom)":""));
+  r("Kuota",wizPick.x+"&times; Xozen AI + "+wizPick.y+"&times; model AI lain");
+  r("Harga",wizPick.custom?"diatur manual":esc(wizPick.price));
+  r("Akses model",planCount(wizPick.plan)+" model &middot; "+PLAN_MODELS[wizPick.plan].slice(0,3).map(esc).join(", ")+", &hellip;");
+  r("Username",esc(u));
+  r("Password",esc($("wP").value));
+  r("Masa aktif",ns?esc($("wT").value.trim()+" (sampai "+new Date(Date.now()+ns*1000).toLocaleDateString("id-ID",{dateStyle:"long"})+")"):"tidak valid");
+  r("Limit pin",esc($("wPin").value));
+  var w=$("wizWarn");
+  if(!planApiOk){w.hidden=false;w.textContent="Catatan: penyimpanan paket per akun belum aktif di server, jadi akses model belum dikunci per akun. Jalankan file supabase-member-plan.sql di Supabase SQL Editor (sekali saja), lalu buat ulang/ubah paket akun ini."}
+  else w.hidden=true;
+}
+async function wizCreate(){
+  if(wizBusy)return;
+  var u=$("wU").value.trim().toLowerCase(),p=$("wP").value,ns=parseDur($("wT").value),pin=parseInt($("wPin").value,10);
+  if(!/^[a-z0-9._-]{3,}$/.test(u)){admErr("Username minimal 3 karakter (huruf kecil, angka, titik, garis bawah, strip).");return}
+  if(!p||p.length<6){admErr("Password minimal 6 karakter.");return}
+  if(!ns){admErr(DURERR);return}
+  if(!(pin>=0)){admErr("Limit pin tidak valid.");return}
+  wizBusy=true;$("wizNext").disabled=true;$("wizNext").textContent="Membuat\u2026";
+  var ok=await admCall("app_admin_create",{nu:u,np:p,ns:ns,la:wizPick.x,lo:wizPick.y});
+  if(ok===undefined){wizBusy=false;$("wizNext").disabled=false;$("wizNext").textContent="Buat akun sekarang";return}
+  await admT("app_admin_setpin",{nu:u,lim:pin});
+  var planRes=await setPlanFor(u,wizPick.plan,false);
+  wizBusy=false;$("wizNext").disabled=false;
+  var expTxt=new Date(Date.now()+ns*1000).toLocaleDateString("id-ID",{dateStyle:"long"});
+  wizCreated={u:u,p:p,plan:wizPick.plan,ns:ns,expTxt:expTxt,pin:pin,planSaved:planRes!==undefined};
+  $("wizDone").innerHTML="<b>Akun "+esc(u)+" berhasil dibuat.</b><br>Paket "+planName(wizPick.plan)+" &middot; "+wizPick.x+"&times; Xozen AI + "+wizPick.y+"&times; model AI lain &middot; aktif sampai "+esc(expTxt)+"."+
+    (planRes===undefined?"<br><b>Akses model belum tersimpan di server</b> (jalankan supabase-member-plan.sql), untuk sekarang akun ini terbaca sebagai paket dari kuotanya.":"");
+  $("wizMsg").value=wizMessage();
+  $("wizWa").href="https://wa.me/?text="+encodeURIComponent($("wizMsg").value);
+  wizPane(4);
+}
+function appLink(){
+  return (location.protocol==="http:"||location.protocol==="https:")?(location.origin+location.pathname):"https://<domain-aplikasi-Xozen-AI>";
+}
+function wizMessage(){
+  var c=wizCreated,t=wizPick;
+  return "Akun Xozen AI Anda sudah aktif \u{1F389}\n\n"+
+    "Paket      : "+planLabel(c.plan)+(t.custom?" (custom)":"")+"\n"+
+    "Kuota      : "+t.x+"x Xozen AI + "+t.y+"x model AI lain\n"+
+    (t.custom?"":"Harga      : "+t.price+"\n")+
+    "Masa aktif : "+c.ns/86400+" hari (sampai "+c.expTxt+")\n"+
+    "Username   : "+c.u+"\n"+
+    "Password   : "+c.p+"\n\n"+
+    "Model yang terbuka: "+planCount(c.plan)+" model (kimi, glm, deepseek, gpt, dan lainnya).\n"+
+    "Cara masuk:\n"+
+    "1. Buka "+appLink()+"\n"+
+    "2. Login dengan username & password di atas\n"+
+    "3. Verifikasi wajah diminta sekali, diproses langsung di perangkat Anda\n\n"+
+    "Simpan pesan ini dan jangan bagikan akun Anda ke orang lain. Terima kasih!";
+}
+function wizGo(){
+  if(wizStep===1){if(!wizPick){admErr("Pilih salah satu template paket dulu.");return}wizPane(2);$("wU").focus();return}
+  if(wizStep===2){
+    var u=$("wU").value.trim().toLowerCase(),p=$("wP").value;
+    if(!/^[a-z0-9._-]{3,}$/.test(u)){admErr("Username minimal 3 karakter (huruf kecil, angka, titik, garis bawah, strip).");return}
+    if(!p||p.length<6){admErr("Password minimal 6 karakter.");return}
+    if(!parseDur($("wT").value)){admErr(DURERR);return}
+    admErr("");wizPane(3);return;
+  }
+  if(wizStep===3){wizCreate();return}
+  admRefresh();wizDlg.close();
+}
+$("wizOpen").onclick=function(){admErr("");wizReset();wizDlg.showModal()};
+$("wizOpen2").onclick=function(){admErr("");wizReset();wizDlg.showModal()};
+$("wizX").onclick=function(){wizDlg.close()};
+$("wizBack").onclick=function(){if(wizStep>1)wizPane(wizStep-1)};
+$("wizNext").onclick=wizGo;
+$("wGen").onclick=function(){
+  var a="abcdefghijkmnpqrstuvwxyz",b="ABCDEFGHJKLMNPQRSTUVWXYZ",c="23456789",s="";
+  for(var i=0;i<4;i++)s+=a[Math.floor(Math.random()*a.length)];
+  for(var j=0;j<2;j++)s+=b[Math.floor(Math.random()*b.length)];
+  for(var k=0;k<2;k++)s+=c[Math.floor(Math.random()*c.length)];
+  $("wP").value=s.split("").sort(function(){return Math.random()-.5}).join("");
+};
+$("wizCopy").onclick=function(){copy($("wizMsg").value,$("wizCopy"))};
+$("wizAgain").onclick=function(){wizReset()};
+$("wT").addEventListener("input",wizMarkDur);
+
+/* ---------- kelola model (admin) ---------- *//* ---------- kelola model (admin) ---------- */
 var LOCKED=["auto","minimumlite"];
 function renderMdlList(){
   var box=$("mList");box.innerHTML="";
@@ -1468,7 +2030,7 @@ async function saveModels(ids){
   await loadCfg();renderModels();renderMdlList();return true;
 }
 $("mClear").onclick=function(){
-  if(!confirm("Hapus semua model kecuali ArcZ Ai dan MinimumLite? Bisa dipulihkan dengan Ambil dari API."))return;
+  if(!confirm("Hapus semua model kecuali Xozen AI dan MinimumLite? Bisa dipulihkan dengan Ambil dari API."))return;
   saveModels(LOCKED.slice());
 };
 $("mFetch").onclick=async function(){
@@ -1487,37 +2049,324 @@ $("mFetch").onclick=async function(){
 };
 
 /* ---------- dropdown model ---------- */
-var dd=$("dd"),ddBtn=$("ddBtn"),ddMenu=$("ddMenu");
-function mlabel(m){return m==="auto"?"ArcZ Ai":m==="minimumlite"?"MinimumLite (Gratis)":m}
+var dd=$("dd"),ddBtn=$("ddBtn");
+function mlabel(m){return m==="auto"?"Xozen AI":m==="minimumlite"?"MinimumLite (Gratis)":m}
+function priceCard(t){
+  var d=document.createElement("div");d.className="pcard"+(t.best?" best":"");
+  var waTxt="Halo admin, saya mau paket "+planLabel(t.plan)+" "+t.x+"x Xozen AI + "+t.y+"x model AI lain ("+t.price+"). Mohon info pembayaran dan aktivasi akunnya.";
+  d.innerHTML=(t.tag?'<span class="ptag">'+esc(t.tag)+'</span>':"")+
+    '<div class="pname">'+t.x+'&times; Xozen AI</div>'+
+    '<div class="pmeta">+ '+t.y+'&times; model AI lain</div>'+
+    '<div class="pprice">'+esc(t.price)+'<small>/ akun</small></div>'+
+    '<a class="btn primary pbuy" href="https://wa.me/'+WA_ADMIN+'?text='+encodeURIComponent(waTxt)+'" target="_blank" rel="noopener noreferrer">Pesan paket</a>';
+  return d;
+}
+function fillChips(box,arr){
+  if(!box)return;box.innerHTML="";
+  arr.forEach(function(m){var sp=document.createElement("span");sp.textContent=m;box.appendChild(sp)});
+}
+function renderPricing(){
+  var bb=$("planBasic"),bt=$("planBest");
+  if(bb&&bt&&!bb.childElementCount){
+    PLAN_TEMPLATES.filter(function(t){return t.plan==="basic"}).forEach(function(t){bb.appendChild(priceCard(t))});
+    PLAN_TEMPLATES.filter(function(t){return t.plan==="best"}).forEach(function(t){bt.appendChild(priceCard(t))});
+    fillChips($("planBasicModels"),PLAN_MODELS.basic);
+    fillChips($("planBestModels"),PLAN_MODELS.best);
+    $("basicCount").textContent=planCount("basic");
+    $("bestCount").textContent=planCount("best");
+    $("bestSummary").textContent="Lihat "+planCount("best")+" model yang bisa dipakai";
+  }
+  var mine=$("myPlan");
+  if(mine){
+    if(session&&session.admin){mine.hidden=false;mine.textContent="Anda admin — semua model terbuka."}
+    else if(session&&memberPlan){mine.hidden=false;mine.textContent="Paket Anda sekarang: "+planName(memberPlan)+(planFromServer?"":" (dibaca dari kuota akun)")}
+    else mine.hidden=true;
+  }
+}
 function pickModel(m){
-  closeDD();
   if(m==="minimumlite"&&modelSel.value!=="minimumlite"&&!confirm("MinimumLite adalah model gratis.\n\nTidak ada memory: model tidak mengingat pesan sebelumnya, tiap pesan dijawab sendiri-sendiri.\n\nLanjut pakai MinimumLite?")){ddBtn.focus();return}
   modelSel.value=m;modelSel.onchange();syncDD();ddBtn.focus();
+  closeModelPick();
+}
+/* ---------- pemilih model (popup dengan pencarian & filter) ---------- */
+var modelPick=$("modelPick"),mpList=$("mpList"),mpSearch=$("mpSearch"),mpFilters=$("mpFilters");
+var mpFilter="all",mpClosing=false;
+var FAM_NAME={bawaan:"Xozen & Gratis",deepseek:"DeepSeek",glm:"GLM",kimi:"Kimi",gpt:"GPT",mimo:"MiMo",hy:"HY",step:"Step",lain:"Lainnya"};
+function modelFamily(m){
+  if(m==="auto"||m==="minimumlite")return"bawaan";
+  if(/^deepseek/.test(m))return"deepseek";
+  if(/^glm/.test(m))return"glm";
+  if(/^kimi/.test(m))return"kimi";
+  if(/^gpt/.test(m))return"gpt";
+  if(/^mimo/.test(m))return"mimo";
+  if(/^hy/.test(m))return"hy";
+  if(/^step/.test(m))return"step";
+  return"lain";
+}
+function modelTags(m){
+  var t=[];
+  if(m==="auto")t.push("otomatis");
+  if(m==="minimumlite")t.push("gratis");
+  if(/highspeed/.test(m))t.push("kilat");else if(/flash/.test(m))t.push("cepat");
+  if(/pro/.test(m))t.push("pro");
+  if(/code/.test(m))t.push("coding");
+  if(/vision/.test(m))t.push("vision");
+  if(/mod/.test(m))t.push("mod");
+  if(/luna/.test(m))t.push("luna");
+  if(/preview/.test(m))t.push("preview");
+  return t.slice(0,3);
+}
+function modelDesc(m){
+  if(m==="auto")return"Pilihan otomatis Xozen AI: cepat, pintar, hemat kuota.";
+  if(m==="minimumlite")return"Gratis tanpa kuota, tanpa memori obrolan.";
+  var fam=FAM_NAME[modelFamily(m)]||"Model";
+  var kind=/code/.test(m)?"jago coding":/vision/.test(m)?"bisa baca gambar":/highspeed|flash/.test(m)?"respons kilat":/pro/.test(m)?"penalaran kuat":"serba bisa";
+  return fam+" \u00b7 "+kind+".";
+}
+function modelPlanOf(m){
+  if(m==="auto")return"xozen";
+  if(m==="minimumlite")return"gratis";
+  if(PLAN_MODELS.basic.indexOf(m)>-1)return"basic";
+  if(PLAN_MODELS.best.indexOf(m)>-1)return"best";
+  return"lain";
+}
+var MPLAN_LABEL={xozen:"Xozen",gratis:"Gratis",basic:"Basic",best:"Best",lain:"\u2014"};
+var mfav=[],mrecent=[],mfUser=null;
+function mfKey(kind){return "glassai."+kind+"."+(session?session.u:"_")}
+function mfLoad(){
+  var u=session?session.u:"_";
+  if(mfUser===u)return;
+  mfUser=u;
+  mfav=load(mfKey("fav"),[]);mrecent=load(mfKey("recent"),[]);
+  if(!Array.isArray(mfav))mfav=[];
+  if(!Array.isArray(mrecent))mrecent=[];
+}
+function mfSave(){
+  save(mfKey("fav"),mfav.slice(0,60));
+  save(mfKey("recent"),mrecent.slice(0,8));
+}
+function mfIsFav(m){return mfav.indexOf(m)>-1}
+function mfToggle(m){
+  mfLoad();
+  var i=mfav.indexOf(m);
+  if(i>-1)mfav.splice(i,1);else mfav.unshift(m);
+  mfSave();
+}
+function mfPush(m){
+  if(!m)return;
+  mfLoad();
+  var i=mrecent.indexOf(m);
+  if(i>-1)mrecent.splice(i,1);
+  mrecent.unshift(m);mrecent=mrecent.slice(0,8);
+  mfSave();
+}
+function mpRenderFilters(){
+  if(!mpFilters)return;
+  mfLoad();
+  var list=allowedModels(),fams=[];
+  list.forEach(function(m){var f=modelFamily(m);if(fams.indexOf(f)<0)fams.push(f)});
+  var favN=list.filter(mfIsFav).length;
+  var recN=list.filter(function(m){return mrecent.indexOf(m)>-1}).length;
+  var chips=[["all","Semua"]];
+  if(favN)chips.push(["fav","\u2605 Favorit ("+favN+")"]);
+  if(recN)chips.push(["recent","\u23F1 Terakhir dipakai"]);
+  var hasB=list.some(function(m){return PLAN_MODELS.basic.indexOf(m)>-1});
+  var hasT=list.some(function(m){return PLAN_MODELS.best.indexOf(m)>-1});
+  if(hasB)chips.push(["plan-basic","Basic ("+planCount("basic")+")"]);
+  if(hasT)chips.push(["plan-best","Best ("+planCount("best")+")"]);
+  fams.forEach(function(f){if(f!=="bawaan"||list.length>2)chips.push(["fam-"+f,FAM_NAME[f]||f])});
+  mpFilters.innerHTML="";
+  chips.forEach(function(c){
+    var b=document.createElement("button");b.type="button";b.className="mchip2"+(mpFilter===c[0]?" on":"");
+    b.textContent=c[1];b.onclick=function(){mpFilter=c[0];mpRender();mpSearch.focus()};
+    mpFilters.appendChild(b);
+  });
+}
+function mpMatch(m){
+  var q=(mpSearch.value||"").trim().toLowerCase();
+  if(q&&m.toLowerCase().indexOf(q)<0&&mlabel(m).toLowerCase().indexOf(q)<0)return false;
+  if(mpFilter==="all")return true;
+  if(mpFilter==="fav")return mfIsFav(m);
+  if(mpFilter==="recent")return mrecent.indexOf(m)>-1;
+  if(mpFilter==="plan-basic")return m==="auto"||m==="minimumlite"||PLAN_MODELS.basic.indexOf(m)>-1;
+  if(mpFilter==="plan-best")return m==="auto"||m==="minimumlite"||PLAN_MODELS.best.indexOf(m)>-1;
+  if(mpFilter.indexOf("fam-")===0)return modelFamily(m)===mpFilter.slice(4);
+  return true;
+}
+function mpRender(){
+  if(!modelPick)return;
+  mfLoad();
+  mpRenderFilters();
+  var list=allowedModels().filter(mpMatch);
+  mpList.innerHTML="";
+  if(!list.length){
+    var e=document.createElement("div");e.className="mempty";
+    e.textContent=mpFilter==="fav"?"Belum ada model favorit. Tekan tanda \u2606 pada kotak model untuk menandainya."
+      :mpFilter==="recent"?"Belum ada riwayat. Model yang Anda pakai akan muncul di sini."
+      :"Tidak ada model yang cocok dengan \u201c"+mpSearch.value+"\u201d. Coba kata kunci lain.";
+    mpList.appendChild(e);
+  }
+  list.forEach(function(m){
+    var on=m===modelSel.value,pl=modelPlanOf(m),fav=mfIsFav(m);
+    var c=document.createElement("div");c.className="mcard"+(on?" on":"");c.tabIndex=0;
+    c.setAttribute("data-m",m);c.setAttribute("role","option");c.setAttribute("aria-selected",on?"true":"false");
+    var tags=modelTags(m).map(function(t){return"<i>"+esc(t)+"</i>"}).join("");
+    c.innerHTML='<div class="mi"><div class="mn">'+esc(mlabel(m))+'</div><div class="md">'+esc(modelDesc(m))+'</div>'+
+      '<div class="mtags"><span class="mplan '+pl+'">'+MPLAN_LABEL[pl]+'</span>'+tags+(fav?'<i class="mfavi">\u2605 favorit</i>':'')+'</div></div>'+
+      '<span class="mcheck" aria-hidden="true">'+(on?"\u2713":"")+'</span>';
+    var st=document.createElement("button");st.type="button";st.className="mstar"+(fav?" on":"");
+    st.textContent=fav?"\u2605":"\u2606";
+    st.title=fav?"Hapus dari favorit":"Tandai sebagai favorit";
+    st.setAttribute("aria-label",(fav?"Hapus dari favorit: ":"Tandai favorit: ")+mlabel(m));
+    st.onclick=function(ev){
+      ev.stopPropagation();mfToggle(m);mpRender();
+      var n=mpList.querySelector('[data-m="'+CSS.escape(m)+'"] .mstar');if(n)n.focus();
+    };
+    c.appendChild(st);
+    c.onclick=function(){var before=modelSel.value;pickModel(m);if(modelSel.value!==before||before===m)closeModelPick()};
+    c.onkeydown=function(ev){if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();c.onclick()}};
+    mpList.appendChild(c);
+  });
+  var sub=$("mpSub");
+  if(sub)sub.textContent=allowedModels().length+" model tersedia"+(memberPlan&&session&&!session.admin?" untuk paket "+planLabel(memberPlan):"");
+  var foot=$("mpFoot");
+  if(foot){
+    var fs2=[];
+    if(session&&session.admin)fs2.push("Anda admin: semua model terbuka.");
+    else if(memberPlan)fs2.push("Model lain tersedia di paket Best \u2014 buka \u201cLihat paket & harga\u201d.");
+    if(mfav.length)fs2.push(mfav.length+" favorit disimpan di perangkat ini.");
+    foot.textContent=fs2.join(" ");
+  }
+}
+function openModelPick(){
+  if(!modelPick)return;
+  mpFilter="all";mpSearch.value="";mpRender();
+  modelPick.classList.remove("closing");modelPick.classList.add("show");
+  modelPick.setAttribute("aria-hidden","false");ddBtn.setAttribute("aria-expanded","true");
+  setTimeout(function(){try{mpSearch.focus()}catch(e){}},170);
+}
+function closeModelPick(){
+  if(!modelPick||!modelPick.classList.contains("show")||mpClosing)return;
+  mpClosing=true;modelPick.classList.add("closing");
+  setTimeout(function(){
+    modelPick.classList.remove("show","closing");modelPick.setAttribute("aria-hidden","true");
+    ddBtn.setAttribute("aria-expanded","false");mpClosing=false;ddBtn.focus();
+  },190);
 }
 function syncDD(){
-  $("ddLabel").textContent=mlabel(modelSel.value);ddMenu.innerHTML="";
-  MODELS.forEach(function(m){
-    var on=m===modelSel.value,b=document.createElement("button");b.type="button";b.className="dd-item"+(on?" on":"");
-    b.setAttribute("role","option");b.setAttribute("aria-selected",on);b.textContent=mlabel(m);
-    b.onclick=function(){pickModel(m)};
-    ddMenu.appendChild(b);
-  });
+  $("ddLabel").textContent=mlabel(modelSel.value);
+  if(modelPick&&modelPick.classList.contains("show"))mpRender();
   if(session&&!session.admin)showAcct();
 }
-function openDD(){ddMenu.hidden=false;ddBtn.setAttribute("aria-expanded","true");var on=ddMenu.querySelector(".on");if(on)on.scrollIntoView({block:"nearest"})}
-function closeDD(){ddMenu.hidden=true;ddBtn.setAttribute("aria-expanded","false")}
-ddBtn.onclick=function(){ddMenu.hidden?openDD():closeDD()};
-document.addEventListener("click",function(e){if(!dd.contains(e.target))closeDD()});
-dd.addEventListener("keydown",function(e){
-  if(e.key==="Escape"){closeDD();ddBtn.focus();return}
-  if(e.key==="ArrowDown"||e.key==="ArrowUp"){
-    e.preventDefault();if(ddMenu.hidden)openDD();
-    var it=[].slice.call(ddMenu.children),i=it.indexOf(document.activeElement);
-    i=e.key==="ArrowDown"?Math.min(it.length-1,i+1):Math.max(0,i-1);it[i].focus();
-  }
+ddBtn.onclick=function(){modelPick&&modelPick.classList.contains("show")?closeModelPick():openModelPick()};
+if(modelPick){
+  modelPick.addEventListener("click",function(e){if(e.target===modelPick)closeModelPick()});
+  $("mpClose").onclick=closeModelPick;
+  mpSearch.addEventListener("input",mpRender);
+  mpSearch.addEventListener("keydown",function(e){
+    if(e.key==="Enter"){e.preventDefault();var f=mpList.querySelector(".mcard");if(f)f.click()}
+    if(e.key==="Escape"){e.preventDefault();closeModelPick()}
+  });
+}
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape"&&modelPick&&modelPick.classList.contains("show")){closeModelPick();return}
+  if(e.key!=="/"||!modelPick)return;
+  if(document.activeElement===input||document.activeElement===$("lUser")||document.activeElement===$("lPass")||busy)return;
+  if(document.querySelector("dialog[open]"))return;
+  e.preventDefault();openModelPick();
 });
 
-/* ---------- lampiran file (diunggah ke uguu.se, link-nya dikirim ke AI) ---------- */
+/* ---------- tutorial pengguna baru ---------- */
+var TOUR=[
+  {ic:"\u2728",t:"Selamat datang di Xozen AI \uD83D\uDC4B",d:"Tur singkat 5 langkah supaya Anda langsung nyaman memakai aplikasinya. Mau langsung mulai? Tekan \u201cLewati\u201d. Mau keluar nanti saja? Tekan \u00d7 di kanan atas."},
+  {ic:"\uD83E\uDDE9",t:"Pilih model AI",d:"Klik tombol model di kanan atas. Muncul daftar model dengan kotak pencarian, filter (Basic, Best, atau keluarga model seperti Kimi, GLM, DeepSeek), dan tanda centang pada model yang sedang dipakai.",el:"dd"},
+  {ic:"\u26A1",t:"Pantau kuota & paket",d:"Kartu di sidebar menunjukkan paket Anda, sisa kuota, dan masa aktif akun. Satu kuota = satu kali pemakaian model. Model MinimumLite gratis dan tidak memakai kuota.",el:"qCard"},
+  {ic:"\uD83D\uDCE4",t:"Kirim pesan & lampiran",d:"Tulis pesan lalu tekan Enter untuk kirim (Shift+Enter untuk baris baru). Tombol klip di kiri untuk melampirkan file, dan tombol kotak untuk menghentikan jawaban yang sedang berjalan.",el:"attachBtn"},
+  {ic:"\u2699\uFE0F",t:"Riwayat, tema, dan paket",d:"Semua obrolan tersimpan di sidebar dan bisa di-pin. Tema tampilan, instruksi sistem, dan daftar paket & harga ada di menu Pengaturan.",el:"openSettings",last:true}
+];
+var TOUR_ADMIN=[
+  {ic:"\uD83D\uDEE1\uFE0F",t:"Tur singkat untuk admin",d:"Enam langkah mengelola akun paket, model AI, dan konfigurasi. Tombol \u00d7 menutup tur kapan saja; bisa dibuka lagi dari Pengaturan \u2192 Tur admin."},
+  {ic:"\uD83D\uDC65",t:"Dashboard Admin",d:"Klik tombol Admin di sidebar: ada wizard buat akun paket, daftar semua akun (kuota, masa aktif, wajah, pin), dan pengelola daftar model AI.",el:"adminBtn"},
+  {ic:"\uD83E\uDDE9",t:"Akses model per paket",d:"Akun Basic hanya melihat 9 model Basic, akun Best melihat 31 model, admin selalu melihat semuanya. Paket tiap akun bisa diubah dari pilihan di baris akunnya.",el:"ddBtn"},
+  {ic:"\u26A1",t:"Kuota admin",d:"Akun admin tidak dibatasi kuota; kartu di sidebar hanya menampilkan status. Untuk member, satu kuota = satu kali pemakaian model.",el:"qCard"},
+  {ic:"\u2699\uFE0F",t:"Konfigurasi AI & harga",d:"Di Pengaturan: Base URL dan API key penyedia AI, instruksi sistem, suhu, tema tampilan, dan halaman paket & harga.",el:"openSettings"},
+  {ic:"\uD83D\uDDC4\uFE0F",t:"Sekali saja: jalankan SQL",d:"Jalankan supabase-member-plan.sql di Supabase SQL Editor agar paket per akun dan penanda pengguna baru (tutorial otomatis member) aktif. Statusnya tampil di bagian atas Dashboard Admin.",last:true}
+];
+var tourEl=$("tour"),tourStep=0,tourShown=false,tourApiOk=true,tourSteps=TOUR,tourKind="member";
+function tourHighlight(id){
+  Array.prototype.forEach.call(document.querySelectorAll(".tour-hi"),function(x){x.classList.remove("tour-hi")});
+  if(!id)return;
+  var n=$(id);
+  if(!n||!n.offsetParent)return;
+  n.classList.add("tour-hi");
+}
+function tourRender(){
+  var st=tourSteps[tourStep];
+  $("tourIc").textContent=st.ic;
+  $("tourTitle").textContent=st.t;
+  $("tourText").textContent=st.d;
+  var dots=$("tourDots");dots.innerHTML="";
+  tourSteps.forEach(function(_,i){var d=document.createElement("i");if(i===tourStep)d.className="on";dots.appendChild(d)});
+  $("tourSkip").hidden=(tourStep!==0);
+  $("tourBack").style.visibility=tourStep===0?"hidden":"";
+  $("tourNext").textContent=st.last?(tourKind==="admin"?"Selesai":"Mulai pakai"):"Lanjut";
+  tourHighlight(st.el);
+}
+function markTourDone(){
+  if(session)save("glassai.tour."+session.u,true);
+  if(session&&!session.admin)rpc("app_tour_done",{u:session.u,p:session.p}).catch(function(){});
+}
+function startTour(steps,kind){
+  if(!tourEl)return;
+  tourSteps=steps||TOUR;tourKind=kind||"member";
+  tourStep=0;
+  tourEl.classList.remove("finish","fade");
+  tourEl.classList.add("show");tourEl.setAttribute("aria-hidden","false");
+  tourRender();
+}
+function endTour(swell){
+  if(!tourEl)return;
+  var kind=tourKind;
+  Array.prototype.forEach.call(document.querySelectorAll(".tour-hi"),function(x){x.classList.remove("tour-hi")});
+  if(swell){
+    tourEl.classList.add("finish");
+    setTimeout(function(){tourEl.classList.add("fade")},640);
+    setTimeout(function(){
+      tourEl.classList.remove("show","finish","fade");tourEl.setAttribute("aria-hidden","true");
+    },1260);
+  }else{
+    tourEl.classList.remove("show");tourEl.setAttribute("aria-hidden","true");
+  }
+  if(kind==="admin"){if(session)save("glassai.tour.admin."+session.u,true)}
+  else markTourDone();
+}
+$("tourX").onclick=function(){endTour(false)};
+$("tourSkip").onclick=function(){endTour(false)};
+$("tourBack").onclick=function(){if(tourStep>0){tourStep--;tourRender()}};
+$("tourNext").onclick=function(){
+  if(tourStep<tourSteps.length-1){tourStep++;tourRender()}
+  else endTour(true);
+};
+async function maybeTour(){
+  if(!session||tourShown)return;
+  tourShown=true;
+  if(session.admin){
+    if(!load("glassai.tour.admin."+session.u,false))setTimeout(function(){startTour(TOUR_ADMIN,"admin")},800);
+    return;
+  }
+  var local=load("glassai.tour."+session.u,false),isNew=null;
+  try{
+    var r=await rpc("app_tour_status",{u:session.u,p:session.p});
+    if(r&&typeof r.is_new==="boolean")isNew=r.is_new;
+    tourApiOk=true;
+  }catch(e){if(handleAuthErr(e))return;tourApiOk=false}
+  if(isNew===null)isNew=!local;
+  if(isNew)setTimeout(function(){startTour(TOUR,"member")},700);
+}
+$("tourBtn").onclick=function(){if(dlg.open)dlg.close();startTour(TOUR,"member")};
+$("tourAdminBtn").onclick=function(){if(dlg.open)dlg.close();startTour(TOUR_ADMIN,"admin")};
+$("tourAdminDash").onclick=function(){if(admDlg.open)admDlg.close();startTour(TOUR_ADMIN,"admin")};
+/* ---------- lampiran file/* ---------- lampiran file (diunggah ke uguu.se, link-nya dikirim ke AI) ---------- */
 var attach=[],fileIn=$("fileIn"),chips=$("chips");
 var UGUU="https://uguu.se/upload",UGUU_MAX=128*1024*1024;
 function fsz(n){return n<1024?n+" B":n<1048576?(n/1024).toFixed(1)+" KB":(n/1048576).toFixed(2)+" MB"}
@@ -1650,9 +2499,11 @@ setInterval(syncPinsUI,45000);
 async function boot(){
   chats=load(ckey("chats"),[]);activeId=load(ckey("active"),null);
   await loadCfg();if(!session)return;
+  await resolvePlan();if(!session)return;
   await syncPins();if(!session)return;
   if(activeId&&!active())activeId=null;
   renderAll();fetchQuota();
+  maybeTour();
 }
 
 /* ---------- face recognition (face-api.js, diproses di browser) ---------- */
@@ -1801,7 +2652,8 @@ $("fCancel").onclick=closeFace;
 /* ---------- mulai ---------- */
 if(session&&!session.t){session=null;save("glassai.auth",null);gate()}   /* sesi lama tanpa verifikasi wajah */
 if(session)boot();else renderAll();
+renderPricing();                                   /* isi halaman paket & harga sejak awal */
 })();
 </script>
 </body>
-</html>
+                                                   </html>
