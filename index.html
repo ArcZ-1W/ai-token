@@ -884,6 +884,24 @@ html[data-theme^="neu"] .mstar.on{background:var(--acc-grad);box-shadow:var(--ra
 /* ===== tipografi merek: Syne (Medium) untuk judul & nama ===== */
 .brand b,.title,.empty h1,.bubble h1,.bubble h2,.bubble h3,.bubble h4,.login h2,dialog h2,.wiz-top h2,.tcard h3,.mtop b,.phead h2,.psec-h b,.pname,.mcard .mn,.pprice,#tourTitle,#fTitle,#priceTitle{font-family:var(--font-display);letter-spacing:-.015em}
 .pprice,.q-num,.qval{font-variant-numeric:tabular-nums}
+
+/* ===== lampiran: pratinjau gambar & status unggah ===== */
+.fthumbs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.fthumb{width:78px;height:78px;object-fit:cover;border-radius:12px;border:1px solid rgba(150,170,220,.35);background:rgba(128,128,128,.12)}
+html[data-theme^="neu"] .fthumb{box-shadow:var(--raise-xs);border:0}
+.fchip button.rt{color:var(--accent-2);font-size:14px}
+.chk{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--ink);cursor:pointer}
+.chk input{width:18px;height:18px;flex:none;accent-color:var(--accent);cursor:pointer}
+.chk:focus-within{outline:2px solid var(--accent-2);outline-offset:3px;border-radius:8px}
+
+/* ===== pratinjau gambar diperbesar ===== */
+.lightbox{position:fixed;inset:0;z-index:140;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,6,16,.82)}
+.lightbox.show{display:flex;animation:lbIn .2s ease}
+@keyframes lbIn{from{opacity:0}to{opacity:1}}
+.lightbox img{max-width:100%;max-height:calc(100dvh - 64px);border-radius:16px;background:#fff;cursor:zoom-out;box-shadow:0 30px 80px -30px rgba(0,0,0,.85)}
+.lightbox .pclose{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.18);color:#fff}
+.fthumb{cursor:zoom-in}
+@media (prefers-reduced-motion:reduce){.lightbox.show{animation:none}}
 </style>
 </head>
 <body>
@@ -974,6 +992,7 @@ html[data-theme^="neu"] .mstar.on{background:var(--acc-grad);box-shadow:var(--ra
     </div>
   </div>
 </div><div class="tbrand" id="tourBrand" aria-hidden="true"><img src="https://i.ibb.co.com/8gqQS0t0/xozen.png" alt="" width="64" height="64"><b>Xozen AI</b></div></div>
+<div class="lightbox" id="lightbox" aria-hidden="true"><button type="button" class="pclose" id="lightboxX" aria-label="Tutup pratinjau">&times;</button><img id="lightboxImg" alt=""></div>
 <canvas id="pfx" aria-hidden="true"></canvas>
 <div class="scene" aria-hidden="true"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="grain"></div></div>
 
@@ -1112,6 +1131,10 @@ html[data-theme^="neu"] .mstar.on{background:var(--acc-grad);box-shadow:var(--ra
     <div class="field"><label>Panduan pemakaian</label>
       <div class="wiz-row"><button type="button" class="btn" id="tourBtn">Lihat tur pengguna</button><button type="button" class="btn" id="tourAdminBtn" hidden>Tur admin</button></div>
     </div>
+    <div class="field"><label>Gambar &amp; video</label>
+      <label class="chk"><input type="checkbox" id="sVision"> Kirim gambar langsung ke model (butuh model vision)</label>
+      <div class="adm-note" id="attNote">Gambar dikecilkan otomatis di perangkat Anda, lalu dikirim ke model sebagai gambar (bukan cuma tautan). Video tidak bisa ditonton model, jadi cuplikan gambarnya yang dikirim, ditambah tautan file. Lampiran diunggah ke host publik sementara (tmpfiles.org, lalu litterbox) supaya bisa dibuka lewat tautan.</div>
+    </div>
     <div class="field"><label>Data obrolan</label><button type="button" class="btn danger" id="clearAll">Hapus semua obrolan</button></div>
     <div class="quota" id="quotaOut"></div>
     <div class="row">
@@ -1214,8 +1237,15 @@ sendBtn.innerHTML=ICON_SEND;
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function active(){return chats.find(function(c){return c.id===activeId})}
 function ckey(n){return "glassai."+n+"."+(session?session.u:"_")}
+function slimMsg(m){
+  var o=Object.assign({},m);
+  if(Array.isArray(o.content))o.content=plainOf(o);
+  if(o.files)o.files=o.files.map(function(f){return {name:f.name,size:f.size,url:f.url||"",thumb:f.thumb||"",type:f.type||"",bin:!!f.bin,img:!!f.img,host:f.host||""}});
+  return o;
+}
+function slimChat(c){return Object.assign({},c,{messages:c.messages.map(slimMsg)})}
 function persist(){
-  if(session){save(ckey("chats"),chats);save(ckey("active"),activeId)}
+  if(session){save(ckey("chats"),chats.map(slimChat));save(ckey("active"),activeId)}
   var st=Object.assign({},settings);delete st.baseUrl;delete st.apiKey;save("glassai.settings",st);
 }
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
@@ -1357,9 +1387,16 @@ function bubbleFor(m,isLast){
   var w=document.createElement("div");w.className="msg "+(m.role==="user"?"user":"bot");
   var b=document.createElement("div");b.className="bubble";
   if(m.role==="user"){b.textContent=m.files?(m.text||""):m.content;
-    if(m.files&&m.files.length){var fc=document.createElement("div");fc.className="fchips";m.files.forEach(function(f){var t=document.createElement("span");
+    if(m.files&&m.files.length){
+      var th=m.files.filter(function(f){return f.thumb});
+      if(th.length){var tb=document.createElement("div");tb.className="fthumbs";th.forEach(function(f){
+        var im=document.createElement("img");im.className="fthumb";im.src=f.thumb;im.alt=f.name;
+        im.title="Klik untuk memperbesar — "+f.name;
+        im.onclick=function(){openLightbox(f.full||f.thumb,f.name)};
+        tb.appendChild(im)});b.appendChild(tb)}
+      var fc=document.createElement("div");fc.className="fchips";m.files.forEach(function(f){var t=document.createElement("span");
       if(f.url){var a=document.createElement("a");a.href=f.url;a.target="_blank";a.rel="noopener noreferrer";a.style.color="inherit";a.textContent="🔗 "+f.name;t.appendChild(a)}
-      else t.textContent="📄 "+f.name;
+      else t.textContent=(f.img?"🖼 ":"📄 ")+f.name;
       fc.appendChild(t)});b.appendChild(fc)}}
   else{
     if(m.error){b.classList.add("err");b.textContent=m.content}
@@ -1439,7 +1476,7 @@ async function streamLite(c){
   ctrl=new AbortController();
   var status=0,raw="";
   try{
-    var qs="prompt="+encodeURIComponent(last.content)
+    var qs="prompt="+encodeURIComponent(plainOf(last))
       +"&system="+encodeURIComponent((settings.system&&settings.system.trim())||"You are a helpful assistant.")
       +"&temperature="+encodeURIComponent(settings.temp);
     if(qs.length>7000){
@@ -1470,7 +1507,10 @@ async function stream(c){
     ctrl=null;setBusy(false);persist();renderMsgs();return;
   }
   var asst=c.messages[c.messages.length-1];
-  var history=c.messages.slice(0,-1).map(function(m){return {role:m.role,content:m.content}});
+  var forcePlain=!!c._plainOnce;c._plainOnce=false;
+  var history=c.messages.slice(0,-1).map(function(m){return {role:m.role,content:forcePlain?plainOf(m):m.content}});
+  var hadImg=!forcePlain&&history.some(function(m){return Array.isArray(m.content)});
+  var plainRetry=false;
   if(settings.system&&settings.system.trim())history.unshift({role:"system",content:settings.system.trim()});
   ctrl=new AbortController();
   var status=0,raw="";
@@ -1491,7 +1531,11 @@ async function stream(c){
       body:JSON.stringify({model:c.model||settings.model,messages:history,stream:true,temperature:Number(settings.temp)})
     });
     status=res.status;
-    if(!res.ok){raw=await res.text().catch(function(){return ""});throw new Error("http")}
+    if(!res.ok){
+      raw=await res.text().catch(function(){return ""});
+      if(hadImg&&[400,413,415,422,500].indexOf(status)>-1){plainRetry=true;throw new Error("vision")}
+      throw new Error("http");
+    }
     var ctype=res.headers.get("content-type")||"";
     if(ctype.indexOf("text/event-stream")===-1&&ctype.indexOf("json")!==-1){
       var j=await res.json();if(j.usage&&j.usage.total_tokens)usageTok=j.usage.total_tokens;
@@ -1528,10 +1572,15 @@ async function stream(c){
     if(c.pinned)pushPin(c).catch(handleAuthErr);
     setTimeout(fetchQuota,900);
   }
+  if(plainRetry){                       /* model menolak gambar: kirim ulang sebagai teks */
+    asst.content="";asst.error=undefined;c._plainOnce=true;
+    setBusy(true);renderMsgs();
+    stream(c);
+  }
 }
 function send(text){
   text=(text||"").trim();if((!text&&!attach.length)||busy)return;
-  if(uploading()){alert("Tunggu unggahan file ke uguu.se selesai dulu.");return}
+  if(uploading()){alert("Tunggu unggahan lampiran selesai dulu.");return}
   if(session&&!session.admin){
     if(session.exp&&Date.now()>=session.exp){acctQuota();return}
     var mm=modelSel.value||settings.model;
@@ -1543,12 +1592,31 @@ function send(text){
   c.model=modelSel.value||c.model||settings.model;
   mfPush(c.model);
   var tl=text||(attach[0]&&attach[0].name)||"Obrolan";if(!c.messages.length)c.title=tl.length>42?tl.slice(0,42)+"…":tl;
-  var full=text;
+  var full=text,imgs=[],missing=[];
   attach.forEach(function(f){
     var info=f.name+(f.type?" | "+f.type:"")+" | "+fsz(f.size);
-    full+="\n\n[File: "+info+"]\n"+(f.url?"Link unduh (uguu.se, sementara): "+f.url+"\n":"")+(f.bin?"(File non-teks: buka isinya lewat link di atas.)\n":f.text+"\n")+"[Akhir file: "+f.name+"]";
+    var isVid=/^video\//.test(f.type||"");
+    full+="\n\n[File: "+info+"]\n";
+    if(f.url)full+="Tautan file ("+fsz(f.size)+"): "+f.url+"\n";
+    if(f.bin){
+      if(f.dataUrl)full+=(isVid?"(Model tidak bisa menonton video; cuplikan gambarnya dikirim ke model.)\n":"(Gambar dikirim langsung ke model.)\n");
+      else full+="(File non-teks"+(f.url?"":" — tautan belum tersedia")+")\n";
+    }else full+=(f.text||"")+"\n";
+    full+="[Akhir file: "+f.name+"]";
+    if(f.dataUrl&&visionOn())imgs.push(f);
+    if(f.bin&&!f.dataUrl&&!f.url)missing.push(f.name);
   });
-  c.messages.push({role:"user",content:full.trim(),text:text,files:attach.map(function(f){return{name:f.name,size:f.size,url:f.url||""}})});
+  if(missing.length){
+    alert("Lampiran ini belum berhasil diunggah: "+missing.join(", ")+".\nTekan tombol ↻ pada lampiran untuk mencoba lagi, atau hapus lampiran tersebut.");
+    return;
+  }
+  var parts=null;
+  if(imgs.length){
+    parts=[{type:"text",text:full.trim()}];
+    imgs.forEach(function(f){parts.push({type:"image_url",image_url:{url:f.dataUrl}})});
+  }
+  c.messages.push({role:"user",content:parts||full.trim(),text:text,
+    files:attach.map(function(f){return{name:f.name,size:f.size,url:f.url||"",thumb:f.thumb||"",full:f.dataUrl||"",type:f.type||"",bin:!!f.bin,img:!!f.dataUrl,host:f.host||""}})});
   attach=[];renderChips();
   c.messages.push({role:"assistant",content:""});
   input.value="";autosize();
@@ -1660,6 +1728,7 @@ function openSettings(){
   pendingTheme=THEMES.indexOf(settings.theme)>-1?settings.theme:"neulight";markTheme(pendingTheme);
   var adm=!!(session&&session.admin);$("cfgBox").style.display=adm?"":"none";$("checkQuota").style.display=adm?"":"none";
   $("tourAdminBtn").hidden=!adm;
+  $("sVision").checked=visionOn();
   closeSide();dlg.showModal();
 }
 $("sTemp").oninput=function(){$("tempVal").textContent=this.value};
@@ -1673,7 +1742,7 @@ $("saveDlg").onclick=async function(){
     try{await tcall("app_cfg_set",{b:b,k:k});settings.baseUrl=b;settings.apiKey=k}
     catch(e){if(!handleAuthErr(e))alert(e.message);return}
   }
-  settings.theme=pendingTheme||settings.theme;persist();dlg.close();fetchQuota();
+  settings.theme=pendingTheme||settings.theme;settings.vision=$("sVision").checked;persist();dlg.close();fetchQuota();
 };
 $("checkQuota").onclick=async function(){
   var out=$("quotaOut");out.style.display="block";out.textContent="Memeriksa…";
@@ -2351,6 +2420,7 @@ function mpRender(){
     if(session&&session.admin)fs2.push("Anda admin: semua model terbuka.");
     else if(memberPlan)fs2.push("Model lain tersedia di paket Best \u2014 buka \u201cLihat paket & harga\u201d.");
     if(mfav.length)fs2.push(mfav.length+" favorit disimpan di perangkat ini.");
+    fs2.push("Gambar yang Anda lampirkan dikirim ke model (dikecilkan otomatis). Bila model menolak gambar, pesan dikirim ulang tanpa gambar.");
     foot.textContent=fs2.join(" ");
   }
 }
@@ -2537,74 +2607,219 @@ async function maybeTour(){
 $("tourBtn").onclick=function(){if(dlg.open)dlg.close();startTour(TOUR,"member")};
 $("tourAdminBtn").onclick=function(){if(dlg.open)dlg.close();startTour(TOUR_ADMIN,"admin")};
 $("tourAdminDash").onclick=function(){if(admDlg.open)admDlg.close();startTour(TOUR_ADMIN,"admin")};
-/* ---------- lampiran file/* ---------- lampiran file (diunggah ke uguu.se, link-nya dikirim ke AI) ---------- */
+/* ---------- lampiran: gambar (langsung ke model) & file lain (tautan) ---------- */
 var attach=[],fileIn=$("fileIn"),chips=$("chips");
-var UGUU="https://uguu.se/upload",UGUU_MAX=128*1024*1024;
 function fsz(n){return n<1024?n+" B":n<1048576?(n/1024).toFixed(1)+" KB":(n/1048576).toFixed(2)+" MB"}
 function uploading(){return attach.some(function(f){return f.up})}
-async function uguuUpload(file){
-  var eps=[UGUU+"?output=json"],last=null;
-  for(var i=0;i<eps.length;i++){
-    try{
-      var fd=new FormData();fd.append("files[]",file,file.name);
-      var r=await fetch(eps[i],{method:"POST",body:fd}),t=await r.text(),j=null;
-      try{j=JSON.parse(t)}catch(e){}
-      if(!r.ok){last=new Error("uguu.se menolak file ("+r.status+")"+((j&&j.description)?": "+j.description:""));continue}
-      var u=(j&&j.files&&j.files[0]&&j.files[0].url)||(j&&j.url)||(/^https?:\/\/\S+$/.test(t.trim())?t.trim():"");
-      if(u)return u;
-      last=new Error((j&&j.description)||"Balasan uguu.se tidak berisi link");
-    }catch(e){last=(e&&e.name==="TypeError")?new Error("Tidak bisa terhubung ke uguu.se (jaringan atau diblokir browser)"):e}
+function visionOn(){return settings.vision!==false}
+function plainOf(m){
+  if(!m)return "";
+  if(typeof m.content==="string")return m.content;
+  if(Array.isArray(m.content)){
+    var t=[];
+    m.content.forEach(function(p){if(p&&p.type==="text")t.push(p.text||"")});
+    return t.join("\n");
   }
-  throw last||new Error("Gagal mengunggah");
+  return m.text||"";
+}
+function isImgFile(f){return /^image\//.test(f.type||"")&&!/svg\+xml/i.test(f.type||"")}
+function isVidFile(f){return /^video\//.test(f.type||"")}
+var HOSTS=[
+  {id:"tmpfiles",name:"tmpfiles.org",max:95*1024*1024},
+  {id:"litterbox",name:"litterbox",max:900*1024*1024},
+  {id:"uguu",name:"uguu.se",max:120*1024*1024}
+];
+function xhrPost(url,fd,onProg){
+  return new Promise(function(res,rej){
+    var x=new XMLHttpRequest();
+    x.open("POST",url,true);x.timeout=600000;
+    if(x.upload&&onProg)x.upload.onprogress=function(e){if(e.lengthComputable)onProg(e.loaded/e.total)};
+    x.onload=function(){res({status:x.status,text:x.responseText||""})};
+    x.onerror=function(){rej(new Error("koneksi/CORS ditolak browser"))};
+    x.ontimeout=function(){rej(new Error("waktu unggah habis"))};
+    x.send(fd);
+  });
+}
+async function hostUpload(h,file,onProg){
+  var fd=new FormData(),r,j,u;
+  if(h.id==="tmpfiles"){
+    fd.append("file",file,file.name);
+    r=await xhrPost("https://tmpfiles.org/api/v1/upload",fd,onProg);
+    if(r.status!==200)throw new Error("HTTP "+r.status);
+    try{j=JSON.parse(r.text)}catch(e){throw new Error("balasan tidak dikenali")}
+    u=j&&j.data&&j.data.url;
+    if(!u)throw new Error("balasan tanpa tautan");
+    return u.indexOf("tmpfiles.org/dl/")>-1?u:u.replace("tmpfiles.org/","tmpfiles.org/dl/");
+  }
+  if(h.id==="litterbox"){
+    fd.append("reqtype","fileupload");fd.append("time","1h");fd.append("fileToUpload",file,file.name);
+    r=await xhrPost("https://litterbox.catbox.moe/resources/internals/api.php",fd,onProg);
+    u=(r.text||"").trim();
+    if(r.status!==200||!/^https?:\/\/\S+$/.test(u))throw new Error(u.slice(0,70)||("HTTP "+r.status));
+    return u;
+  }
+  fd.append("files[]",file,file.name);
+  r=await xhrPost("https://uguu.se/upload?output=json",fd,onProg);
+  try{j=JSON.parse(r.text)}catch(e){}
+  u=j&&j.files&&j.files[0]&&j.files[0].url;
+  if(!u)throw new Error((j&&j.description)||("HTTP "+r.status));
+  return u;
+}
+async function uploadAny(file,ent){
+  var errs=[];
+  for(var i=0;i<HOSTS.length;i++){
+    var h=HOSTS[i];
+    if(file.size>h.max){errs.push(h.name+" (batas "+fsz(h.max)+")");continue}
+    try{
+      ent.status="mengunggah ke "+h.name;
+      renderChips();
+      var u=await hostUpload(h,file,function(p){
+        ent.status="mengunggah ke "+h.name+" "+Math.round(p*100)+"%";
+        if(!ent._t){ent._t=setTimeout(function(){ent._t=0;renderChips()},400)}
+      });
+      ent.url=u;ent.host=h.name;ent.err="";ent.canRetry=false;
+      return u;
+    }catch(e){errs.push(h.name+": "+((e&&e.message)||"gagal"))}
+  }
+  throw new Error(errs.join(" · ")||"tidak ada host yang bisa menerima file ini");
+}
+function imgScale(file,maxDim,q){
+  return new Promise(function(res,rej){
+    var u=URL.createObjectURL(file),im=new Image();
+    im.onload=function(){
+      try{
+        var sc=Math.min(1,maxDim/Math.max(im.width||1,im.height||1));
+        var w=Math.max(1,Math.round((im.width||1)*sc)),hh=Math.max(1,Math.round((im.height||1)*sc));
+        var cv=document.createElement("canvas");cv.width=w;cv.height=hh;
+        cv.getContext("2d").drawImage(im,0,0,w,hh);
+        URL.revokeObjectURL(u);
+        res({data:cv.toDataURL("image/jpeg",q),w:w,h:hh});
+      }catch(e){URL.revokeObjectURL(u);rej(e)}
+    };
+    im.onerror=function(){URL.revokeObjectURL(u);rej(new Error("gambar tidak bisa dibaca browser (format HEIC/RAW?)"))};
+    im.src=u;
+  });
+}
+function videoFrame(file){
+  return new Promise(function(res,rej){
+    var u=URL.createObjectURL(file),v=document.createElement("video"),done=false;
+    v.preload="metadata";v.muted=true;v.playsInline=true;v.setAttribute("playsinline","");
+    function finish(){
+      if(done)return;done=true;
+      try{
+        var w=v.videoWidth||0,hh=v.videoHeight||0;
+        if(!w||!hh)throw new Error("ukuran video belum terbaca");
+        var sc=Math.min(1,960/Math.max(w,hh));
+        var cv=document.createElement("canvas");cv.width=Math.round(w*sc);cv.height=Math.round(hh*sc);
+        cv.getContext("2d").drawImage(v,0,0,cv.width,cv.height);
+        URL.revokeObjectURL(u);
+        res({data:cv.toDataURL("image/jpeg",.72),sec:v.currentTime||0});
+      }catch(e){URL.revokeObjectURL(u);rej(e)}
+    }
+    v.onloadeddata=function(){try{v.currentTime=Math.min(1.5,(v.duration||3)/3)}catch(e){finish()}};
+    v.onseeked=finish;
+    v.onerror=function(){URL.revokeObjectURL(u);rej(new Error("video tidak bisa dibaca browser"))};
+    setTimeout(function(){if(!done)finish()},5000);
+    v.src=u;
+  });
 }
 function renderChips(){
   chips.innerHTML="";
   attach.forEach(function(f,i){
     var sp=document.createElement("span");sp.className="fchip";
-    sp.textContent=(f.up?"\u23F3 ":f.url?"\uD83D\uDD17 ":"")+f.name+" · "+fsz(f.size)+(f.up?" · mengunggah…":f.err?" · hanya teks":"");
+    var ic=f.up?"\u23F3":f.url?"\uD83D\uDD17":(f.dataUrl?"\uD83D\uDDBC":"\uD83D\uDCC4");
+    var note=f.up?" · "+(f.status||"mengunggah…"):(f.err?" · gagal":(f.host?" · "+f.host:" · siap"));
+    sp.textContent=ic+" "+f.name+" · "+fsz(f.size)+note;
     if(f.err)sp.title=f.err;
-    var x=document.createElement("button");x.type="button";x.textContent="×";x.setAttribute("aria-label","Hapus "+f.name);
-    x.onclick=function(){attach.splice(i,1);renderChips()};sp.appendChild(x);chips.appendChild(sp);
+    if(f.err&&!f.up){var rb=document.createElement("button");rb.type="button";rb.className="rt";rb.textContent="\u21BB";
+      rb.title="Coba unggah lagi";rb.setAttribute("aria-label","Coba unggah lagi "+f.name);
+      rb.onclick=function(){retryUpload(f)};sp.appendChild(rb)}
+    var x=document.createElement("button");x.type="button";x.textContent="\u00d7";x.setAttribute("aria-label","Hapus "+f.name);
+    x.onclick=function(){attach.splice(i,1);renderChips()};
+    sp.appendChild(x);chips.appendChild(sp);
   });
   chips.style.display=attach.length?"flex":"none";
+}
+function retryUpload(ent){
+  if(ent.up||!ent.file)return;
+  ent.up=true;ent.err="";ent.status="menyiapkan…";renderChips();
+  uploadAny(ent.file,ent).catch(function(e){ent.err=(e&&e.message)||"Gagal mengunggah"})
+    .then(function(){ent.up=false;renderChips()});
+}
+function addAttachment(file){
+  var ent={name:file.name,size:file.size,type:file.type||"",text:"",bin:!isImgFile(file),url:"",up:true,err:"",status:"menyiapkan…",file:file,thumb:"",dataUrl:""};
+  attach.push(ent);renderChips();
+  if(isImgFile(file)){
+    ent.bin=true;
+    imgScale(file,1280,.82).then(function(big){
+      ent.dataUrl=big.data;ent.iw=big.w;ent.ih=big.h;
+      return imgScale(file,180,.6);
+    }).then(function(small){
+      ent.thumb=small.data;ent.status="gambar siap dikirim ke model";renderChips();
+    }).catch(function(e){
+      ent.imgErr=(e&&e.message)||"gambar tidak bisa diproses";
+      ent.status="dikirim sebagai tautan";
+      renderChips();
+    });
+  }else if(isVidFile(file)){
+    ent.bin=true;
+    videoFrame(file).then(function(fr){
+      ent.dataUrl=fr.data;ent.thumb=fr.data;ent.sec=fr.sec;
+      ent.status="cuplikan video siap";renderChips();
+    }).catch(function(e){
+      ent.imgErr=(e&&e.message)||"cuplikan video tidak bisa dibuat";
+      ent.status="dikirim sebagai tautan";
+      renderChips();
+    });
+  }
+  uploadAny(file,ent).then(function(){ent.up=false;renderChips()})
+    .catch(function(e){ent.up=false;ent.err=(e&&e.message)||"Gagal mengunggah";renderChips()});
 }
 $("attachBtn").onclick=function(){fileIn.click()};
 fileIn.onchange=async function(){
   var fl=Array.prototype.slice.call(fileIn.files);fileIn.value="";
   for(var i=0;i<fl.length;i++){
-    var f=fl[i],txt="",bin=false;
-    if(f.size>UGUU_MAX){alert(f.name+" lebih dari 128 MB (batas uguu.se). File dilewati.");continue}
+    var f=fl[i];
+    if(isImgFile(f)||isVidFile(f)){addAttachment(f);continue}
+    var txt="",bin=false;
     try{
       bin=(await f.slice(0,8192).text()).indexOf("\u0000")!==-1;
       if(!bin){
-        if(f.size>8*1024*1024)bin=true;                       /* terlalu besar untuk ditempel: kirim link saja */
+        if(f.size>8*1024*1024)bin=true;
         else{txt=await f.text();if(txt.indexOf("\u0000")!==-1){bin=true;txt=""}}
       }
     }catch(e){alert("Gagal membaca "+f.name);continue}
     if(!bin){
       var tk=Math.ceil(txt.length/3.5);
-      var sum=attach.reduce(function(a,x){return a+Math.ceil(x.text.length/3.5)},0)+tk;
+      var sum=attach.reduce(function(a,x){return a+Math.ceil((x.text||"").length/3.5)},0)+tk;
       if(sum>1000000){
         if(!confirm("PERINGATAN: perkiraan "+nf(sum)+" token, lebih dari 1 juta. Ini akan memakai token sangat banyak dan bisa gagal.\n\nTetap lanjutkan?"))continue;
       }else if(f.size>100*1024){
         if(!confirm("File besar: "+f.name+" ("+fsz(f.size)+", sekitar "+nf(tk)+" token).\nIsinya dikirim utuh tanpa dipotong dan akan memakai banyak token.\n\nTetap lanjutkan?"))continue;
       }
     }
-    var ent={name:f.name,size:f.size,type:f.type||"",text:txt,bin:bin,url:"",up:true,err:""};
+    var ent={name:f.name,size:f.size,type:f.type||"",text:txt,bin:bin,url:"",up:true,err:"",status:"menyiapkan…",file:f,thumb:"",dataUrl:""};
     attach.push(ent);renderChips();
-    (function(ent,file){
-      uguuUpload(file).then(function(u){ent.url=u},function(e){ent.err=(e&&e.message)||"Gagal mengunggah"}).then(function(){
-        ent.up=false;
-        if(ent.err&&ent.bin){
-          var ix=attach.indexOf(ent);if(ix>-1)attach.splice(ix,1);
-          alert("Gagal mengunggah "+ent.name+" ke uguu.se: "+ent.err+".\nFile non-teks tidak bisa dikirim tanpa link, jadi dibatalkan.");
-        }
-        renderChips();
-      });
-    })(ent,f);
+    uploadAny(f,ent).then(function(){ent.up=false;renderChips()})
+      .catch(function(e){ent.up=false;ent.err=(e&&e.message)||"Gagal mengunggah";renderChips()});
   }
 };
-
+/* ---------- pratinjau gambar ---------- */
+var lightbox=$("lightbox"),lightboxImg=$("lightboxImg");
+function openLightbox(src,alt){
+  if(!lightbox||!src)return;
+  lightboxImg.src=src;lightboxImg.alt=alt||"";
+  lightbox.classList.add("show");lightbox.setAttribute("aria-hidden","false");
+}
+function closeLightbox(){
+  if(!lightbox)return;
+  lightbox.classList.remove("show");lightbox.setAttribute("aria-hidden","true");lightboxImg.src="";
+}
+if(lightbox){
+  lightbox.addEventListener("click",function(e){if(e.target===lightbox||e.target===lightboxImg)closeLightbox()});
+  $("lightboxX").onclick=closeLightbox;
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&lightbox.classList.contains("show"))closeLightbox()});
+}
 /* ---------- panggilan bertoken, config, pin ---------- */
 function tcall(fn,args){return rpc(fn,Object.assign({u:session.u,p:session.p,t:session.t},args||{}))}
 function handleAuthErr(e){
@@ -2622,7 +2837,7 @@ async function loadCfg(){
   if(MODELS.indexOf(settings.model)<0)settings.model="auto";
 }
 async function pushPin(c){
-  var ms=await tcall("app_pin_put",{cid:c.id,ttl:c.title,mdl:c.model||settings.model,msgs:c.messages});
+  var ms=await tcall("app_pin_put",{cid:c.id,ttl:c.title,mdl:c.model||settings.model,msgs:slimChat(c).messages});
   c.synced=Number(ms);c.pinned=true;persist();return ms;
 }
 async function togglePin(c){
