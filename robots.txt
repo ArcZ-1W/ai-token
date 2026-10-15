@@ -1,0 +1,6 @@
+﻿User-agent: *
+Allow: /
+Disallow: /_internal/
+
+# Setelah domain aktif, tambahkan baris berikut (ganti contoh domainnya):
+# Sitemap: https://domain-anda.com/sitemap.xml
