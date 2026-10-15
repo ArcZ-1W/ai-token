@@ -27,6 +27,40 @@
 <meta name="twitter:image:alt" content="Xozen AI">
 
 <script>try{var __o=JSON.parse(localStorage.getItem("glassai.settings")||"{}")||{},__t=__o.themeV===2?__o.theme:null;document.documentElement.setAttribute("data-theme",["glass","glassold","glasswhite","neu","neulight"].indexOf(__t)>-1?__t:"neulight")}catch(e){document.documentElement.setAttribute("data-theme","neu")}</script>
+<!-- ====== KEAMANAN ====== -->
+<meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex,nofollow">
+<script>
+(function(){
+"use strict";
+/* anti-framing (clickjacking) */
+try{if(window.top!==window.self){document.documentElement.style.display="none";window.top.location=window.self.location}}catch(e){document.documentElement.style.display="none"}
+function inField(t){return t&&t.closest&&t.closest("input,textarea,pre,code,[contenteditable=true]")}
+/* blok klik kanan (kecuali kolom input & blok kode) */
+document.addEventListener("contextmenu",function(e){if(!inField(e.target))e.preventDefault()});
+/* blok pintasan inspect / view-source / simpan */
+document.addEventListener("keydown",function(e){
+  var k=(e.key||"").toLowerCase(),c=e.ctrlKey||e.metaKey;
+  if(e.key==="F12"||(c&&e.shiftKey&&/^(i|j|c|k)$/.test(k))||(c&&(k==="u"||k==="s"))||(e.metaKey&&e.altKey&&/^(i|j|c|u)$/.test(k))){e.preventDefault();e.stopPropagation();return false}
+},true);
+/* blok drag gambar */
+document.addEventListener("dragstart",function(e){if(e.target&&e.target.tagName==="IMG")e.preventDefault()});
+/* deteksi DevTools terbuka (hanya desktop) lalu tutup tampilan */
+var ov=null,desk=window.matchMedia&&matchMedia("(pointer:fine)").matches&&!/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+function lock(on){
+  if(on&&!ov){ov=document.createElement("div");
+    ov.setAttribute("style","position:fixed;inset:0;z-index:2147483647;background:#080b18;color:#f4f6ff;display:flex;align-items:center;justify-content:center;text-align:center;font:600 16px system-ui,sans-serif;padding:24px");
+    ov.textContent="Tutup Developer Tools untuk melanjutkan.";document.documentElement.appendChild(ov)}
+  else if(!on&&ov){ov.remove();ov=null}
+}
+if(desk){setInterval(function(){
+  var w=window.outerWidth-window.innerWidth>200,h=window.outerHeight-window.innerHeight>260;
+  lock(w||h);
+},1000)}
+})();
+</script>
+<!-- ====== /KEAMANAN ====== -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@400..800&display=swap" rel="stylesheet">
@@ -753,6 +787,26 @@ html[data-theme^="neu"] .tcard{box-shadow:var(--raise)}
 .tbtns .btn{font-size:13px;padding:8px 13px}
 .tour-hi{position:relative;z-index:131;border-radius:14px;animation:thi 1.4s ease-in-out infinite alternate}
 @keyframes thi{from{box-shadow:0 0 0 2px var(--accent),0 0 12px -2px var(--accent)}to{box-shadow:0 0 0 3px var(--accent-2),0 0 30px 2px var(--accent-2)}}
+/* --- tur: spotlight + kartu yang menempel di elemen --- */
+.tour.spot{display:block;background:transparent;padding:0}
+.tspot{position:fixed;left:0;top:0;width:0;height:0;border-radius:16px;pointer-events:none;z-index:0;opacity:0;
+  box-shadow:0 0 0 9999px rgba(4,6,16,.76);
+  transition:left .42s cubic-bezier(.2,.8,.2,1),top .42s cubic-bezier(.2,.8,.2,1),width .42s cubic-bezier(.2,.8,.2,1),height .42s cubic-bezier(.2,.8,.2,1),border-radius .42s,opacity .25s}
+.tour.spot .tspot{opacity:1}
+.tspot::before{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid var(--accent-2);box-shadow:0 0 22px -2px var(--accent-2),inset 0 0 14px -6px var(--accent-2)}
+.tspot::after{content:"";position:absolute;inset:-2px;border-radius:inherit;border:2px solid var(--accent-2);animation:tpulse 1.6s ease-out infinite}
+@keyframes tpulse{0%{transform:scale(1);opacity:.85}100%{transform:scale(1.14);opacity:0}}
+.tour.spot .tcard{position:fixed;z-index:2;margin:0;width:min(370px,calc(100vw - 24px));animation:none;transform:none;opacity:1;
+  transition:left .42s cubic-bezier(.2,.8,.2,1),top .42s cubic-bezier(.2,.8,.2,1)}
+.tour.spot .tcard p{min-height:0}
+.tcount{position:absolute;top:38px;left:80px;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+.tarrow{position:absolute;width:14px;height:14px;background:var(--bg);border:1px solid var(--glass-edge);transform:rotate(45deg);display:none;pointer-events:none}
+.tarrow.below{display:block;top:-8px;margin-left:-7px;border-right:0;border-bottom:0}
+.tarrow.above{display:block;bottom:-8px;margin-left:-7px;border-left:0;border-top:0}
+.tarrow.right{display:block;left:-8px;margin-top:-7px;border-top:0;border-right:0}
+.tarrow.left{display:block;right:-8px;margin-top:-7px;border-bottom:0;border-left:0}
+.tour.finish .tspot,.tour.finish .tarrow,.tour.finish .tcount{display:none}
+@media (prefers-reduced-motion:reduce){.tspot,.tour.spot .tcard{transition:none}.tspot::after{animation:none}}
 .tour.finish{pointer-events:none}
 .tour.finish .tic,.tour.finish h3,.tour.finish p,.tour.finish .tbar,.tour.finish .pclose{opacity:0;transition:opacity .16s}
 .tour.finish .tcard{background:#fff!important;border-color:#fff!important;box-shadow:none!important;animation:tSwell .62s cubic-bezier(.55,0,.72,.2) forwards}
@@ -902,11 +956,13 @@ html[data-theme^="neu"] .mstar.on{background:var(--acc-grad);box-shadow:var(--ra
   <div class="mfoot" id="mpFoot"></div>
 </div></div>
 
-<div class="tour" id="tour" aria-hidden="true"><div class="tcard" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+<div class="tour" id="tour" aria-hidden="true"><div class="tspot" id="tourSpot" aria-hidden="true"></div><div class="tcard" role="dialog" aria-modal="true" aria-labelledby="tourTitle">
   <button type="button" class="pclose" id="tourX" aria-label="Keluar dari tur">&times;</button>
   <div class="tic" id="tourIc" aria-hidden="true">&#10024;</div>
+  <span class="tcount" id="tourCount"></span>
   <h3 id="tourTitle">Selamat datang</h3>
   <p id="tourText"></p>
+  <i class="tarrow" id="tourArrow" aria-hidden="true"></i>
   <div class="tbar">
     <span class="tdots" id="tourDots" aria-hidden="true"></span>
     <div class="tbtns">
@@ -1020,6 +1076,7 @@ html[data-theme^="neu"] .mstar.on{background:var(--acc-grad);box-shadow:var(--ra
     </div>
   </section>
 
+  <div class="adm-err" id="wizErr" role="alert"></div>
   <div class="wiz-foot">
     <button type="button" class="btn" id="wizBack">Kembali</button>
     <button type="button" class="btn primary" id="wizNext">Lanjut</button>
@@ -1159,7 +1216,7 @@ function persist(){
   if(session){save(ckey("chats"),chats);save(ckey("active"),activeId)}
   var st=Object.assign({},settings);delete st.baseUrl;delete st.apiKey;save("glassai.settings",st);
 }
-function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
 
 /* ---------- markdown ringan ---------- */
 function md(src){
@@ -1784,7 +1841,11 @@ gate();
 
 /* ---------- dashboard admin ---------- */
 var admDlg=$("admDlg");
-function admErr(m){$("admErr").textContent=m||""}
+function admErr(m){
+  $("admErr").textContent=m||"";
+  var w=$("wizErr"),d=$("wizDlg");
+  if(w)w.textContent=(d&&d.open)?(m||""):"";
+}
 async function admCall(fn,args){admErr();try{var r=await rpc(fn,Object.assign({au:session.u,ap:session.p},args||{}));return r}catch(e){admErr(e.message);return undefined}}
 async function admT(fn,args){admErr();try{return await tcall(fn,args)}catch(e){if(!handleAuthErr(e))admErr(e.message);return undefined}}
 var UNIT={s:1,m:60,h:3600,d:86400,y:31536000};
@@ -1943,6 +2004,14 @@ function wizSummary(){
   if(!planApiOk){w.hidden=false;w.textContent="Catatan: penyimpanan paket per akun belum aktif di server, jadi akses model belum dikunci per akun. Jalankan file supabase-member-plan.sql di Supabase SQL Editor (sekali saja), lalu buat ulang/ubah paket akun ini."}
   else w.hidden=true;
 }
+function wizFriendly(m){
+  m=String(m||"");
+  if(/duplicate|already|exists|unique|sudah/i.test(m))return"Username \u201c"+$("wU").value.trim().toLowerCase()+"\u201d sudah dipakai. Ganti username lain. ("+m+")";
+  if(/could not find the function|does not exist|PGRST202|schema cache/i.test(m))return"Fungsi database belum ada di Supabase (app_admin_create). Jalankan file SQL akun/admin di SQL Editor dulu. ("+m+")";
+  if(/not allowed|forbidden|unauthor|denied|bukan admin|not admin/i.test(m))return"Akses ditolak: sesi admin tidak valid. Keluar lalu login admin lagi. ("+m+")";
+  if(/Failed to fetch|NetworkError|Load failed/i.test(m))return"Tidak bisa terhubung ke server. Cek internet lalu coba lagi.";
+  return m;
+}
 async function wizCreate(){
   if(wizBusy)return;
   var u=$("wU").value.trim().toLowerCase(),p=$("wP").value,ns=parseDur($("wT").value),pin=parseInt($("wPin").value,10);
@@ -1950,19 +2019,30 @@ async function wizCreate(){
   if(!p||p.length<6){admErr("Password minimal 6 karakter.");return}
   if(!ns){admErr(DURERR);return}
   if(!(pin>=0)){admErr("Limit pin tidak valid.");return}
-  wizBusy=true;$("wizNext").disabled=true;$("wizNext").textContent="Membuat\u2026";
-  var ok=await admCall("app_admin_create",{nu:u,np:p,ns:ns,la:wizPick.x,lo:wizPick.y});
-  if(ok===undefined){wizBusy=false;$("wizNext").disabled=false;$("wizNext").textContent="Buat akun sekarang";return}
-  await admT("app_admin_setpin",{nu:u,lim:pin});
-  var planRes=await setPlanFor(u,wizPick.plan,false);
-  wizBusy=false;$("wizNext").disabled=false;
-  var expTxt=new Date(Date.now()+ns*1000).toLocaleDateString("id-ID",{dateStyle:"long"});
-  wizCreated={u:u,p:p,plan:wizPick.plan,ns:ns,expTxt:expTxt,pin:pin,planSaved:planRes!==undefined};
-  $("wizDone").innerHTML="<b>Akun "+esc(u)+" berhasil dibuat.</b><br>Paket "+planName(wizPick.plan)+" &middot; "+wizPick.x+"&times; Xozen AI + "+wizPick.y+"&times; model AI lain &middot; aktif sampai "+esc(expTxt)+"."+
-    (planRes===undefined?"<br><b>Akses model belum tersimpan di server</b> (jalankan supabase-member-plan.sql), untuk sekarang akun ini terbaca sebagai paket dari kuotanya.":"");
-  $("wizMsg").value=wizMessage();
-  $("wizWa").href="https://wa.me/?text="+encodeURIComponent($("wizMsg").value);
-  wizPane(4);
+  if(!wizPick){admErr("Pilih template paket dulu.");wizPane(1);return}
+  wizBusy=true;$("wizNext").disabled=true;$("wizNext").textContent="Membuat\u2026";admErr("");
+  function fail(msg){admErr(msg);wizBusy=false;$("wizNext").disabled=false;$("wizNext").textContent="Buat akun sekarang"}
+  try{
+    var ok;
+    try{ok=await rpc("app_admin_create",{au:session.u,ap:session.p,nu:u,np:p,ns:ns,la:wizPick.x,lo:wizPick.y})}
+    catch(e){if(handleAuthErr(e)){fail("");return}fail("Gagal membuat akun: "+wizFriendly(e.message));return}
+    var pinRes=await admT("app_admin_setpin",{nu:u,lim:pin});
+    var pinFail=(pinRes===undefined);
+    var pinMsg=$("wizErr").textContent;
+    var planRes=await setPlanFor(u,wizPick.plan,false);
+    wizBusy=false;$("wizNext").disabled=false;
+    var expTxt=new Date(Date.now()+ns*1000).toLocaleDateString("id-ID",{dateStyle:"long"});
+    wizCreated={u:u,p:p,plan:wizPick.plan,ns:ns,expTxt:expTxt,pin:pin,planSaved:planRes!==undefined};
+    $("wizDone").innerHTML="<b>Akun "+esc(u)+" berhasil dibuat.</b><br>Paket "+planName(wizPick.plan)+" &middot; "+wizPick.x+"&times; Xozen AI + "+wizPick.y+"&times; model AI lain &middot; aktif sampai "+esc(expTxt)+"."+
+      (pinFail?"<br><b>Limit pin belum tersimpan</b>"+(pinMsg?" ("+esc(pinMsg)+")":"")+". Atur ulang dari daftar akun.":"")+
+      (planRes===undefined?"<br><b>Akses model belum tersimpan di server</b> (jalankan supabase-member-plan.sql), untuk sekarang akun ini terbaca sebagai paket dari kuotanya.":"");
+    $("wizMsg").value=wizMessage();
+    $("wizWa").href="https://wa.me/?text="+encodeURIComponent($("wizMsg").value);
+    admErr("");
+    wizPane(4);
+  }catch(e){
+    fail("Terjadi kesalahan: "+wizFriendly(e&&e.message));
+  }
 }
 function appLink(){
   return (location.protocol==="http:"||location.protocol==="https:")?(location.origin+location.pathname):"https://<domain-aplikasi-Xozen-AI>";
@@ -2293,18 +2373,72 @@ var TOUR_ADMIN=[
   {ic:"\uD83D\uDDC4\uFE0F",t:"Sekali saja: jalankan SQL",d:"Jalankan supabase-member-plan.sql di Supabase SQL Editor agar paket per akun dan penanda pengguna baru (tutorial otomatis member) aktif. Statusnya tampil di bagian atas Dashboard Admin.",last:true}
 ];
 var tourEl=$("tour"),tourStep=0,tourShown=false,tourApiOk=true,tourSteps=TOUR,tourKind="member";
-function tourHighlight(id){
-  Array.prototype.forEach.call(document.querySelectorAll(".tour-hi"),function(x){x.classList.remove("tour-hi")});
-  if(!id)return;
-  var n=$(id);
-  if(!n||!n.offsetParent)return;
-  n.classList.add("tour-hi");
+var tourTarget=null,tourTimer=0;
+function tourVisible(n){
+  if(!n)return false;
+  var r=n.getBoundingClientRect(),cs=getComputedStyle(n);
+  return r.width>0&&r.height>0&&cs.display!=="none"&&cs.visibility!=="hidden";
 }
+function tourClear(){
+  clearTimeout(tourTimer);tourTarget=null;
+  var sp=$("tourSpot"),cd=tourEl.querySelector(".tcard");
+  tourEl.classList.remove("spot");
+  sp.removeAttribute("style");cd.style.cssText="";
+  $("tourArrow").className="tarrow";
+}
+function tourPlace(){
+  var n=tourTarget?$(tourTarget):null;
+  var sp=$("tourSpot"),cd=tourEl.querySelector(".tcard"),ar=$("tourArrow");
+  if(!tourVisible(n)){tourClear();return}
+  try{n.scrollIntoView({block:"nearest",inline:"nearest"})}catch(e){}
+  var first=!tourEl.classList.contains("spot");
+  if(first){sp.style.transition="none";cd.style.transition="none";tourEl.classList.add("spot")}
+  var W=window.innerWidth,H=window.innerHeight,P=7,G=16,M=12;
+  var r=n.getBoundingClientRect();
+  var sx=Math.max(0,r.left-P),sy=Math.max(0,r.top-P);
+  var sw=Math.min(W,r.right+P)-sx,sh=Math.min(H,r.bottom+P)-sy;
+  sp.style.left=sx+"px";sp.style.top=sy+"px";sp.style.width=sw+"px";sp.style.height=sh+"px";
+  sp.style.borderRadius=Math.min(18,sw/2,sh/2)+"px";
+  var cw=cd.offsetWidth,ch=cd.offsetHeight,pos,left,top;
+  function cl(v,a,b){return Math.max(a,Math.min(b,v))}
+  var below=H-(sy+sh)-G-M,above=sy-G-M,rightRoom=W-(sx+sw)-G-M,leftRoom=sx-G-M;
+  if(below>=ch){pos="below";top=sy+sh+G}
+  else if(above>=ch){pos="above";top=sy-G-ch}
+  else if(rightRoom>=cw){pos="right";left=sx+sw+G;top=sy+sh/2-ch/2}
+  else if(leftRoom>=cw){pos="left";left=sx-G-cw;top=sy+sh/2-ch/2}
+  else{pos="none";top=(sy+sh/2<H/2)?H-ch-M:M}
+  if(pos==="below"||pos==="above"||pos==="none")left=cl(sx+sw/2-cw/2,M,Math.max(M,W-cw-M));
+  top=cl(top,M,Math.max(M,H-ch-M));
+  cd.style.left=left+"px";cd.style.top=top+"px";
+  ar.className="tarrow"+(pos==="none"?"":" "+pos);
+  if(pos==="below"||pos==="above")ar.style.cssText="left:"+cl(sx+sw/2-left,24,cw-24)+"px";
+  else if(pos==="left"||pos==="right")ar.style.cssText="top:"+cl(sy+sh/2-top,24,ch-24)+"px";
+  if(first){void cd.offsetWidth;sp.style.transition="";cd.style.transition=""}
+}
+function tourHighlight(id){
+  clearTimeout(tourTimer);
+  tourTarget=id||null;
+  var n=id?$(id):null;
+  var mobile=window.matchMedia&&window.matchMedia("(max-width:820px)").matches;
+  var inSide=!!(n&&$("side")&&$("side").contains(n));
+  if(mobile){if(inSide)openSide();else closeSide()}
+  if(!n){tourClear();return}
+  if(mobile&&inSide){tourTimer=setTimeout(tourPlace,340)}   /* tunggu sidebar selesai bergeser */
+  else tourPlace();
+}
+window.addEventListener("resize",function(){if(tourEl&&tourEl.classList.contains("show")&&tourTarget)tourPlace()});
+document.addEventListener("keydown",function(e){
+  if(!tourEl||!tourEl.classList.contains("show")||tourEl.classList.contains("finish"))return;
+  if(e.key==="Escape"){endTour(false)}
+  else if(e.key==="ArrowRight"||e.key==="Enter"){e.preventDefault();$("tourNext").click()}
+  else if(e.key==="ArrowLeft"){$("tourBack").click()}
+});
 function tourRender(){
   var st=tourSteps[tourStep];
   $("tourIc").textContent=st.ic;
   $("tourTitle").textContent=st.t;
   $("tourText").textContent=st.d;
+  $("tourCount").textContent="Langkah "+(tourStep+1)+" dari "+tourSteps.length;
   var dots=$("tourDots");dots.innerHTML="";
   tourSteps.forEach(function(_,i){var d=document.createElement("i");if(i===tourStep)d.className="on";dots.appendChild(d)});
   $("tourSkip").hidden=(tourStep!==0);
@@ -2327,7 +2461,8 @@ function startTour(steps,kind){
 function endTour(swell){
   if(!tourEl)return;
   var kind=tourKind;
-  Array.prototype.forEach.call(document.querySelectorAll(".tour-hi"),function(x){x.classList.remove("tour-hi")});
+  tourClear();
+  if(window.matchMedia&&window.matchMedia("(max-width:820px)").matches)closeSide();
   if(swell){
     tourEl.classList.add("finish");
     setTimeout(function(){tourEl.classList.add("fade")},640);
