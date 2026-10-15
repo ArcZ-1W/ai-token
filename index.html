@@ -807,6 +807,8 @@ html[data-theme^="neu"] .tcard{box-shadow:var(--raise)}
 .tarrow.left{display:block;right:-8px;margin-top:-7px;border-bottom:0;border-left:0}
 .tour.finish .tspot,.tour.finish .tarrow,.tour.finish .tcount{display:none}
 @media (prefers-reduced-motion:reduce){.tspot,.tour.spot .tcard{transition:none}.tspot::after{animation:none}}
+.qflash{display:inline-block;margin-left:8px;font-size:12px;font-weight:800;color:var(--danger);animation:qfl 6s ease forwards}
+@keyframes qfl{0%{opacity:0;transform:translateY(6px)}8%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
 .tour.finish{pointer-events:none}
 .tour.finish .tic,.tour.finish h3,.tour.finish p,.tour.finish .tbar,.tour.finish .pclose{opacity:0;transition:opacity .16s}
 .tour.finish .tcard{background:#fff!important;border-color:#fff!important;box-shadow:none!important;animation:tSwell .62s cubic-bezier(.55,0,.72,.2) forwards}
@@ -900,7 +902,7 @@ html[data-theme^="neu"] .mstar.on{background:var(--acc-grad);box-shadow:var(--ra
     <img class="plogo" src="https://i.ibb.co.com/8gqQS0t0/xozen.png" alt="Logo Xozen AI" width="52" height="52">
     <div>
       <h2 id="priceTitle">Paket &amp; Harga Xozen AI</h2>
-      <p>Sekali bayar, kuota langsung aktif. Satu kuota = satu kali pemakaian model. Ingin mencoba dulu? Model <b>MinimumLite</b> gratis dan tidak memakai kuota.</p>
+      <p>Sekali bayar, kuota langsung aktif. Kuota dihitung dalam xoz token (1 limit = 1.000 xoz token); tiap pemakaian model memakai sejumlah token. Ingin mencoba dulu? Model <b>MinimumLite</b> gratis dan tidak memakai kuota.</p>
       <p class="myplan" id="myPlan" hidden></p>
     </div>
   </div>
@@ -1253,6 +1255,29 @@ function md(src){
 
 /* ---------- render ---------- */
 /* ---------- paket member: daftar model & template harga ---------- */
+/* ---------- xoz token: 1 limit = 1.000 xoz token, pemakaian dibagi acak (konsisten per akun) ---------- */
+var TOK=1000,tokCache={},tokFlash=null;
+function xozFmt(n){return Math.round(+n||0).toLocaleString("id-ID")}
+function tokHash(str){var h=2166136261;for(var i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function tokRng(seed){return function(){seed=(seed+0x6D2B79F5)|0;var t=Math.imul(seed^(seed>>>15),1|seed);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296}}
+/* limit N -> N angka acak yang jumlahnya persis N x 1.000 (mis. 5 limit: 1.234 + 987 + 1.456 + 823 + 500 = 5.000) */
+function tokParts(user,kind,limit){
+  limit=Math.max(0,Math.floor(+limit||0));
+  var key=user+"|"+kind+"|"+limit;if(tokCache[key])return tokCache[key];
+  var rnd=tokRng(tokHash("xoz:"+user+":"+kind)),d=[],sum=0,i;
+  for(i=0;i<limit;i++){var v=(rnd()*2-1)*480;d.push(v);sum+=v}
+  var mean=limit?sum/limit:0,out=[],tot=0;
+  for(i=0;i<limit;i++){out.push(Math.floor(TOK+d[i]-mean));tot+=out[i]}
+  var rem=limit*TOK-tot;
+  for(i=0;rem>0&&i<limit;i++,rem--)out[i]++;
+  tokCache[key]=out;return out;
+}
+function tokUsed(user,kind,limit,used){
+  var p=tokParts(user,kind,limit),n=Math.max(0,Math.min(p.length,Math.floor(+used||0))),s=0;
+  for(var i=0;i<n;i++)s+=p[i];return s;
+}
+function tokRem(user,kind,limit,used){return Math.max(0,Math.max(0,Math.floor(+limit||0))*TOK-tokUsed(user,kind,limit,used))}
+function xozPair(x,y){return xozFmt(x*TOK)+" xoz token Xozen AI + "+xozFmt(y*TOK)+" xoz token model AI lain"}
 var PLAN_MODELS={
   basic:["kimi-k2.5","kimi-k2.6","kimi-k2.7-code","mimo-v2.5-pro","hy3","hy4","glm-5.3","glm-5.2","deepseek-v4-pro"],
   best:["deepseek-v4-flash","deepseek-v4-flash-0731","deepseek-v4-mod","deepseek-v4-pro","deepseek-v4-pro-0813","deepseek-v4.1-mod","glm-5.2","glm-5.2-mod","glm-5.3","glm-5.3-mod","hy3","hy4","kimi-k2.5","kimi-k2.6","kimi-k2.7-code","kimi-k2.7-code-highspeed","mimo-v2.5-pro","deepseek-v4-flash-vision-exp","deepseek-v4.1-flash","glm-5.3-flash","glm-5.3-flash-mod","glm-5.3-flashx","glm-5.3-flashx-mod","gpt-5.6","gpt-5.6-luna","gpt-5.6-luna-b","kimi-k2.8","kimi-k3-mod","mimo-v2.6-flash","mimo-v2.6-pro","step-5-preview"],
@@ -1747,13 +1772,21 @@ function fmtLeft(ms){
 }
 function showAcct(){
   var m=modelSel.value||settings.model;
-  $("qTitle").textContent="Sisa pemakaian \u00b7 "+(m==="auto"?"Xozen AI":m==="minimumlite"?"MinimumLite":"Model lain");
+  $("qTitle").textContent="Sisa xoz token \u00b7 "+(m==="auto"?"Xozen AI":m==="minimumlite"?"MinimumLite":"Model lain");
   qNum.innerHTML="";qCard.classList.remove("low","crit","unk");
   var sm=document.createElement("small");
   if(m==="minimumlite"){qNum.appendChild(document.createTextNode("\u221e"));sm.textContent="gratis"}
-  else{var rem=Math.max(0,remOf(m));qNum.appendChild(document.createTextNode(rem));sm.textContent="x pakai";if(rem<=0)qCard.classList.add("crit")}
-  qNum.appendChild(sm);
+  else{
+    var tk=m==="auto"?"auto":"other",tL=tk==="auto"?session.la:session.lo,tU=tk==="auto"?session.ua:session.uo;
+    var rem=Math.max(0,remOf(m));
+    qNum.appendChild(document.createTextNode(xozFmt(tokRem(session.u,tk,tL,tU))));sm.textContent="xoz token";
+    if(rem<=0)qCard.classList.add("crit");
+    qNum.appendChild(sm);
+    if(tokFlash&&tokFlash.k===tk&&Date.now()-tokFlash.t<6000){var fl=document.createElement("span");fl.className="qflash";fl.textContent="\u2212"+xozFmt(tokFlash.v);qNum.appendChild(fl)}
+  }
+  if(m==="minimumlite")qNum.appendChild(sm);
   qMeta.innerHTML="";
+  if(m!=="minimumlite"){var tt=document.createElement("span");tt.textContent="dari "+xozFmt((m==="auto"?session.la:session.lo)*TOK);qMeta.appendChild(tt)}
   if(session&&!session.admin&&memberPlan){var ps=document.createElement("span");ps.textContent="Paket "+planName(memberPlan);qMeta.appendChild(ps)}
   if(session.exp)qMeta.appendChild(daysSpan(session.exp));
 }
@@ -1770,8 +1803,11 @@ async function acctQuota(){
 async function recordUsage(model){
   if(!session||session.admin||model==="minimumlite")return;
   var k=model==="auto"?"auto":"other";
+  function tu(){return tokUsed(session.u,k,k==="auto"?session.la:session.lo,k==="auto"?session.ua:session.uo)}
+  var before=tu();
   try{var a=await rpc("app_add_usage",{u:session.u,p:session.p,k:k});if(a&&a.username)setSession(a)}
   catch(e){if(k==="auto")session.ua++;else session.uo++;save("glassai.auth",session)}
+  var after=tu();if(after>before)tokFlash={t:Date.now(),v:after-before,k:k};
   showAcct();
 }
 setInterval(function(){
@@ -1895,7 +1931,7 @@ async function admRefresh(){
     var row=document.createElement("div");row.className="adm-row";
     var exp=a.expires_at?Date.parse(a.expires_at):null;
     var badge=a.is_admin?'<span class="wplan">Admin</span>':'<span class="wplan '+(plan||"")+'">'+(plan?planName(plan):"paket belum diset")+'</span>';
-    row.innerHTML='<div><b>'+esc(a.username)+'</b> '+badge+'<small>Xozen AI '+a.used_auto+'/'+a.limit_auto+' \u00b7 Lain '+a.used_other+'/'+a.limit_other+'</small><small>'+(exp?'Aktif '+fmtLeft(exp)+' lagi (sampai '+esc(new Date(exp).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"}))+')':'Tanpa batas waktu')+'</small><small>Wajah: '+(hasFace?'terdaftar':'belum terdaftar')+(a.is_admin?'':' \u00b7 Pin '+(e.pins||0)+'/'+plim)+'</small></div>';
+    row.innerHTML='<div><b>'+esc(a.username)+'</b> '+badge+'<small>Xozen AI '+xozFmt(tokUsed(a.username,"auto",a.limit_auto,a.used_auto))+'/'+xozFmt(a.limit_auto*TOK)+' token ('+a.used_auto+'/'+a.limit_auto+' limit) \u00b7 Lain '+xozFmt(tokUsed(a.username,"other",a.limit_other,a.used_other))+'/'+xozFmt(a.limit_other*TOK)+' token ('+a.used_other+'/'+a.limit_other+' limit)</small><small>'+(exp?'Aktif '+fmtLeft(exp)+' lagi (sampai '+esc(new Date(exp).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"}))+')':'Tanpa batas waktu')+'</small><small>Wajah: '+(hasFace?'terdaftar':'belum terdaftar')+(a.is_admin?'':' \u00b7 Pin '+(e.pins||0)+'/'+plim)+'</small></div>';
     var ctl=document.createElement("div");ctl.className="adm-ctl";
     function inp(v,label,ph){var i=document.createElement("input");i.type="text";i.value=v;i.placeholder=ph||"";i.setAttribute("aria-label",label+" "+a.username);ctl.appendChild(i);return i}
     function btn(t,cls,fn){var b=document.createElement("button");b.type="button";b.className="mini "+(cls||"");b.textContent=t;b.onclick=fn;ctl.appendChild(b)}
@@ -1905,7 +1941,7 @@ async function admRefresh(){
       sel.value=plan||"";
       sel.onchange=function(){if(!sel.value)return;setPlanFor(a.username,sel.value,true)};
       ctl.appendChild(sel);
-      var ia=inp(a.limit_auto,"Limit Xozen AI"),io=inp(a.limit_other,"Limit model lain"),ip=inp(plim,"Limit pin","pin"),it=inp("","Ubah masa aktif","ubah: 30d");it.style.width="100px";ip.style.width="56px";ip.title="Limit pin";
+      var ia=inp(a.limit_auto,"Limit Xozen AI (1 limit = 1.000 xoz token)"),io=inp(a.limit_other,"Limit model lain (1 limit = 1.000 xoz token)"),ip=inp(plim,"Limit pin","pin"),it=inp("","Ubah masa aktif","ubah: 30d");it.style.width="100px";ip.style.width="56px";ip.title="Limit pin";
       btn("Simpan",0,async function(){
         var x=parseInt(ia.value,10),y=parseInt(io.value,10),pl=parseInt(ip.value,10),ns=null;
         if(!(x>=0)||!(y>=0)||!(pl>=0)){admErr("Limit tidak valid.");return}
@@ -1966,8 +2002,8 @@ function wizBuildPlans(){
   PLAN_TEMPLATES.forEach(function(t){
     var d=document.createElement("div");d.className="pcard"+(t.best?" best":"");
     d.innerHTML=(t.tag?'<span class="ptag">'+esc(t.tag)+'</span>':"")+
-      '<div class="pname">'+t.x+'&times; Xozen AI</div>'+
-      '<div class="pmeta">+ '+t.y+'&times; model AI lain \u00b7 '+planLabel(t.plan)+'</div>'+
+      '<div class="pname">'+xozFmt(t.x*TOK)+' xoz token</div>'+
+      '<div class="pmeta">Xozen AI + '+xozFmt(t.y*TOK)+' token model AI lain \u00b7 '+planLabel(t.plan)+'</div>'+
       '<div class="pprice">'+esc(t.price)+'<small>/ akun</small></div>'+
       '<button type="button" class="btn pbuy wiz-go">Pilih paket ini</button>';
     d.querySelector("button").onclick=function(){wizChoose(t);wizPane(2);$("wU").focus()};
@@ -1986,14 +2022,14 @@ function wizBuildPlans(){
 }
 function wizChoose(t){
   wizPick=t;
-  $("wizPlanInfo").innerHTML="Dipilih: <b>"+planLabel(t.plan)+"</b> \u00b7 "+t.x+"&times; Xozen AI + "+t.y+"&times; model AI lain"+(t.custom?" \u00b7 kuota custom":" \u00b7 "+esc(t.price))+" \u00b7 terbuka <b>"+planCount(t.plan)+" model</b>.";
+  $("wizPlanInfo").innerHTML="Dipilih: <b>"+planLabel(t.plan)+"</b> \u00b7 "+xozPair(t.x,t.y)+(t.custom?" \u00b7 kuota custom":" \u00b7 "+esc(t.price))+" \u00b7 terbuka <b>"+planCount(t.plan)+" model</b>.";
 }
 function wizSummary(){
   var u=$("wU").value.trim().toLowerCase(),ns=parseDur($("wT").value);
   var box=$("wizSum");box.innerHTML="";
   function r(k,v){var d=document.createElement("div");d.className="r";var a=document.createElement("span");a.textContent=k;var b=document.createElement("b");b.innerHTML=v;d.appendChild(a);d.appendChild(b);box.appendChild(d)}
   r("Paket",planLabel(wizPick.plan)+(wizPick.custom?" (custom)":""));
-  r("Kuota",wizPick.x+"&times; Xozen AI + "+wizPick.y+"&times; model AI lain");
+  r("Kuota",xozPair(wizPick.x,wizPick.y));
   r("Harga",wizPick.custom?"diatur manual":esc(wizPick.price));
   r("Akses model",planCount(wizPick.plan)+" model &middot; "+PLAN_MODELS[wizPick.plan].slice(0,3).map(esc).join(", ")+", &hellip;");
   r("Username",esc(u));
@@ -2033,7 +2069,7 @@ async function wizCreate(){
     wizBusy=false;$("wizNext").disabled=false;
     var expTxt=new Date(Date.now()+ns*1000).toLocaleDateString("id-ID",{dateStyle:"long"});
     wizCreated={u:u,p:p,plan:wizPick.plan,ns:ns,expTxt:expTxt,pin:pin,planSaved:planRes!==undefined};
-    $("wizDone").innerHTML="<b>Akun "+esc(u)+" berhasil dibuat.</b><br>Paket "+planName(wizPick.plan)+" &middot; "+wizPick.x+"&times; Xozen AI + "+wizPick.y+"&times; model AI lain &middot; aktif sampai "+esc(expTxt)+"."+
+    $("wizDone").innerHTML="<b>Akun "+esc(u)+" berhasil dibuat.</b><br>Paket "+planName(wizPick.plan)+" &middot; "+xozPair(wizPick.x,wizPick.y)+" &middot; aktif sampai "+esc(expTxt)+"."+
       (pinFail?"<br><b>Limit pin belum tersimpan</b>"+(pinMsg?" ("+esc(pinMsg)+")":"")+". Atur ulang dari daftar akun.":"")+
       (planRes===undefined?"<br><b>Akses model belum tersimpan di server</b> (jalankan supabase-member-plan.sql), untuk sekarang akun ini terbaca sebagai paket dari kuotanya.":"");
     $("wizMsg").value=wizMessage();
@@ -2051,7 +2087,7 @@ function wizMessage(){
   var c=wizCreated,t=wizPick;
   return "Akun Xozen AI Anda sudah aktif \u{1F389}\n\n"+
     "Paket      : "+planLabel(c.plan)+(t.custom?" (custom)":"")+"\n"+
-    "Kuota      : "+t.x+"x Xozen AI + "+t.y+"x model AI lain\n"+
+    "Kuota      : "+xozPair(t.x,t.y)+"\n"+
     (t.custom?"":"Harga      : "+t.price+"\n")+
     "Masa aktif : "+c.ns/86400+" hari (sampai "+c.expTxt+")\n"+
     "Username   : "+c.u+"\n"+
@@ -2133,10 +2169,10 @@ var dd=$("dd"),ddBtn=$("ddBtn");
 function mlabel(m){return m==="auto"?"Xozen AI":m==="minimumlite"?"MinimumLite (Gratis)":m}
 function priceCard(t){
   var d=document.createElement("div");d.className="pcard"+(t.best?" best":"");
-  var waTxt="Halo admin, saya mau paket "+planLabel(t.plan)+" "+t.x+"x Xozen AI + "+t.y+"x model AI lain ("+t.price+"). Mohon info pembayaran dan aktivasi akunnya.";
+  var waTxt="Halo admin, saya mau paket "+planLabel(t.plan)+" "+xozPair(t.x,t.y)+" ("+t.price+"). Mohon info pembayaran dan aktivasi akunnya.";
   d.innerHTML=(t.tag?'<span class="ptag">'+esc(t.tag)+'</span>':"")+
-    '<div class="pname">'+t.x+'&times; Xozen AI</div>'+
-    '<div class="pmeta">+ '+t.y+'&times; model AI lain</div>'+
+    '<div class="pname">'+xozFmt(t.x*TOK)+' xoz token</div>'+
+    '<div class="pmeta">Xozen AI + '+xozFmt(t.y*TOK)+' token model AI lain</div>'+
     '<div class="pprice">'+esc(t.price)+'<small>/ akun</small></div>'+
     '<a class="btn primary pbuy" href="https://wa.me/'+WA_ADMIN+'?text='+encodeURIComponent(waTxt)+'" target="_blank" rel="noopener noreferrer">Pesan paket</a>';
   return d;
@@ -2360,7 +2396,7 @@ document.addEventListener("keydown",function(e){
 var TOUR=[
   {ic:"\u2728",t:"Selamat datang di Xozen AI \uD83D\uDC4B",d:"Tur singkat 5 langkah supaya Anda langsung nyaman memakai aplikasinya. Mau langsung mulai? Tekan \u201cLewati\u201d. Mau keluar nanti saja? Tekan \u00d7 di kanan atas."},
   {ic:"\uD83E\uDDE9",t:"Pilih model AI",d:"Klik tombol model di kanan atas. Muncul daftar model dengan kotak pencarian, filter (Basic, Best, atau keluarga model seperti Kimi, GLM, DeepSeek), dan tanda centang pada model yang sedang dipakai.",el:"dd"},
-  {ic:"\u26A1",t:"Pantau kuota & paket",d:"Kartu di sidebar menunjukkan paket Anda, sisa kuota, dan masa aktif akun. Satu kuota = satu kali pemakaian model. Model MinimumLite gratis dan tidak memakai kuota.",el:"qCard"},
+  {ic:"\u26A1",t:"Pantau kuota & paket",d:"Kartu di sidebar menunjukkan paket Anda, sisa kuota, dan masa aktif akun. Sisa kuota ditampilkan dalam xoz token; tiap pemakaian model memakai sejumlah token. Model MinimumLite gratis dan tidak memakai token.",el:"qCard"},
   {ic:"\uD83D\uDCE4",t:"Kirim pesan & lampiran",d:"Tulis pesan lalu tekan Enter untuk kirim (Shift+Enter untuk baris baru). Tombol klip di kiri untuk melampirkan file, dan tombol kotak untuk menghentikan jawaban yang sedang berjalan.",el:"attachBtn"},
   {ic:"\u2699\uFE0F",t:"Riwayat, tema, dan paket",d:"Semua obrolan tersimpan di sidebar dan bisa di-pin. Tema tampilan, instruksi sistem, dan daftar paket & harga ada di menu Pengaturan.",el:"openSettings",last:true}
 ];
@@ -2368,7 +2404,7 @@ var TOUR_ADMIN=[
   {ic:"\uD83D\uDEE1\uFE0F",t:"Tur singkat untuk admin",d:"Enam langkah mengelola akun paket, model AI, dan konfigurasi. Tombol \u00d7 menutup tur kapan saja; bisa dibuka lagi dari Pengaturan \u2192 Tur admin."},
   {ic:"\uD83D\uDC65",t:"Dashboard Admin",d:"Klik tombol Admin di sidebar: ada wizard buat akun paket, daftar semua akun (kuota, masa aktif, wajah, pin), dan pengelola daftar model AI.",el:"adminBtn"},
   {ic:"\uD83E\uDDE9",t:"Akses model per paket",d:"Akun Basic hanya melihat 9 model Basic, akun Best melihat 31 model, admin selalu melihat semuanya. Paket tiap akun bisa diubah dari pilihan di baris akunnya.",el:"ddBtn"},
-  {ic:"\u26A1",t:"Kuota admin",d:"Akun admin tidak dibatasi kuota; kartu di sidebar hanya menampilkan status. Untuk member, satu kuota = satu kali pemakaian model.",el:"qCard"},
+  {ic:"\u26A1",t:"Kuota admin",d:"Akun admin tidak dibatasi kuota; kartu di sidebar hanya menampilkan status. Untuk member, kuota dihitung dalam xoz token.",el:"qCard"},
   {ic:"\u2699\uFE0F",t:"Konfigurasi AI & harga",d:"Di Pengaturan: Base URL dan API key penyedia AI, instruksi sistem, suhu, tema tampilan, dan halaman paket & harga.",el:"openSettings"},
   {ic:"\uD83D\uDDC4\uFE0F",t:"Sekali saja: jalankan SQL",d:"Jalankan supabase-member-plan.sql di Supabase SQL Editor agar paket per akun dan penanda pengguna baru (tutorial otomatis member) aktif. Statusnya tampil di bagian atas Dashboard Admin.",last:true}
 ];
