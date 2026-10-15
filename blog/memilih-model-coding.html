@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kimi, DeepSeek, atau GLM untuk Coding? — Xozen AI</title>
+<meta name="description" content="Panduan memilih model AI untuk coding: kapan memakai model cepat seperti flash/flashx, kapan butuh model penalaran seperti deepseek-v4-pro, dan cara menghemat kuota saat ngoding.">
+<meta name="theme-color" content="#070b18">
+<link rel="icon" type="image/png" href="https://i.ibb.co.com/8gqQS0t0/xozen.png">
+<link rel="apple-touch-icon" href="https://i.ibb.co.com/8gqQS0t0/xozen.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Xozen AI">
+<meta property="og:locale" content="id_ID">
+<meta property="og:title" content="Kimi, DeepSeek, atau GLM untuk coding?">
+<meta property="og:description" content="Kapan memakai model cepat, kapan butuh model penalaran, dan cara menghemat kuota saat ngoding.">
+<meta property="og:image" content="https://i.ibb.co.com/8gqQS0t0/xozen.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Kimi, DeepSeek, atau GLM untuk coding?">
+<meta name="twitter:description" content="Panduan memilih model AI untuk coding dan menghemat kuota.">
+<meta name="twitter:image" content="https://i.ibb.co.com/8gqQS0t0/xozen.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../site.css">
+</head>
+<body>
+<a class="skip" href="#utama">Lewati ke konten</a>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="../index.html"><img src="https://i.ibb.co.com/8gqQS0t0/xozen.png" alt="Logo Xozen AI" width="34" height="34">Xozen AI</a>
+    <button class="nav-toggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">☰</button>
+    <nav class="nav" id="nav" aria-label="Navigasi utama">
+      <a href="../index.html#model">Model</a>
+      <a href="../pricing/index.html">Harga</a>
+      <a href="index.html">Blog</a>
+      <a class="btn primary sm head-cta" href="../ai/index.html">Buka AI</a>
+    </nav>
+  </div>
+</header>
+
+<main id="utama">
+<article class="article">
+  <div class="kicker">Perbandingan · Model</div>
+  <h1>Kimi, DeepSeek, atau GLM untuk coding?</h1>
+  <div class="meta"><span>5 Oktober 2026</span><span>7 menit baca</span><span>Tim Xozen AI</span></div>
+
+  <p>Pertanyaan yang paling sering muncul dari pengguna Xozen AI: “Untuk ngoding, sebaiknya pakai model yang mana?” Jawabannya tidak tunggal — tergantung jenis pekerjaannya. Artikel ini memberi aturan praktis supaya Anda tidak memboroskan kuota ke model yang terlalu berat untuk tugas ringan, atau sebaliknya.</p>
+
+  <nav class="toc" aria-label="Daftar isi">
+    <b>Isi artikel</b>
+    <ol>
+      <li><a href="#keluarga">Mengenal keluarga model</a></li>
+      <li><a href="#kapan">Aturan praktis: kapan pakai yang mana</a></li>
+      <li><a href="#pola">Pola kerja yang hemat kuota</a></li>
+      <li><a href="#contoh">Contoh alur nyata</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="keluarga">1. Mengenal keluarga model</h2>
+  <p>Di pemilih model Xozen AI, model dikelompokkan otomatis per keluarga. Yang penting dipahami adalah <strong>karakter</strong>, bukan sekadar nama:</p>
+  <div class="grid g2" style="margin:18px 0">
+    <div class="card"><h3>Model cepat (flash / flashx / highspeed)</h3><p>Balasan kilat, biaya per permintaan lebih ringan. Cocok untuk pertanyaan singkat, memperbaiki pesan error, menulis fungsi kecil, atau menjelaskan potongan kode.</p></div>
+    <div class="card"><h3>Model penalaran (pro / mod)</h3><p>Lebih lambat tapi lebih teliti. Cocok untuk merancang arsitektur, menelusuri bug yang rumit, atau menganalisis logika yang bercabang.</p></div>
+    <div class="card"><h3>Model khusus coding</h3><p>Nama dengan akhiran <code>-code</code> dilatih untuk kode: mengikuti gaya penamaan, menghasilkan diff, dan lebih rapi saat refactor.</p></div>
+    <div class="card"><h3>Model vision</h3><p>Bisa membaca gambar — berguna untuk screenshot error, desain UI, atau diagram alur yang ingin diubah menjadi kode.</p></div>
+  </div>
+  <p class="faint">Keluarga yang tersedia di Xozen AI: Kimi, GLM, DeepSeek, GPT, MiMo, HY, dan Step. Daftar lengkap ada di <a href="../pricing/index.html">halaman harga</a>.</p>
+
+  <h2 id="kapan">2. Aturan praktis: kapan pakai yang mana</h2>
+  <ul>
+    <li><strong>Error message atau typo</strong> → model cepat. Tempel pesan error dan 10–20 baris kode sekitar.</li>
+    <li><strong>Menulis fungsi baru yang jelas</strong> → model cepat atau <code>-code</code>. Sebutkan bahasa, versi, dan larangan (misal “tanpa library tambahan”).</li>
+    <li><strong>Refactor / memperbaiki struktur</strong> → model penalaran atau <code>-code</code>. Minta keluaran berupa diff.</li>
+    <li><strong>Bug yang sulit direproduksi</strong> → model penalaran. Sertakan langkah reproduksi, ekspektasi, dan hasil nyata.</li>
+    <li><strong>Screenshot error atau desain</strong> → model vision: lampirkan gambar, lalu tulis pertanyaan.</li>
+    <li><strong>Pertanyaan konsep</strong> (“beda REST dan GraphQL?”) → model cepat sudah cukup.</li>
+  </ul>
+
+  <h2 id="pola">3. Pola kerja yang hemat kuota</h2>
+  <p>Satu kuota = satu kali kirim. Karena itu, cara Anda membungkus pertanyaan menentukan berapa kuota yang terpakai untuk menyelesaikan satu masalah.</p>
+  <ul>
+    <li><strong>Potong kode ke bagian relevan.</strong> Kirim fungsi yang bermasalah, bukan seluruh file.</li>
+    <li><strong>Sebutkan versi &amp; lingkungan.</strong> “Node 20, tanpa TypeScript” menghindari jawaban yang tidak bisa dipakai.</li>
+    <li><strong>Minta bentuk keluaran.</strong> “Berikan hanya fungsi yang berubah, tanpa penjelasan” sering menghemat waktu baca.</li>
+    <li><strong>Lanjutkan percakapan yang sama</strong> untuk satu topik, jangan buka obrolan baru tiap pertanyaan lanjutan.</li>
+    <li><strong>Gunakan obrolan baru</strong> saat pindah proyek, supaya konteks lama tidak mengganggu.</li>
+  </ul>
+
+  <h2 id="contoh">4. Contoh alur nyata</h2>
+  <p>Misalnya Anda mendapat error saat memuat data:</p>
+  <pre><code>Pesan error:
+TypeError: Cannot read properties of undefined (reading 'map')
+
+Kode:
+const rows = res.data.items.map(...)
+
+Lingkungan: Node 20, fetch biasa (bukan axios).
+Sebutkan penyebab paling mungkin, lalu berikan perbaikan minimal.
+Jangan ubah bagian lain.</code></pre>
+  <p>Setelah jawaban datang, lanjutkan di obrolan yang sama:</p>
+  <pre><code>Sekarang tambahkan penanganan untuk kasus data kosong,
+dan tulis 3 unit test singkat untuk fungsi itu.</code></pre>
+  <div class="cta">
+    <p><strong>Coba sendiri.</strong> Paket Best membuka 31 model — termasuk model <code>-code</code>, versi flash/flashx, dan model vision untuk screenshot error.</p>
+    <a class="btn primary" href="../ai/index.html">Buka aplikasi AI</a>
+    <a class="btn ghost" href="../pricing/index.html">Lihat paket Best</a>
+  </div>
+
+  <h3>Baca juga</h3>
+  <ul>
+    <li><a href="cara-menulis-prompt.html">Cara menulis prompt agar jawaban AI tepat sasaran</a></li>
+    <li><a href="model-vision-gambar.html">Kenapa AI sekarang bisa membaca gambar Anda</a></li>
+  </ul>
+</article>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="legal">
+      <span>© <span data-year>2026</span> Xozen AI · <a href="index.html">Blog</a> · <a href="../pricing/index.html">Harga</a> · <a href="../ai/index.html">Aplikasi</a></span>
+      <span>Ditulis oleh tim Xozen AI</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../site.js"></script>
+</body>
+</html>
