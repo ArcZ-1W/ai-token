@@ -18,6 +18,18 @@
     });
   }
 
+  /* halaman awal memilih landing AI atau langsung ke Community */
+  var chooser = document.querySelector('.chooser');
+  if (chooser) {
+    function syncServiceChoice() {
+      document.body.classList.toggle('awaiting-service', location.hash !== '#landing-ai');
+    }
+    syncServiceChoice();
+    window.addEventListener('hashchange', syncServiceChoice);
+    var aiChoice = chooser.querySelector('.xozen-option');
+    if (aiChoice) aiChoice.addEventListener('click', function () { document.body.classList.remove('awaiting-service'); });
+  }
+
   /* tahun di footer */
   Array.prototype.forEach.call(document.querySelectorAll('[data-year]'), function (el) {
     el.textContent = new Date().getFullYear();

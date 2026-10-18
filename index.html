@@ -26,7 +26,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@400..800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css">
 </head>
-<body>
+<body class="awaiting-service">
 <a class="skip" href="#utama">Lewati ke konten</a>
 
 <header class="site-head">
@@ -47,8 +47,28 @@
 
 <main id="utama">
 
-  <!-- ================= HERO ================= -->
-  <section class="hero">
+  <section class="chooser" id="pilih-layanan" aria-labelledby="chooser-title">
+    <div class="wrap chooser-wrap">
+      <p class="eyebrow">ArcZ by Xozen</p>
+      <h1 id="chooser-title">Kamu sedang mencari apa?</h1>
+      <p class="chooser-lead">Pilih ruang yang ingin kamu buka.</p>
+      <div class="service-options">
+        <a class="service-option xozen-option" href="#landing-ai">
+          <img src="https://i.ibb.co.com/8gqQS0t0/xozen.png" alt="" width="48" height="48">
+          <span class="service-copy"><strong>Xozen AI</strong><span>Lihat landing page, fitur, model, dan paket AI.</span></span>
+          <span class="service-arrow" aria-hidden="true">&#8599;</span>
+        </a>
+        <a class="service-option community-option" href="community/">
+          <span class="community-mark" aria-hidden="true">AC</span>
+          <span class="service-copy"><strong>ArcZ Community</strong><span>Masuk ke ruang chat komunitas dengan akun Community.</span></span>
+          <span class="service-arrow" aria-hidden="true">&#8599;</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LANDING PAGE XOZEN AI ================= -->
+  <section class="hero" id="landing-ai">
     <div class="wrap">
       <div>
         <h1 class="hero-title">Semua model AI favoritmu, <span>dalam satu aplikasi</span>.</h1>
@@ -308,6 +328,6 @@
   </div>
 </footer>
 
-<script src="site.js"></script>
+<script src="site.js?v=chooser-1"></script>
 </body>
 </html>

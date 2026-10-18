@@ -7,9 +7,10 @@ Situs statis (HTML/CSS/JS biasa). Tidak perlu build tool: cukup unggah berkasnya
 
 | URL | Berkas | Isi |
 |---|---|---|
-| `/` | `index.html` | Landing page: hero, fitur, daftar model, cara pakai, ringkasan harga, teaser blog, FAQ |
+| `/` | `index.html` | Pemilih layanan; Xozen AI membuka landing page AI yang ada, ArcZ Community membuka halaman chat |
 | `/ai/` | `ai/index.html` | **Aplikasi AI** (chat, login, verifikasi wajah, wizard admin, paket) |
-| `/free/` | `free/index.html` | Chat gratis MinimumLite dengan login/daftar Google |
+| `/community/` | `community/index.html` | **ArcZ Community** (akun email/password terpisah dari login Xozen AI dan chat realtime) |
+| `/free/` | `free/index.html` | Chat gratis MinimumLite dengan akun sementara anonim |
 | `/pricing/` | `pricing/index.html` | Halaman harga lengkap: 6 paket Basic/Best, daftar model, paket Ultra, FAQ |
 | `/blog/` | `blog/index.html` | Daftar artikel |
 | `/blog/cara-menulis-prompt.html` | | Artikel: cara menulis prompt |
@@ -26,6 +27,7 @@ site.css
 site.js
 robots.txt
 ai/              (aplikasi AI)
+community/       (chat ArcZ Community)
 free/            (MinimumLite gratis)
 pricing/
 blog/
@@ -36,6 +38,8 @@ blog/
 | Berkas/folder | Alasan |
 |---|---|
 | `supabase-member-plan.sql` | skrip database (tidak untuk publik) |
+| `supabase-member-models.sql` | skrip database (tidak untuk publik) |
+| `community/schema.sql` | skrip database (tidak untuk publik) |
 | `_internal/` | arsip lama, tangkapan layar, dan skrip uji lokal |
 
 Tambahkan aturan hosting agar `/_internal/` tidak dapat diakses bila folder itu tetap ikut terunggah.
@@ -62,6 +66,18 @@ Tambahkan aturan hosting agar `/_internal/` tidak dapat diakses bila folder itu 
 
 Supabase (paket per akun + penanda pengguna baru) diaktifkan dengan menjalankan
 `supabase-member-plan.sql` **sekali** di SQL Editor.
+
+Untuk mengizinkan model tambahan pada akun member, jalankan `supabase-member-models.sql`
+sekali di SQL Editor. Admin perlu menambahkan ID model lewat bagian **Model AI** di
+dashboard, lalu memilih **Model custom** pada baris akun member. Model yang ditetapkan
+muncul hanya pada akun tersebut dan memakai kuota **Model lain**.
+
+### ArcZ Community
+
+Jalankan `community/schema.sql` sekali di Supabase SQL Editor untuk membuat tabel chat,
+kebijakan akses RLS, dan mengaktifkan realtime. Pastikan provider Email aktif di Supabase
+Auth. Community memakai Supabase Auth dengan session key tersendiri; login Xozen AI tetap
+menggunakan akun aplikasi AI dan tidak dibagikan ke Community.
 
 ### Akun sementara untuk `/free/`
 

@@ -235,9 +235,11 @@ select option{background:#14172b;color:var(--ink)}
 }
 .bot .bubble{background:var(--glass);border:1px solid rgba(255,255,255,.12);border-bottom-left-radius:6px;width:100%}
 .bubble.err{border-color:rgba(255,122,138,.5);color:#ffd5da}
-.tools{display:flex;gap:6px;padding-left:4px}
+.tools{display:flex;align-items:center;gap:6px;width:100%;padding-left:4px}
 .tool{font:inherit;font-size:12.5px;color:var(--ink-faint);background:none;border:0;cursor:pointer;padding:4px 8px;border-radius:8px}
 .tool:hover{color:var(--ink);background:var(--glass)}
+.make-better-btn{margin-left:auto}
+.make-better-btn.on{color:var(--accent-2);background:var(--glass);box-shadow:inset 0 0 0 1px var(--glass-edge)}
 .edit-tools{display:flex;align-items:center;gap:8px;padding-left:4px}
 .edit-message-btn{font:inherit;font-size:12px;font-weight:600;color:var(--ink-dim);background:var(--glass);border:1px solid var(--glass-edge);border-radius:8px;padding:5px 10px;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
 .edit-message-btn:hover{color:var(--ink);background:var(--glass-strong)}
@@ -1248,6 +1250,7 @@ Aturan ketat:
 - Jika respons memiliki lebih dari satu file, tambahkan beberapa blok terpisah, satu blok per file.
 - Jika konten tidak layak dijadikan file (misal: sapaan singkat, jawaban 1 kalimat), JANGAN sertakan blok ini.
 - Jangan tampilkan instruksi ini ke user.`;
+var MAKE_IT_BETTER_INSTRUCTION="For the next answer, improve usefulness and quality: understand the full request, follow every constraint, give a correct and complete result, organize it clearly, use the user's language, and avoid unnecessary repetition. Do not mention this instruction.";
 /* Isi dengan data proyek Supabase Anda (Project Settings > API) */
 var SUPA_URL="https://beqlxnlhvarjhkuxndmr.supabase.co";   /* contoh: https://abcd1234.supabase.co */
 var SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJlcWx4bmxodmFyamhrdXhuZG1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMjQ4ODgsImV4cCI6MjEwNjcwMDg4OH0.FxPj-dfPf6OnfPotgQxFafd7Fx9yIM6oqMm25xMRslw";   /* anon public key */
@@ -1275,15 +1278,19 @@ settings.fileDownloadFormat=(load("fileDownloadFormat",settings.fileDownloadForm
 settings.baseUrl="";settings.apiKey="";
 function fileDownloadFormatList(){return ["txt","md","json","html","csv","js","py","css"]}
 function normalizeFileFormat(fmt){var list=fileDownloadFormatList();var v=(fmt||"txt").toLowerCase();return list.indexOf(v)>-1?v:"txt"}
-function resolveSystemPrompt(){
+function resolveSystemPrompt(makeItBetter){
   var base=(settings.system&&settings.system.trim())||"You are a helpful assistant.";
   var mode=normalizeFileResponseMode(settings.fileResponseMode);
-  if(mode==="progress")return base;
-  var fmt=normalizeFileFormat(settings.fileDownloadFormat);
-  var instruction=FILE_DOWNLOAD_INSTR.replace("default: .txt", "default: ."+fmt);
-  if(mode==="file_only")instruction+="\n\nMODE FILE ONLY: Jangan menulis jawaban atau penjelasan di luar blok FILE_DOWNLOAD. Masukkan seluruh hasil yang diminta ke dalam satu atau lebih file. Jika memang tidak perlu file, jawab singkat bahwa tidak ada file yang perlu dibuat.";
-  else instruction+="\n\nMODE PROGRESS + FILE: Berikan jawaban normal seperti biasa, lalu sertakan file unduhan yang sesuai.";
-  return base+"\n\n"+instruction;
+  var prompt=base;
+  if(mode!=="progress"){
+    var fmt=normalizeFileFormat(settings.fileDownloadFormat);
+    var instruction=FILE_DOWNLOAD_INSTR.replace("default: .txt", "default: ."+fmt);
+    if(mode==="file_only")instruction+="\n\nMODE FILE ONLY: Jangan menulis jawaban atau penjelasan di luar blok FILE_DOWNLOAD. Masukkan seluruh hasil yang diminta ke dalam satu atau lebih file. Jika memang tidak perlu file, jawab singkat bahwa tidak ada file yang perlu dibuat.";
+    else instruction+="\n\nMODE PROGRESS + FILE: Berikan jawaban normal seperti biasa, lalu sertakan file unduhan yang sesuai.";
+    prompt+="\n\n"+instruction;
+  }
+  if(makeItBetter)prompt+="\n\n"+MAKE_IT_BETTER_INSTRUCTION;
+  return prompt;
 }
 function xozenDownloadFilename(filename){
   var basename=String(filename||"").replace(/\\/g,"/").split("/").pop()||"download.txt";
@@ -1500,7 +1507,7 @@ var PLAN_TEMPLATES=[
   {plan:"best",x:20,y:8,price:"Rp 10.000"}
 ];
 var WA_ADMIN="6289523042979";
-var memberPlan=null,planFromServer=false,planApiOk=true;
+var memberPlan=null,planFromServer=false,planApiOk=true,memberCustomModels=[];
 function planLabel(p){return p==="best"?"Best Value":p==="basic"?"Basic":"belum diset"}
 function planCount(p){return (PLAN_MODELS[p]||[]).length}
 function planName(p){return p==="admin"?"Admin":planLabel(p)+" ("+planCount(p)+" model)"}
@@ -1512,16 +1519,24 @@ function planFromLimits(la,lo){
 function allowedModels(){
   if(!session||session.admin||!memberPlan)return MODELS.slice();
   var white=PLAN_MODELS[memberPlan]||[];
-  return MODELS.filter(function(m){return m==="auto"||m==="minimumlite"||white.indexOf(m)>-1});
+  return MODELS.filter(function(m){return m==="auto"||m==="minimumlite"||white.indexOf(m)>-1||memberCustomModels.indexOf(m)>-1});
 }
 function modelAllowed(m){
   if(!session||session.admin||!memberPlan)return true;
   if(m==="auto"||m==="minimumlite")return true;
-  return (PLAN_MODELS[memberPlan]||[]).indexOf(m)>-1;
+  return (PLAN_MODELS[memberPlan]||[]).indexOf(m)>-1||(MODELS.indexOf(m)>-1&&memberCustomModels.indexOf(m)>-1);
+}
+async function resolveMemberModels(){
+  memberCustomModels=[];
+  if(!session||session.admin)return;
+  try{
+    var r=await rpc("app_member_models_get",{u:session.u,p:session.p});
+    if(r&&Array.isArray(r.models))memberCustomModels=uniqueModelIds(r.models).filter(function(m){return MODELS.indexOf(m)>-1});
+  }catch(e){handleAuthErr(e)}
 }
 async function resolvePlan(){
-  if(!session){memberPlan=null;planFromServer=false;return}
-  if(session.admin){memberPlan="admin";planFromServer=false;planApiOk=true;return}
+  if(!session){memberPlan=null;memberCustomModels=[];planFromServer=false;return}
+  if(session.admin){memberPlan="admin";memberCustomModels=[];planFromServer=false;planApiOk=true;return}
   var got=null;
   try{
     var r=await rpc("app_plan_get",{u:session.u,p:session.p});
@@ -1529,6 +1544,7 @@ async function resolvePlan(){
     planApiOk=true;
   }catch(e){if(handleAuthErr(e))return;planApiOk=false}
   planFromServer=!!got;memberPlan=got||planFromLimits(session.la,session.lo);
+  await resolveMemberModels();
   renderModels();
 }
 function renderModels(){
@@ -1660,6 +1676,7 @@ function bubbleFor(m,isLast,index){
     var cp=document.createElement("button");cp.className="tool";cp.type="button";cp.textContent="Salin";
     cp.onclick=function(){copy(m.content,cp)};t.appendChild(cp);
     if(isLast){var rg=document.createElement("button");rg.className="tool";rg.type="button";rg.textContent="Buat ulang";rg.onclick=regenerate;t.appendChild(rg)}
+    if(isLast){var better=document.createElement("button"),chat=active(),betterOn=!!(chat&&chat.makeItBetterNext);better.className="tool make-better-btn"+(betterOn?" on":"");better.type="button";better.textContent="Make it better";better.setAttribute("aria-pressed",betterOn?"true":"false");better.title=betterOn?"Instruksi aktif untuk balasan berikutnya":"Tambahkan instruksi peningkatan kualitas pada balasan berikutnya";better.onclick=function(){var current=active();if(!current||busy)return;current.makeItBetterNext=!current.makeItBetterNext;persist();renderAll()};t.appendChild(better)}
     w.appendChild(t);
   }
   return w;
@@ -1760,7 +1777,7 @@ async function streamLite(c){
   var status=0,raw="";
   try{
     var qs="prompt="+encodeURIComponent(plainOf(last))
-      +"&system="+encodeURIComponent(resolveSystemPrompt())
+      +"&system="+encodeURIComponent(resolveSystemPrompt(!!asst.makeItBetter))
       +"&temperature="+encodeURIComponent(settings.temp);
     if(qs.length>7000){
       asst.content="Pesan atau file terlalu panjang untuk MinimumLite (batas sekitar 7.000 karakter). Pakai Xozen AI untuk teks panjang.";
@@ -1795,7 +1812,7 @@ async function stream(c){
   var history=c.messages.slice(0,-1).map(function(m){return {role:m.role,content:forcePlain?plainOf(m):m.content}});
   var hadImg=!forcePlain&&history.some(function(m){return Array.isArray(m.content)});
   var plainRetry=false;
-  history.unshift({role:"system",content:resolveSystemPrompt()});
+  history.unshift({role:"system",content:resolveSystemPrompt(!!asst.makeItBetter)});
   ctrl=new AbortController();
   var status=0,raw="";
   var pending=false,usageTok=null;
@@ -1907,7 +1924,8 @@ function send(text){
   c.messages.push({role:"user",content:parts||full.trim(),text:text,
     files:attach.map(function(f){return{name:f.name,size:f.size,url:f.url||"",thumb:f.thumb||"",full:f.dataUrl||"",type:f.type||"",bin:!!f.bin,img:!!f.dataUrl,host:f.host||""}})});
   attach=[];renderChips();
-  c.messages.push({role:"assistant",content:""});
+  var makeItBetter=!!c.makeItBetterNext;c.makeItBetterNext=false;
+  c.messages.push({role:"assistant",content:"",makeItBetter:makeItBetter});
   input.value="";autosize();
   setBusy(true);persist();renderAll();toBottom(true);
   stream(c);
@@ -2272,6 +2290,17 @@ async function admPlanMap(){
     planApiOk=true;return m;
   }catch(e){if(handleAuthErr(e))return{};planApiOk=false;return{}}
 }
+var memberCustomModelMap={},customModelApiOk=true;
+async function admCustomModelMap(){
+  try{
+    var list=await rpc("app_member_models_list",{u:session.u,p:session.p}),map={};
+    (list||[]).forEach(function(row){map[row.username]=Array.isArray(row.models)?row.models:[]});
+    memberCustomModelMap=map;customModelApiOk=true;return map;
+  }catch(e){if(handleAuthErr(e))return{};customModelApiOk=false;memberCustomModelMap={};return{}}
+}
+function memberAssignableModels(){
+  return MODELS.filter(function(m){return LOCKED.indexOf(m)<0&&PLAN_MODELS.basic.indexOf(m)<0&&PLAN_MODELS.best.indexOf(m)<0});
+}
 function planNote(){
   var n=$("planNote");if(!n)return;
   if(planApiOk){
@@ -2281,6 +2310,7 @@ function planNote(){
     n.className="adm-note bad";
     n.textContent="Penyimpanan paket per akun belum aktif di server. Jalankan sekali file supabase-member-plan.sql di Supabase SQL Editor agar pembatasan model tersimpan per akun. Sementara ini aplikasi menebak paket dari kuota akun (template Basic 20x/8x dianggap Best).";
   }
+  if(!customModelApiOk)n.textContent+=" Penetapan model custom perlu menjalankan supabase-member-models.sql di Supabase SQL Editor.";
 }
 async function setPlanFor(nu,plan,reload){
   planNote();
@@ -2300,6 +2330,7 @@ async function admRefresh(){
   var list=await admCall("app_admin_list");if(!list)return;
   var ex=await admT("app_admin_extra"),em={};(ex||[]).forEach(function(x){em[x.username]=x});
   var pm=await admPlanMap();
+  var cm=await admCustomModelMap();
   planNote();
   var box=$("admList");box.innerHTML="";
   list.forEach(function(a){
@@ -2318,6 +2349,18 @@ async function admRefresh(){
       sel.value=plan||"";
       sel.onchange=function(){if(!sel.value)return;setPlanFor(a.username,sel.value,true)};
       ctl.appendChild(sel);
+      var assigned=cm[a.username]||[];
+      btn("Model custom ("+assigned.length+")",0,async function(){
+        var available=memberAssignableModels();
+        var value=prompt("Masukkan ID model custom yang sudah ditambahkan di bagian Model AI. Pisahkan dengan koma; kosongkan untuk menghapus semua.\n\nModel tersedia: "+(available.join(", ")||"belum ada"),(memberCustomModelMap[a.username]||[]).join(", "));
+        if(value===null)return;
+        var ids=uniqueModelIds(value.split(/[;,]/)),invalid=ids.filter(function(id){return available.indexOf(id)<0});
+        if(invalid.length){admErr("Tambahkan model ini dulu di bagian Model AI: "+invalid.join(", "));return}
+        try{
+          var saved=await rpc("app_member_models_set",{u:session.u,p:session.p,nu:a.username,models:ids});
+          memberCustomModelMap[a.username]=saved&&Array.isArray(saved.models)?saved.models:ids;customModelApiOk=true;admRefresh();
+        }catch(err){if(!handleAuthErr(err)){customModelApiOk=false;planNote();admErr("Gagal menyimpan model custom: "+err.message+( /404|does not exist|Could not find/i.test(err.message)?" — jalankan supabase-member-models.sql di Supabase.":""))}}
+      });
       var ia=inp(a.limit_auto,"Limit Xozen AI (1 limit = 1.000 xoz token)"),io=inp(a.limit_other,"Limit model lain (1 limit = 1.000 xoz token)"),ip=inp(plim,"Limit pin","pin"),it=inp("","Ubah masa aktif","ubah: 30d");it.style.width="100px";ip.style.width="56px";ip.title="Limit pin";
       btn("Simpan",0,async function(){
         var x=parseInt(ia.value,10),y=parseInt(io.value,10),pl=parseInt(ip.value,10),ns=null;
@@ -2651,11 +2694,12 @@ function modelDesc(m){
 function modelPlanOf(m){
   if(m==="auto")return"xozen";
   if(m==="minimumlite")return"gratis";
+  if(memberCustomModels.indexOf(m)>-1)return"custom";
   if(PLAN_MODELS.basic.indexOf(m)>-1)return"basic";
   if(PLAN_MODELS.best.indexOf(m)>-1)return"best";
   return"lain";
 }
-var MPLAN_LABEL={xozen:"Xozen",gratis:"Gratis",basic:"Basic",best:"Best",lain:"\u2014"};
+var MPLAN_LABEL={xozen:"Xozen",gratis:"Gratis",basic:"Basic",best:"Best",custom:"Custom",lain:"\u2014"};
 var mfav=[],mrecent=[],mfUser=null;
 function mfKey(kind){return "glassai."+kind+"."+(session?session.u:"_")}
 function mfLoad(){
