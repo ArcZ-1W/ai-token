@@ -63,25 +63,11 @@ Tambahkan aturan hosting agar `/_internal/` tidak dapat diakses bila folder itu 
 Supabase (paket per akun + penanda pengguna baru) diaktifkan dengan menjalankan
 `supabase-member-plan.sql` **sekali** di SQL Editor.
 
-### Login Google untuk `/free/`
+### Akun sementara untuk `/free/`
 
-Panduan lengkap: [PANDUAN-GOOGLE-SUPABASE.md](PANDUAN-GOOGLE-SUPABASE.md).
+Panduan lengkap: [PANDUAN-AKUN-SEMENTARA.md](PANDUAN-AKUN-SEMENTARA.md).
 
-Aktifkan provider Google di Supabase **Authentication → Providers → Google**, lalu isi OAuth Client ID dan Secret dari Google Cloud. Tambahkan callback Supabase berikut sebagai authorized redirect URI di Google Cloud:
-
-```
-https://beqlxnlhvarjhkuxndmr.supabase.co/auth/v1/callback
-```
-
-Di Supabase **Authentication → URL Configuration**, tambahkan URL berikut ke daftar Redirect URLs:
-
-```
-https://your-domain.example/free/
-http://localhost:8000/free/
-http://127.0.0.1:8000/free/
-```
-
-Ganti domain contoh dengan domain produksi. Login Google sekaligus menangani pendaftaran pengguna baru; tidak perlu tabel akun aplikasi.
+Aktifkan **Anonymous Sign-Ins** di Supabase **Authentication → Sign In / Providers**. Halaman lalu membuat sesi anonim tanpa email, password, atau Google. Sesi tersimpan di browser; jika pengguna keluar atau menghapus data browser, akun itu tidak bisa dipulihkan. Record akun anonim tetap berada di `auth.users` sampai dihapus, jadi siapkan CAPTCHA dan pembersihan berkala sebelum membuka layanan untuk publik.
 
 ## Uji lokal
 
