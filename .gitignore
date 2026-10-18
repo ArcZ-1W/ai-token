@@ -1,0 +1,5 @@
+*.zip
+_tmp_download_check.js
+.env
+.env.*
+!.env.example

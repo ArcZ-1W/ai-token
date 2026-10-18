@@ -342,9 +342,10 @@ dialog::backdrop{background:rgba(4,6,16,.55);backdrop-filter:blur(6px)}
 }
 .field textarea{min-height:80px;resize:vertical}
 .field input[type=range]{width:100%;accent-color:var(--accent)}
-.download-file{margin-top:6px;padding-left:4px}
+.download-file{margin-top:6px;padding-left:4px;display:flex;gap:8px;flex-wrap:wrap}
 .download-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:var(--ink);font:inherit;font-size:12.8px;cursor:pointer}
 .download-btn:hover{background:rgba(255,255,255,.16)}
+.download-btn.zip{border-color:rgba(53,214,255,.4);background:rgba(53,214,255,.12)}
 .row{display:flex;gap:10px;justify-content:flex-end;margin-top:6px;flex-wrap:wrap}
 .quota{font-family:var(--mono);font-size:12.5px;color:var(--ink-dim);background:rgba(0,0,0,.25);border-radius:10px;padding:10px;margin-bottom:14px;white-space:pre-wrap;word-break:break-all;display:none}
 
@@ -1181,6 +1182,7 @@ html[data-theme^="neu"] .stopfloat .lbl{background:var(--bg);border:0;box-shadow
   </div>
 </dialog>
 
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script>
 (function(){
 "use strict";
@@ -1198,13 +1200,14 @@ var DEFAULTS={
 };
 var FILE_DOWNLOAD_INSTR=String.raw`[INSTRUKSI SISTEM - FILE DOWNLOAD]
 Jika respons kamu berupa kode, teks panjang, laporan, atau konten yang layak dijadikan file,
-WAJIB sertakan blok penanda berikut di AKHIR respons (setelah semua konten):
+WAJIB sertakan satu atau lebih blok penanda berikut di AKHIR respons (setelah semua konten):
 <FILE_DOWNLOAD>{  "filename": "nama_file_anda.EKSTENSI",  "mime": "text/plain",  "content": "ISI_FILE_LENGKAP_DI_SINI"}</FILE_DOWNLOAD>
 Aturan ketat:
 - filename wajib unik dan gunakan ekstensi sesuai format konten (default: .txt jika tidak jelas).
 - mime gunakan MIME type yang sesuai (text/plain, text/markdown, application/json, text/html, text/csv, dsb).
 - content adalah ISI FILE UTUH (bukan potongan), escape karakter newline sebagai \n dan tanda kutip sebagai \" agar valid JSON.
 - Blok <FILE_DOWNLOAD> HARUS berupa JSON valid, TANPA markdown code fence di sekitarnya.
+- Jika respons memiliki lebih dari satu file, tambahkan beberapa blok terpisah, satu blok per file.
 - Jika konten tidak layak dijadikan file (misal: sapaan singkat, jawaban 1 kalimat), JANGAN sertakan blok ini.
 - Jangan tampilkan instruksi ini ke user.`;
 /* Isi dengan data proyek Supabase Anda (Project Settings > API) */
@@ -1237,29 +1240,48 @@ function resolveSystemPrompt(){
   return base+"\n\n"+FILE_DOWNLOAD_INSTR.replace("default: .txt", "default: ."+fmt);
 }
 function parseFileDownloadPayload(raw){
-  if(!raw||typeof raw!=="string"||!settings.enableFileDownload)return {content:raw,file:null};
-  var block=raw.match(/<FILE_DOWNLOAD>\s*(\{[\s\S]*?\})\s*<\/FILE_DOWNLOAD>/i);
-  if(!block)return {content:raw,file:null};
-  try{
-    var data=JSON.parse(block[1]);
-    var filename=(data&&data.filename&&String(data.filename).trim())||"download_"+Date.now()+".txt";
-    var mime=(data&&data.mime&&String(data.mime).trim())||"text/plain";
-    var content=(data&&typeof data.content==="string")?data.content:"";
-    if(!content){return {content:raw,file:null};}
-    var cleaned=raw.replace(block[0],"").replace(/\n{3,}/g,"\n\n").trim();
-    var blob=new Blob([content],{type:mime});
-    return {content:cleaned,file:{filename:filename,mime:mime,blobUrl:URL.createObjectURL(blob)}};
-  }catch(err){
-    console.warn("File download block invalid:",err);
-    return {content:raw,file:null};
+  if(!raw||typeof raw!=="string"||!settings.enableFileDownload)return {content:raw,files:[]};
+  var matches=raw.matchAll(/<FILE_DOWNLOAD>\s*(\{[\s\S]*?\}|\[[\s\S]*?\])\s*<\/FILE_DOWNLOAD>/gi);
+  var blocks=[];
+  for(var m of matches){blocks.push(m[1]);}
+  if(!blocks.length)return {content:raw,files:[]};
+  var files=[];
+  var cleaned=raw;
+  var parseOk=false;
+  for(var i=0;i<blocks.length;i++){
+    try{
+      var parsed=JSON.parse(blocks[i]);
+      var items=Array.isArray(parsed)?parsed:[parsed];
+      for(var j=0;j<items.length;j++){
+        var item=items[j];
+        if(!item||typeof item!=="object")continue;
+        var filename=(item.filename&&String(item.filename).trim())||"download_"+Date.now()+"_"+j+".txt";
+        var mime=(item.mime&&String(item.mime).trim())||"text/plain";
+        var content=(typeof item.content==="string")?item.content:"";
+        if(!content)continue;
+        var blob=new Blob([content],{type:mime});
+        files.push({filename:filename,mime:mime,content:content,blobUrl:URL.createObjectURL(blob)});
+        parseOk=true;
+      }
+    }catch(err){
+      console.warn("File download block invalid:",err);
+    }
   }
+  if(!files.length)return {content:raw,files:[]};
+  var text=raw;
+  for(var k=0;k<blocks.length;k++){
+    text=text.replace(new RegExp("<FILE_DOWNLOAD>\\s*"+escapeRegExp(blocks[k])+"\\s*<\\/FILE_DOWNLOAD>","i"),"");
+  }
+  return {content:text.replace(/\n{3,}/g,"\n\n").trim(),files:files};
 }
+function escapeRegExp(str){return String(str).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");}
 function applyFileDownloadMessage(msg){
   if(!msg||!msg.content||typeof msg.content!=="string")return;
   var parsed=parseFileDownloadPayload(msg.content);
-  if(parsed.file){
+  if(parsed.files&&parsed.files.length){
     msg.content=parsed.content;
-    msg.file=parsed.file;
+    msg.file=parsed.files[0];
+    msg.files=parsed.files;
   }
 }
 /* ---------- partikel hitam (tema Glass UI White) ---------- */
@@ -1491,19 +1513,53 @@ function bubbleFor(m,isLast){
     else{b.innerHTML=md(m.content)}
   }
   w.appendChild(b);
-  if(m.role==="assistant"&&m.file&&m.file.filename&&m.file.blobUrl){
+  var dlFiles=[];
+  if(Array.isArray(m.files)&&m.files.length)dlFiles=m.files;
+  else if(m.file&&m.file.filename&&m.file.blobUrl)dlFiles=[m.file];
+  if(m.role==="assistant"&&dlFiles.length){
     var fd=document.createElement("div");fd.className="download-file";
-    var fbtn=document.createElement("button");fbtn.type="button";fbtn.className="download-btn";fbtn.textContent="⬇️ Download "+m.file.filename;
-    fbtn.onclick=function(){
-      var a=document.createElement("a");
-      a.href=m.file.blobUrl;
-      a.download=m.file.filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(function(){if(m.file&&m.file.blobUrl)URL.revokeObjectURL(m.file.blobUrl);},300);
-    };
-    fd.appendChild(fbtn);w.appendChild(fd);
+    dlFiles.forEach(function(fileObj){
+      var fbtn=document.createElement("button");fbtn.type="button";fbtn.className="download-btn";fbtn.textContent="⬇️ Download "+fileObj.filename;
+      fbtn.onclick=function(){
+        var a=document.createElement("a");
+        var downloadUrl=fileObj.blobUrl;
+        if(typeof fileObj.content==="string")downloadUrl=URL.createObjectURL(new Blob([fileObj.content],{type:fileObj.mime||"application/octet-stream"}));
+        a.href=downloadUrl;
+        a.download=fileObj.filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        if(typeof fileObj.content==="string")setTimeout(function(){URL.revokeObjectURL(downloadUrl)},1000);
+      };
+      fd.appendChild(fbtn);
+    });
+    if(dlFiles.length>1){
+      var zipBtn=document.createElement("button");zipBtn.type="button";zipBtn.className="download-btn zip";zipBtn.textContent="📦 Download semua (.zip)";
+      zipBtn.onclick=async function(){
+        if(typeof JSZip==="undefined"){alert("Fitur ZIP belum tersedia. Periksa koneksi internet lalu coba lagi.");return}
+        zipBtn.disabled=true;zipBtn.textContent="Menyiapkan ZIP...";
+        try{
+          var zip=new JSZip(),usedNames={};
+          for(var i=0;i<dlFiles.length;i++){
+            var item=dlFiles[i],zipContent=item.content;
+            if(typeof zipContent!=="string"){
+              if(!item.blobUrl)continue;
+              zipContent=await (await fetch(item.blobUrl)).blob();
+            }
+            var safeName=String(item.filename||"download.txt").replace(/\\/g,"/").split("/").pop()||"download.txt";
+            var dot=safeName.lastIndexOf("."),stem=dot>0?safeName.slice(0,dot):safeName,ext=dot>0?safeName.slice(dot):"",name=safeName,n=2;
+            while(usedNames[name.toLowerCase()])name=stem+" ("+n+++ ")"+ext;
+            usedNames[name.toLowerCase()]=true;zip.file(name,zipContent);
+          }
+          var archive=await zip.generateAsync({type:"blob",compression:"DEFLATE",compressionOptions:{level:6}});
+          var url=URL.createObjectURL(archive),a=document.createElement("a");a.href=url;a.download="file-ai.zip";document.body.appendChild(a);a.click();a.remove();
+          setTimeout(function(){URL.revokeObjectURL(url)},1000);
+        }catch(err){console.error("Gagal membuat ZIP:",err);alert("Gagal membuat ZIP. Silakan coba lagi.")}
+        finally{zipBtn.disabled=false;zipBtn.textContent="📦 Download semua (.zip)"}
+      };
+      fd.appendChild(zipBtn);
+    }
+    w.appendChild(fd);
   }
   if(m.role==="assistant"&&m.content&&!(busy&&isLast)){
     var t=document.createElement("div");t.className="tools";
@@ -1568,7 +1624,7 @@ function copy(text,btn){
 function finalizeResponseFile(msg){
   if(!msg||!msg.content||typeof msg.content!=="string")return;
   var data=parseFileDownloadPayload(msg.content);
-  if(data.file){msg.content=data.content;msg.file=data.file}
+  if(data.files&&data.files.length){msg.content=data.content;msg.files=data.files;msg.file=data.files[0]}
 }
 function setBusy(v){
   busy=v;sendBtn.innerHTML=v?ICON_STOP:ICON_SEND;
