@@ -171,6 +171,16 @@ body{
 .side-foot{display:flex;gap:8px;flex-wrap:wrap}
 .side-foot #adminBtn{flex-basis:100%}
 .side-foot .btn{flex:1;font-size:13.5px;padding:9px 10px}
+.api-key-list{display:grid;gap:8px;margin:12px 0}
+.api-key-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid var(--menu-line);border-radius:12px;background:rgba(128,128,128,.08)}
+.api-key-row>div{min-width:0;display:grid;gap:3px}
+.api-key-row b{font-size:13px}
+.api-key-row code,.api-key-row small{overflow-wrap:anywhere;color:var(--ink-dim);font-size:11px}
+.api-snippet{max-height:270px;overflow:auto;margin:8px 0;padding:12px;border-radius:10px;background:rgba(0,0,0,.24);color:var(--ink);font:11px/1.5 var(--mono);white-space:pre}
+.api-docs{display:grid;gap:12px}
+.api-docs h3{margin:12px 0 4px}
+.api-docs p,.api-docs li{font-size:12.5px;line-height:1.55;color:var(--ink-dim)}
+.api-docs ol{padding-left:20px}
 
 /* kartu sisa token */
 .qcard{margin-bottom:10px;padding:13px 14px 12px;border-radius:16px;background:rgba(8,11,24,.32);border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
@@ -1071,6 +1081,7 @@ html[data-theme^="neu"] .fthumb{box-shadow:var(--raise-xs);border:0}
     </div>
     <div class="side-foot">
       <a class="btn" id="homeLink" href="../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg><span>Beranda</span></a>
+      <button class="btn" id="apiKeysBtn" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="m10.8 12.2 8.7-8.7 2 2-2 2 1.5 1.5-2.2 2.2-1.5-1.5-3.8 3.8"/></svg><span>API Key</span></button>
       <button class="btn" id="openSettings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg><span>Pengaturan</span></button>
       <button class="btn" id="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4"/></svg><span>Keluar</span></button>
       <button class="btn" id="adminBtn" style="display:none" title="Dashboard Admin" aria-label="Dashboard Admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg><span>Admin</span></button>
@@ -1219,6 +1230,55 @@ html[data-theme^="neu"] .fthumb{box-shadow:var(--raise-xs);border:0}
       <button class="btn" id="closeDlg">Batal</button>
       <button class="btn primary" id="saveDlg">Simpan</button>
     </div>
+  </div>
+</dialog>
+
+<dialog id="apiDlg">
+  <div class="dlg glass">
+    <h2>API Xozen untuk Developer</h2>
+    <p class="adm-note">Buat API key pribadi untuk memakai model dan kuota akun Xozen dari OpenCode, OpenClaw, Claude Code, 9Router, atau Hermes. Key hanya ditampilkan sekali; simpan dengan aman dan cabut jika bocor.</p>
+    <p class="adm-note">Admin perlu memasang <code>supabase-api-keys.sql</code>, deploy Supabase Edge Function <code>xozen-api</code>, dan mengatur upstream secrets sebelum API dapat dipakai.</p>
+    <div class="settings-grid">
+      <div class="field"><label for="apiKeyName">Nama key</label><input id="apiKeyName" type="text" maxlength="60" placeholder="Contoh: Laptop coding"></div>
+      <div class="field"><label>API Base URL</label><input id="apiEndpoint" type="text" readonly></div>
+      <div class="field"><label for="apiConfigKey">Key untuk konfigurasi (tidak disimpan)</label><input id="apiConfigKey" type="password" autocomplete="off" spellcheck="false" placeholder="Buat key baru atau tempel key yang sudah disimpan"></div>
+      <div class="field"><label for="apiModelSelect">Model default tool eksternal</label><select id="apiModelSelect"></select></div>
+    </div>
+    <div class="row"><button class="btn primary" id="createApiKey" type="button">Buat API key</button><button class="btn" id="refreshApiKeys" type="button">Muat ulang</button></div>
+    <div class="quota" id="apiKeyReveal" role="status" aria-live="polite"></div>
+    <div class="row"><button class="mini" id="copyCreatedApiKey" type="button" hidden>Salin API key baru</button></div>
+    <h3>Quickstart API</h3>
+    <p class="adm-note">OpenAI-compatible: <code>POST /chat/completions</code> · Anthropic Messages: <code>POST /messages</code> · daftar model: <code>GET /models</code> · sisa kuota: <code>GET /quota</code>.</p>
+    <pre class="api-snippet" id="apiQuickstart"></pre><button class="mini" type="button" data-api-copy="apiQuickstart">Salin perintah cek kuota &amp; model</button>
+    <h3>API key akun ini</h3>
+    <div class="api-key-list" id="apiKeyList"><span class="adm-note">Memuat daftar key...</span></div>
+    <div class="api-docs">
+      <h3>OpenCode</h3>
+      <p>Simpan JSON ini sebagai <code>~/.config/opencode/opencode.json</code>, lalu jalankan <code>opencode</code>.</p>
+      <p>Install di Linux/macOS: <code>curl -fsSL https://opencode.ai/install | bash</code>.</p>
+      <pre class="api-snippet" id="apiOpenCode"></pre><button class="mini" type="button" data-api-copy="apiOpenCode">Salin konfigurasi OpenCode</button>
+      <h3>OpenClaw</h3>
+      <p>Gabungkan provider berikut ke <code>models.providers</code> dalam <code>~/.openclaw/openclaw.json</code>.</p>
+      <p>Install dengan <code>npm install -g openclaw</code>, lalu mulai <code>openclaw gateway</code>.</p>
+      <pre class="api-snippet" id="apiOpenClaw"></pre><button class="mini" type="button" data-api-copy="apiOpenClaw">Salin konfigurasi OpenClaw</button>
+      <h3>Claude Code</h3>
+      <p>Set Base URL ke gateway tanpa <code>/v1</code>; Claude Code menambahkan <code>/v1/messages</code>.</p>
+      <pre class="api-snippet" id="apiClaude"></pre><button class="mini" type="button" data-api-copy="apiClaude">Salin PowerShell Claude Code</button>
+      <h3>9Router</h3>
+      <ol>
+        <li>Jalankan <code>npm install -g 9router</code>, lalu <code>9router</code>.</li>
+        <li>Buka <code>http://localhost:20128/dashboard</code> → <b>Providers → Add/Connect → Custom OpenAI-compatible endpoint</b>.</li>
+        <li>Gunakan Base URL API Xozen dan salah satu API key Xozen aktif Anda sebagai upstream key.</li>
+        <li>Di coding tool pilih URL lokal <code>http://localhost:20128/v1</code> dan key lokal yang dibuat 9Router.</li>
+      </ol>
+      <pre class="api-snippet" id="apiRouter"></pre><button class="mini" type="button" data-api-copy="apiRouter">Salin detail upstream 9Router</button>
+      <h3>Hermes Agent</h3>
+      <p>Tambahkan konfigurasi berikut ke <code>~/.hermes/config.yaml</code>.</p>
+      <p>Install (Linux/macOS): <code>curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash</code>, lalu jalankan <code>hermes chat</code>.</p>
+      <pre class="api-snippet" id="apiHermes"></pre><button class="mini" type="button" data-api-copy="apiHermes">Salin konfigurasi Hermes</button>
+      <div class="adm-note">Semua API key menggunakan akses dan kuota akun Xozen yang sedang login. Setiap respons model berhasil memakai satu unit kuota, sama seperti chat aplikasi. MinimumLite gratis tidak tersedia lewat endpoint eksternal.</div>
+    </div>
+    <div class="row"><button class="btn" id="closeApiDlg" type="button">Tutup</button></div>
   </div>
 </dialog>
 
@@ -2157,6 +2217,94 @@ async function rpc(fn,args){
   if(!r.ok)throw new Error((j&&j.message)||("Error "+r.status));
   return j;
 }
+var apiDlg=$("apiDlg"),apiCreatedSecret="";
+function apiFunctionBase(){return SUPA_URL.replace(/\/+$/,"")+"/functions/v1/xozen-api"}
+function apiBaseUrl(){return apiFunctionBase()+"/v1"}
+function apiKeySecret(){
+  var bytes=new Uint8Array(32);crypto.getRandomValues(bytes);
+  var raw="";for(var i=0;i<bytes.length;i++)raw+=String.fromCharCode(bytes[i]);
+  return "xz_live_"+btoa(raw).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function apiModels(){
+  var ids=allowedModels().filter(function(id){return id!=="minimumlite"});
+  return Array.prototype.indexOf.call(ids,"auto")>-1?ids:["auto"].concat(ids);
+}
+function apiConfigKey(){return $("apiConfigKey").value.trim()}
+function updateApiSnippets(){
+  var secret=apiConfigKey()||"PASTE_XOZEN_API_KEY";
+  var ids=apiModels(),model=$("apiModelSelect").value||"auto",base=apiBaseUrl(),origin=apiFunctionBase();
+  function put(id,value){$(id).textContent=value}
+  var opModels={};ids.forEach(function(id){opModels[id]={name:id,modalities:{input:["text","image"],output:["text"]}}});
+  put("apiOpenCode",JSON.stringify({"$schema":"https://opencode.ai/config.json",provider:{xozen:{npm:"@ai-sdk/openai-compatible",options:{baseURL:base,apiKey:secret},models:opModels}},model:"xozen/"+model,permission:"allow"},null,2));
+  put("apiOpenClaw",JSON.stringify({models:{mode:"merge",providers:{xozen:{baseUrl:base,apiKey:secret,api:"openai-completions",models:ids.map(function(id){return{id:id,name:id}})}}}},null,2));
+  put("apiClaude","$env:ANTHROPIC_BASE_URL='"+origin+"'; $env:ANTHROPIC_AUTH_TOKEN='"+secret+"'; $env:ANTHROPIC_MODEL='"+model+"'; claude");
+  put("apiQuickstart","curl "+base+"/models -H 'Authorization: Bearer "+secret+"'\ncurl "+base+"/quota -H 'Authorization: Bearer "+secret+"'\ncurl -X POST "+base+"/chat/completions -H 'Content-Type: application/json' -H 'Authorization: Bearer "+secret+"' -d '{\"model\":\""+model+"\",\"messages\":[{\"role\":\"user\",\"content\":\"Halo\"}]}'\n\nnpm install -g @anthropic-ai/claude-code\n$env:ANTHROPIC_BASE_URL='"+origin+"'; $env:ANTHROPIC_AUTH_TOKEN='"+secret+"'; $env:ANTHROPIC_MODEL='"+model+"'; claude");
+  put("apiRouter","Base URL: "+base+"\nAPI key:  "+secret+"\nModels:   "+base+"/models\n\nURL lokal untuk coding tool:\nhttp://localhost:20128/v1\nGunakan key lokal yang diterbitkan oleh dashboard 9Router.");
+  put("apiHermes","model:\n  default: "+model+"\n  provider: custom\n  base_url: "+JSON.stringify(base)+"\n  api_key: "+JSON.stringify(secret));
+}
+function renderApiKeyList(rows){
+  var list=$("apiKeyList");list.replaceChildren();
+  if(!Array.isArray(rows)||!rows.length){var empty=document.createElement("p");empty.className="adm-note";empty.textContent="Belum ada API key. Buat key pertama untuk menghubungkan coding tool.";list.appendChild(empty);return}
+  rows.forEach(function(item){
+    var row=document.createElement("div");row.className="api-key-row";
+    var info=document.createElement("div"),name=document.createElement("b"),prefix=document.createElement("code"),used=document.createElement("small");
+    name.textContent=item.name||"API key";prefix.textContent=(item.prefix||"xz_live_")+"...";used.textContent=item.revoked_at?"Dicabut":("Dibuat "+new Date(item.created_at).toLocaleDateString("id-ID")+(item.last_used_at?" · dipakai "+new Date(item.last_used_at).toLocaleString("id-ID"):" · belum dipakai"));
+    info.appendChild(name);info.appendChild(prefix);info.appendChild(used);row.appendChild(info);
+    if(!item.revoked_at){var revoke=document.createElement("button");revoke.type="button";revoke.className="mini del";revoke.textContent="Cabut";revoke.addEventListener("click",function(){revokeApiKey(item.id)});row.appendChild(revoke)}
+    list.appendChild(row);
+  });
+}
+async function refreshApiKeys(){
+  if(!session){$("apiKeyList").textContent="Login terlebih dahulu.";return}
+  $("apiKeyList").textContent="Memuat daftar key...";
+  try{renderApiKeyList(await rpc("app_api_key_list",{u:session.u,p:session.p}))}
+  catch(error){$("apiKeyList").textContent="API key belum siap: "+(error.message||"jalankan supabase-api-keys.sql di Supabase SQL Editor.")}
+}
+async function revokeApiKey(id){
+  if(!session||!confirm("Cabut API key ini? Aplikasi eksternal yang memakainya akan langsung kehilangan akses."))return;
+  try{await rpc("app_api_key_revoke",{u:session.u,p:session.p,target:id});await refreshApiKeys()}
+  catch(error){alert("Gagal mencabut API key: "+(error.message||"kesalahan server"))}
+}
+function openApiKeys(){
+  if(!session)return;
+  $("apiEndpoint").value=apiBaseUrl();$("apiKeyReveal").style.display="none";$("apiKeyReveal").textContent="";
+  $("apiConfigKey").value="";$("apiModelSelect").replaceChildren();
+  apiModels().forEach(function(id){var option=document.createElement("option");option.value=id;option.textContent=id;$("apiModelSelect").appendChild(option)});
+  $("apiModelSelect").value="auto";updateApiSnippets();refreshApiKeys();closeSide();apiDlg.showModal();
+}
+$("apiKeysBtn").addEventListener("click",openApiKeys);
+$("closeApiDlg").addEventListener("click",function(){apiDlg.close()});
+$("refreshApiKeys").addEventListener("click",refreshApiKeys);
+$("apiConfigKey").addEventListener("input",updateApiSnippets);
+$("apiModelSelect").addEventListener("change",updateApiSnippets);
+$("createApiKey").addEventListener("click",async function(){
+  if(!session)return;
+  var name=$("apiKeyName").value.trim();if(!name){alert("Isi nama untuk API key ini.");$("apiKeyName").focus();return}
+  var button=this;button.disabled=true;
+  try{
+    var secret=apiKeySecret();
+    await rpc("app_api_key_create",{u:session.u,p:session.p,label:name,secret:secret});
+    apiCreatedSecret=secret;$("apiConfigKey").value=secret;
+    $("apiKeyReveal").style.display="block";$("apiKeyReveal").textContent="Simpan key ini sekarang — key tidak dapat ditampilkan lagi setelah dialog ditutup:\n"+secret;
+    $("copyCreatedApiKey").hidden=false;
+    $("apiKeyName").value="";updateApiSnippets();await refreshApiKeys();
+  }catch(error){alert("Gagal membuat API key: "+(error.message||"jalankan supabase-api-keys.sql di Supabase SQL Editor."))}
+  finally{button.disabled=false}
+});
+document.querySelectorAll("[data-api-copy]").forEach(function(button){
+  button.addEventListener("click",async function(){
+    try{await navigator.clipboard.writeText($(button.getAttribute("data-api-copy")).textContent);alert("Konfigurasi disalin.")}
+    catch(error){alert("Tidak dapat menyalin otomatis. Pilih dan salin teks konfigurasi secara manual.")}
+  });
+});
+apiDlg.addEventListener("close",function(){
+  apiCreatedSecret="";$("apiConfigKey").value="";$("apiKeyReveal").textContent="";$("apiKeyReveal").style.display="none";$("copyCreatedApiKey").hidden=true;updateApiSnippets();
+});
+ $("copyCreatedApiKey").addEventListener("click",async function(){
+  if(!apiCreatedSecret)return;
+  try{await navigator.clipboard.writeText(apiCreatedSecret);alert("API key disalin. Simpan di password manager Anda.")}
+  catch(error){alert("Tidak dapat menyalin otomatis. Salin key yang ditampilkan secara manual.")}
+});
 function setSession(a,p,t){session={u:a.username,p:p||session.p,t:t||(session&&session.t),admin:!!a.is_admin,la:+a.limit_auto,lo:+a.limit_other,ua:+a.used_auto,uo:+a.used_other,exp:a.expires_at?Date.parse(a.expires_at):null};save("glassai.auth",session)}
 function remOf(m){return m==="auto"?session.la-session.ua:session.lo-session.uo}
 function fmtLeft(ms){
@@ -2212,6 +2360,7 @@ setInterval(function(){
 var loginEl=$("login");
 function gate(){
   loginEl.classList.toggle("show",!session);
+  $("apiKeysBtn").hidden=!session;
   $("adminBtn").style.display=session&&session.admin?"":"none";
   $("qTitle").textContent=session&&!session.admin?"Sisa pemakaian":"Sisa token";
   if(!session)setTimeout(function(){$("lUser").focus()},50);
@@ -2848,18 +2997,20 @@ document.addEventListener("keydown",function(e){
 
 /* ---------- tutorial pengguna baru ---------- */
 var TOUR=[
-  {ic:"\u2728",t:"Selamat datang di Xozen AI \uD83D\uDC4B",d:"Tur singkat 5 langkah supaya Anda langsung nyaman memakai aplikasinya. Mau langsung mulai? Tekan \u201cLewati\u201d. Mau keluar nanti saja? Tekan \u00d7 di kanan atas."},
+  {ic:"\u2728",t:"Selamat datang di Xozen AI \uD83D\uDC4B",d:"Tur singkat 6 langkah supaya Anda langsung nyaman memakai aplikasinya. Mau langsung mulai? Tekan \u201cLewati\u201d. Mau keluar nanti saja? Tekan \u00d7 di kanan atas."},
   {ic:"\uD83E\uDDE9",t:"Pilih model AI",d:"Klik tombol model di kanan atas. Muncul daftar model dengan kotak pencarian, filter (Basic, Best, atau keluarga model seperti Kimi, GLM, DeepSeek), dan tanda centang pada model yang sedang dipakai.",el:"dd"},
   {ic:"\u26A1",t:"Pantau kuota & paket",d:"Kartu di sidebar menunjukkan paket Anda, sisa kuota, dan masa aktif akun. Sisa kuota ditampilkan dalam xoz token; tiap pemakaian model memakai sejumlah token. Model MinimumLite gratis dan tidak memakai token.",el:"qCard"},
   {ic:"\uD83D\uDCE4",t:"Kirim pesan & lampiran",d:"Tulis pesan lalu tekan Enter untuk kirim (Shift+Enter untuk baris baru). Tombol klip di kiri untuk melampirkan file. Saat menjawab, tombol kirim berubah menjadi tombol hentikan.",el:"attachBtn"},
+  {ic:"\uD83D\uDD11",t:"Pakai API Xozen di coding agent",d:"Buka API Key di sidebar untuk membuat key pribadi. Gunakan key itu di OpenCode, OpenClaw, Claude Code, 9Router, atau Hermes. Pemakaian tool eksternal memakai kuota dan akses model akun yang sama.",el:"apiKeysBtn"},
   {ic:"\u2699\uFE0F",t:"Pengaturan aplikasi",d:"Buka Pengaturan dari sidebar untuk memilih tema, mengatur instruksi sistem dan suhu AI, memilih mode serta format file unduhan, dan mengatur pengiriman gambar ke model. Tekan Simpan untuk menerapkan. Paket & harga juga bisa dibuka dari sini.",el:"openSettings",last:true}
 ];
 var TOUR_ADMIN=[
-  {ic:"\uD83D\uDEE1\uFE0F",t:"Tur singkat untuk admin",d:"Enam langkah mengelola akun paket, model AI, dan konfigurasi. Tombol \u00d7 menutup tur kapan saja; bisa dibuka lagi dari Pengaturan \u2192 Tur admin."},
+  {ic:"\uD83D\uDEE1\uFE0F",t:"Tur singkat untuk admin",d:"Tujuh langkah mengelola akun paket, model AI, dan konfigurasi. Tombol \u00d7 menutup tur kapan saja; bisa dibuka lagi dari Pengaturan \u2192 Tur admin."},
   {ic:"\uD83D\uDC65",t:"Dashboard Admin",d:"Klik tombol Admin di sidebar: ada wizard buat akun paket, daftar semua akun (kuota, masa aktif, wajah, pin), dan pengelola daftar model AI.",el:"adminBtn"},
   {ic:"\uD83E\uDDE9",t:"Akses model per paket",d:"Akun Basic hanya melihat 9 model Basic, akun Best melihat 31 model, admin selalu melihat semuanya. Paket tiap akun bisa diubah dari pilihan di baris akunnya.",el:"ddBtn"},
   {ic:"\u26A1",t:"Kuota admin",d:"Akun admin tidak dibatasi kuota; kartu di sidebar hanya menampilkan status. Untuk member, kuota dihitung dalam xoz token.",el:"qCard"},
   {ic:"\u2699\uFE0F",t:"Konfigurasi AI & harga",d:"Di Pengaturan: Base URL dan API key penyedia AI, instruksi sistem, suhu, tema tampilan, dan halaman paket & harga.",el:"openSettings"},
+  {ic:"\uD83D\uDD11",t:"API untuk coding agent",d:"Anggota dapat membuat dan mencabut API key pribadi dari sidebar. Gateway eksternal harus dideploy lewat Supabase Edge Functions dan memakai secrets upstream provider.",el:"apiKeysBtn"},
   {ic:"\uD83D\uDDC4\uFE0F",t:"Sekali saja: jalankan SQL",d:"Jalankan supabase-member-plan.sql di Supabase SQL Editor agar paket per akun dan penanda pengguna baru (tutorial otomatis member) aktif. Statusnya tampil di bagian atas Dashboard Admin.",last:true}
 ];
 var tourEl=$("tour"),tourStep=0,tourShown=false,tourApiOk=true,tourSteps=TOUR,tourKind="member";

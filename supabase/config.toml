@@ -1,0 +1,2 @@
+[functions.xozen-api]
+verify_jwt = false

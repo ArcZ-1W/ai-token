@@ -152,10 +152,10 @@
     try{
       var result;
       if(authMode==="signup"){
-        result=await client.auth.signUp({email:email.value.trim(),password:password.value,options:{emailRedirectTo:"https://xozen.web.id/auth?tokenrahasia=true",data:{display_name:displayName.value.trim()||email.value.trim().split("@")[0]}}});
+        result=await client.auth.signUp({email:email.value.trim(),password:password.value,options:{data:{display_name:displayName.value.trim()||email.value.trim().split("@")[0]}}});
         if(result.error)throw result.error;
         if(result.data.session)setSession(result.data.session.user);
-        else setStatus(authStatus,"Pendaftaran berhasil. Periksa email untuk konfirmasi, lalu masuk.");
+        else setStatus(authStatus,"Akun belum bisa langsung digunakan. Admin perlu menonaktifkan Confirm email di pengaturan Supabase Auth.");
       }else{
         result=await client.auth.signInWithPassword({email:email.value.trim(),password:password.value});
         if(result.error)throw result.error;
