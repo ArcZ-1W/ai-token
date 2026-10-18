@@ -41,8 +41,6 @@ blog/
 | `supabase-member-models.sql` | skrip database (tidak untuk publik) |
 | `community/schema.sql` | skrip database (tidak untuk publik) |
 | `_internal/` | arsip lama, tangkapan layar, dan skrip uji lokal |
-| `supabase-api-keys.sql` | migrasi database API key eksternal (jalankan di Supabase SQL Editor) |
-| `supabase/functions/` | source Supabase Edge Function (deploy dengan Supabase CLI) |
 
 Tambahkan aturan hosting agar `/_internal/` tidak dapat diakses bila folder itu tetap ikut terunggah.
 
@@ -73,31 +71,6 @@ Untuk mengizinkan model tambahan pada akun member, jalankan `supabase-member-mod
 sekali di SQL Editor. Admin perlu menambahkan ID model lewat bagian **Model AI** di
 dashboard, lalu memilih **Model custom** pada baris akun member. Model yang ditetapkan
 muncul hanya pada akun tersebut dan memakai kuota **Model lain**.
-
-### API untuk coding agent dan tool eksternal
-
-Menu **API Key** pada aplikasi membuat key pribadi per akun Xozen. Endpoint kompatibel dengan
-OpenAI Chat Completions, Anthropic Messages, daftar model, dan pemeriksaan kuota. Akses model
-mengikuti paket akun; setiap completion berhasil memakai satu unit kuota seperti chat web.
-Key mentah hanya ditampilkan saat dibuat, sedangkan database hanya menyimpan hash-nya.
-
-Fitur ini memerlukan backend Supabase dan tidak aktif hanya dengan mengunggah berkas statis:
-
-1. Jalankan `supabase-api-keys.sql` sekali di Supabase SQL Editor setelah skema inti akun
-   Xozen (fungsi `app_login` dan tabel `accounts`) tersedia.
-2. Pasang Supabase CLI, login, lalu dari root proyek jalankan
-   `supabase functions deploy xozen-api --project-ref <PROJECT_REF>`.
-3. Isi secrets Edge Function dengan upstream Base URL dan API key yang sama dengan provider
-   di **Pengaturan** admin aplikasi:
-   `supabase secrets set XOZEN_UPSTREAM_BASE_URL="https://provider.example/v1" XOZEN_UPSTREAM_API_KEY="<provider-key>" --project-ref <PROJECT_REF>`.
-   Supabase menyediakan `SUPABASE_URL` dan `SUPABASE_SERVICE_ROLE_KEY` untuk Edge Function.
-4. Endpoint API akun: `https://<PROJECT_REF>.supabase.co/functions/v1/xozen-api/v1`.
-   Kelola key dan salin konfigurasi OpenCode, OpenClaw, Claude Code, 9Router, atau Hermes
-   lewat menu **API Key** setelah login.
-
-Jika Base URL atau API key provider admin berubah, secrets Edge Function juga harus diperbarui.
-Jangan gunakan provider key admin sebagai API key di tool pengguna; gunakan key `xz_live_...`
-yang dibuat per akun. `MinimumLite` gratis tidak disediakan lewat endpoint eksternal.
 
 ### ArcZ Community
 
