@@ -65,6 +65,7 @@
         .replace(/([a-zA-Z-]+)=(&quot;[^&]*&quot;)/g, '<span class="attr">$1</span>=<span class="str">$2</span>');
     }
     var caret = null;
+    function scrollLatest() { cdBody.scrollTop = cdBody.scrollHeight; }
     function putCaret(node) {
       if (caret && caret.parentNode) caret.parentNode.removeChild(caret);
       caret = el('span', 'cd-caret');
@@ -118,6 +119,7 @@
             }
             ln.textContent = line.slice(0, ++ci);
             ln.appendChild(caret);
+            scrollLatest();
             setTimeout(typeChar, 9);
           })();
         })();
@@ -131,6 +133,7 @@
         if (n >= st.t.length) { setTimeout(function () { typeSteps(i + 1, done); }, st.k === 'u' ? 420 : 320); return; }
         msg.textContent = st.t.slice(0, ++n);
         msg.appendChild(caret);
+        scrollLatest();
         setTimeout(typeChar, st.k === 'u' ? 34 : 18);
       })();
     }

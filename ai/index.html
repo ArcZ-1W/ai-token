@@ -290,19 +290,28 @@ select option{background:#14172b;color:var(--ink)}
 .fchip button{background:none;border:0;color:var(--ink-dim);cursor:pointer;font-size:16px;line-height:1;padding:0 4px}
 .fchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .fchips span{padding:3px 10px;border-radius:999px;font-size:12px;background:rgba(255,255,255,.18)}
-dialog#admDlg{width:min(720px,calc(100vw - 20px))}
+dialog#admDlg{width:min(920px,calc(100vw - 20px));max-height:calc(100dvh - 24px)}
+#admDlg .dlg{max-height:calc(100dvh - 24px);overflow-y:auto}
 .adm-new{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-items:end;margin-bottom:6px}
 .adm-new .field{margin-bottom:0}
 .adm-err{min-height:18px;font-size:13px;color:var(--danger);margin:4px 0}
-.adm-list{max-height:48vh;overflow-y:auto}
-.adm-row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:10px 0;border-top:1px solid rgba(255,255,255,.12);font-size:13.5px}
+.adm-toolbar{display:flex;align-items:center;gap:10px;margin:10px 0 6px}
+.adm-search{flex:1;min-width:0;padding:10px 12px;border-radius:11px;border:1px solid var(--glass-edge);background:rgba(128,128,128,.12);color:var(--ink);font:inherit;font-size:13.5px}
+.adm-search:focus-visible{outline:2px solid var(--accent-2);outline-offset:1px}
+.adm-count{flex:none;font-size:12px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+.adm-list{max-height:42vh;overflow-y:auto;display:grid;gap:8px;padding:2px}
+.adm-row{display:grid;gap:10px;padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:13px;background:rgba(128,128,128,.06);font-size:13.5px}
+.adm-person{min-width:0}
+.adm-identity{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.adm-identity b{font-size:14px;overflow-wrap:anywhere}
+.adm-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 12px;margin-top:7px}
 .adm-row small{display:block;color:var(--ink-dim);margin-top:2px}
-.adm-ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.adm-ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-top:9px;border-top:1px solid rgba(128,128,128,.18)}
 .adm-ctl input{width:84px;padding:6px 9px;border-radius:9px;border:1px solid var(--glass-edge);background:rgba(8,11,24,.38);color:var(--ink);font:inherit;font-size:13px}
 .mini{font:inherit;font-size:12.5px;padding:6px 10px;border-radius:9px;border:1px solid var(--glass-edge);background:var(--glass);color:var(--ink);cursor:pointer}
 .mini:hover{background:rgba(255,255,255,.2)}
 .mini.del{color:var(--danger)}
-@media (max-width:640px){.adm-new{grid-template-columns:1fr}}
+@media (max-width:640px){.adm-new{grid-template-columns:1fr}.adm-toolbar{align-items:stretch;flex-direction:column}.adm-count{align-self:flex-end}.adm-metrics{grid-template-columns:1fr}.adm-ctl{align-items:stretch}.adm-ctl input{flex:1;min-width:72px}}
 .jump{position:absolute;right:16px;bottom:100%;margin-bottom:6px;display:none;flex-direction:column;gap:8px;z-index:5}
 .jump.show{display:flex}
 .jump button{width:40px;height:40px;border-radius:50%;border:1px solid var(--glass-edge);background:var(--glass-strong);color:var(--ink);cursor:pointer;display:grid;place-items:center;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 6px 18px rgba(0,0,0,.3)}
@@ -1087,6 +1096,7 @@ html[data-theme^="neu"] .stopfloat .lbl{background:var(--bg);border:0;box-shadow
   </div></form>
   <div class="adm-sec"><div class="adm-h"><b>Model AI</b><div class="adm-ctl"><button class="mini" type="button" id="mFetch">Ambil dari API</button><button class="mini del" type="button" id="mClear">Hapus semua</button></div></div><div class="mlist" id="mList"></div></div>
   <div class="adm-err" id="admErr" role="alert"></div>
+  <div class="adm-toolbar"><input class="adm-search" type="search" id="admSearch" placeholder="Cari akun..." aria-label="Cari akun"><span class="adm-count" id="admCount" aria-live="polite"></span></div>
   <div class="adm-list" id="admList"></div>
     <div style="margin-top:14px;text-align:right"><button class="btn danger" type="button" id="wizOpen2">Buat akun (wizard)</button> <button class="btn" type="button" id="admClose">Tutup</button></div>
 </div></dialog>
@@ -1159,9 +1169,9 @@ html[data-theme^="neu"] .stopfloat .lbl{background:var(--bg);border:0;box-shadow
     </div>
     <div class="field"><label for="sSys">Instruksi sistem</label><textarea id="sSys" placeholder="Contoh: Jawab singkat dalam bahasa Indonesia."></textarea></div>
     <div class="field"><label for="sTemp">Suhu: <span id="tempVal">0.7</span></label><input type="range" id="sTemp" min="0" max="1.5" step="0.1"></div>
-    <div class="field"><label>File Download</label>
-      <label class="chk"><input type="checkbox" id="sFileDownload"> Aktifkan tombol Download File pada respons AI</label>
-      <div class="adm-note">Saat aktif, model akan menambahkan file siap unduh untuk jawaban yang cocok dijadikan file teks atau kode.</div>
+    <div class="field"><label for="sFileMode">Mode respons</label>
+      <select id="sFileMode"><option value="progress">Progress only (default)</option><option value="progress_file">Progress + file</option><option value="file_only">File send only</option></select>
+      <div class="adm-note">Progress only menampilkan jawaban biasa. Progress + file menampilkan jawaban dan file unduhan. File send only menampilkan file unduhan tanpa teks jawaban.</div>
     </div>
     <div class="field"><label for="sFileFormat">Format file default</label><select id="sFileFormat"><option value="txt">txt</option><option value="md">md</option><option value="json">json</option><option value="html">html</option><option value="csv">csv</option><option value="js">js</option><option value="py">py</option><option value="css">css</option></select></div>
     <div class="field"><label>Paket &amp; harga</label><button type="button" class="btn" id="openPriceInApp">Lihat paket &amp; harga</button></div>
@@ -1195,7 +1205,7 @@ var DEFAULTS={
   model:"glm-5.3",
   model:"auto",           /* bawaan: Xozen AI */
   theme:"neulight",
-  enableFileDownload:false,
+  fileResponseMode:"progress",
   fileDownloadFormat:"txt"
 };
 var FILE_DOWNLOAD_INSTR=String.raw`[INSTRUKSI SISTEM - FILE DOWNLOAD]
@@ -1227,20 +1237,28 @@ var ICON_STOP='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" wi
 /* ---------- penyimpanan ---------- */
 function load(k,f){try{var v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}}
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function normalizeFileResponseMode(mode){return ["progress","progress_file","file_only"].indexOf(mode)>-1?mode:"progress"}
 var settings=Object.assign({},DEFAULTS,load("glassai.settings",{}));
-settings.enableFileDownload=!!load("enableFileDownload",!!settings.enableFileDownload);
+var legacyFileDownload=!!load("enableFileDownload",!!settings.enableFileDownload);
+var savedFileResponseMode=load("fileResponseMode",null);
+settings.fileResponseMode=normalizeFileResponseMode(savedFileResponseMode||(legacyFileDownload?"progress_file":settings.fileResponseMode));
+delete settings.enableFileDownload;
 settings.fileDownloadFormat=(load("fileDownloadFormat",settings.fileDownloadFormat||"txt")||"txt").toLowerCase();
 settings.baseUrl="";settings.apiKey="";
 function fileDownloadFormatList(){return ["txt","md","json","html","csv","js","py","css"]}
 function normalizeFileFormat(fmt){var list=fileDownloadFormatList();var v=(fmt||"txt").toLowerCase();return list.indexOf(v)>-1?v:"txt"}
 function resolveSystemPrompt(){
   var base=(settings.system&&settings.system.trim())||"You are a helpful assistant.";
-  if(!settings.enableFileDownload)return base;
+  var mode=normalizeFileResponseMode(settings.fileResponseMode);
+  if(mode==="progress")return base;
   var fmt=normalizeFileFormat(settings.fileDownloadFormat);
-  return base+"\n\n"+FILE_DOWNLOAD_INSTR.replace("default: .txt", "default: ."+fmt);
+  var instruction=FILE_DOWNLOAD_INSTR.replace("default: .txt", "default: ."+fmt);
+  if(mode==="file_only")instruction+="\n\nMODE FILE ONLY: Jangan menulis jawaban atau penjelasan di luar blok FILE_DOWNLOAD. Masukkan seluruh hasil yang diminta ke dalam satu atau lebih file. Jika memang tidak perlu file, jawab singkat bahwa tidak ada file yang perlu dibuat.";
+  else instruction+="\n\nMODE PROGRESS + FILE: Berikan jawaban normal seperti biasa, lalu sertakan file unduhan yang sesuai.";
+  return base+"\n\n"+instruction;
 }
 function parseFileDownloadPayload(raw){
-  if(!raw||typeof raw!=="string"||!settings.enableFileDownload)return {content:raw,files:[]};
+  if(!raw||typeof raw!=="string"||normalizeFileResponseMode(settings.fileResponseMode)==="progress")return {content:raw,files:[]};
   var matches=raw.matchAll(/<FILE_DOWNLOAD>\s*(\{[\s\S]*?\}|\[[\s\S]*?\])\s*<\/FILE_DOWNLOAD>/gi);
   var blocks=[];
   for(var m of matches){blocks.push(m[1]);}
@@ -1353,7 +1371,7 @@ function slimMsg(m){
 function slimChat(c){return Object.assign({},c,{messages:c.messages.map(slimMsg)})}
 function persist(){
   if(session){save(ckey("chats"),chats.map(slimChat));save(ckey("active"),activeId)}
-  save("enableFileDownload",!!settings.enableFileDownload);
+  save("fileResponseMode",normalizeFileResponseMode(settings.fileResponseMode));
   save("fileDownloadFormat",normalizeFileFormat(settings.fileDownloadFormat));
   var st=Object.assign({},settings);delete st.baseUrl;delete st.apiKey;save("glassai.settings",st);
 }
@@ -1495,6 +1513,10 @@ function renderHist(){
 function bubbleFor(m,isLast){
   var w=document.createElement("div");w.className="msg "+(m.role==="user"?"user":"bot");
   var b=document.createElement("div");b.className="bubble";
+  var dlFiles=[];
+  if(Array.isArray(m.files)&&m.files.length)dlFiles=m.files.filter(function(f){return f&&f.filename&&f.blobUrl});
+  else if(m.file&&m.file.filename&&m.file.blobUrl)dlFiles=[m.file];
+  var hideFileOnlyBubble=m.role==="assistant"&&m.fileOnly&&dlFiles.length>0;
   if(m.role==="user"){b.textContent=m.files?(m.text||""):m.content;
     if(m.files&&m.files.length){
       var th=m.files.filter(function(f){return f.thumb});
@@ -1507,15 +1529,12 @@ function bubbleFor(m,isLast){
       if(f.url){var a=document.createElement("a");a.href=f.url;a.target="_blank";a.rel="noopener noreferrer";a.style.color="inherit";a.textContent="🔗 "+f.name;t.appendChild(a)}
       else t.textContent=(f.img?"🖼 ":"📄 ")+f.name;
       fc.appendChild(t)});b.appendChild(fc)}}
-  else{
+  else if(!hideFileOnlyBubble){
     if(m.error){b.classList.add("err");b.textContent=m.content}
     else if(!m.content){b.innerHTML='<span class="dots"><i></i><i></i><i></i></span>'}
     else{b.innerHTML=md(m.content)}
   }
-  w.appendChild(b);
-  var dlFiles=[];
-  if(Array.isArray(m.files)&&m.files.length)dlFiles=m.files;
-  else if(m.file&&m.file.filename&&m.file.blobUrl)dlFiles=[m.file];
+  if(!hideFileOnlyBubble)w.appendChild(b);
   if(m.role==="assistant"&&dlFiles.length){
     var fd=document.createElement("div");fd.className="download-file";
     dlFiles.forEach(function(fileObj){
@@ -1624,7 +1643,7 @@ function copy(text,btn){
 function finalizeResponseFile(msg){
   if(!msg||!msg.content||typeof msg.content!=="string")return;
   var data=parseFileDownloadPayload(msg.content);
-  if(data.files&&data.files.length){msg.content=data.content;msg.files=data.files;msg.file=data.files[0]}
+  if(data.files&&data.files.length){msg.content=data.content;msg.files=data.files;msg.file=data.files[0];msg.fileOnly=normalizeFileResponseMode(settings.fileResponseMode)==="file_only";if(msg.fileOnly)msg.content="File siap diunduh."}
 }
 function setBusy(v){
   busy=v;sendBtn.innerHTML=v?ICON_STOP:ICON_SEND;
@@ -1694,7 +1713,7 @@ async function stream(c){
     requestAnimationFrame(function(){
       pending=false;
       var bub=col.lastElementChild&&col.lastElementChild.querySelector(".bubble");
-      if(bub&&!asst.error){bub.innerHTML=asst.content?md(asst.content):'<span class="dots"><i></i><i></i><i></i></span>'}
+      if(bub&&!asst.error){bub.innerHTML=normalizeFileResponseMode(settings.fileResponseMode)==="file_only"?'<span class="dots"><i></i><i></i><i></i></span>':(asst.content?md(asst.content):'<span class="dots"><i></i><i></i><i></i></span>')}
       toBottom(false);
     });
   }
@@ -1903,7 +1922,7 @@ var dlg=$("dlg");
 function openSettings(){
   $("sBase").value=settings.baseUrl;$("sKey").value=settings.apiKey;$("sSys").value=settings.system||"";
   $("sTemp").value=settings.temp;$("tempVal").textContent=settings.temp;$("quotaOut").style.display="none";
-  $("sFileDownload").checked=!!settings.enableFileDownload;$("sFileFormat").value=normalizeFileFormat(settings.fileDownloadFormat);
+  $("sFileMode").value=normalizeFileResponseMode(settings.fileResponseMode);$("sFileFormat").value=normalizeFileFormat(settings.fileDownloadFormat);
   pendingTheme=THEMES.indexOf(settings.theme)>-1?settings.theme:"neulight";markTheme(pendingTheme);
   var adm=!!(session&&session.admin);$("cfgBox").style.display=adm?"":"none";$("checkQuota").style.display=adm?"":"none";
   $("tourAdminBtn").hidden=!adm;
@@ -1915,9 +1934,9 @@ $("closeDlg").onclick=function(){dlg.close()};
 $("saveDlg").onclick=async function(){
   settings.system=$("sSys").value;
   settings.temp=parseFloat($("sTemp").value);
-  settings.enableFileDownload=!!$("sFileDownload").checked;
+  settings.fileResponseMode=normalizeFileResponseMode($("sFileMode").value);
   settings.fileDownloadFormat=normalizeFileFormat($("sFileFormat").value);
-  save("enableFileDownload",settings.enableFileDownload);
+  save("fileResponseMode",settings.fileResponseMode);
   save("fileDownloadFormat",settings.fileDownloadFormat);
   if(session&&session.admin){
     var b=$("sBase").value.trim(),k=$("sKey").value.trim();
@@ -2198,7 +2217,7 @@ async function admRefresh(){
     var row=document.createElement("div");row.className="adm-row";
     var exp=a.expires_at?Date.parse(a.expires_at):null;
     var badge=a.is_admin?'<span class="wplan">Admin</span>':'<span class="wplan '+(plan||"")+'">'+(plan?planName(plan):"paket belum diset")+'</span>';
-    row.innerHTML='<div><b>'+esc(a.username)+'</b> '+badge+'<small>Xozen AI '+xozFmt(tokUsed(a.username,"auto",a.limit_auto,a.used_auto))+'/'+xozFmt(a.limit_auto*TOK)+' token ('+a.used_auto+'/'+a.limit_auto+' limit) \u00b7 Lain '+xozFmt(tokUsed(a.username,"other",a.limit_other,a.used_other))+'/'+xozFmt(a.limit_other*TOK)+' token ('+a.used_other+'/'+a.limit_other+' limit)</small><small>'+(exp?'Aktif '+fmtLeft(exp)+' lagi (sampai '+esc(new Date(exp).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"}))+')':'Tanpa batas waktu')+'</small><small>Wajah: '+(hasFace?'terdaftar':'belum terdaftar')+(a.is_admin?'':' \u00b7 Pin '+(e.pins||0)+'/'+plim)+'</small></div>';
+    row.innerHTML='<div class="adm-person"><div class="adm-identity"><b>'+esc(a.username)+'</b>'+badge+'</div><div class="adm-metrics"><small>Xozen AI '+xozFmt(tokUsed(a.username,"auto",a.limit_auto,a.used_auto))+'/'+xozFmt(a.limit_auto*TOK)+' token ('+a.used_auto+'/'+a.limit_auto+' limit)</small><small>Model lain '+xozFmt(tokUsed(a.username,"other",a.limit_other,a.used_other))+'/'+xozFmt(a.limit_other*TOK)+' token ('+a.used_other+'/'+a.limit_other+' limit)</small><small>'+(exp?'Aktif '+fmtLeft(exp)+' lagi · '+esc(new Date(exp).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"})):'Tanpa batas waktu')+'</small><small>Wajah: '+(hasFace?'terdaftar':'belum terdaftar')+(a.is_admin?'':' · Pin '+(e.pins||0)+'/'+plim)+'</small></div></div>';
     var ctl=document.createElement("div");ctl.className="adm-ctl";
     function inp(v,label,ph){var i=document.createElement("input");i.type="text";i.value=v;i.placeholder=ph||"";i.setAttribute("aria-label",label+" "+a.username);ctl.appendChild(i);return i}
     function btn(t,cls,fn){var b=document.createElement("button");b.type="button";b.className="mini "+(cls||"");b.textContent=t;b.onclick=fn;ctl.appendChild(b)}
@@ -2231,7 +2250,15 @@ async function admRefresh(){
     });
     row.appendChild(ctl);box.appendChild(row);
   });
+  admFilterRows();
 }
+function admFilterRows(){
+  var query=(($("admSearch")&&$("admSearch").value)||"").trim().toLowerCase();
+  var rows=document.querySelectorAll("#admList .adm-row"),visible=0;
+  Array.prototype.forEach.call(rows,function(row){var match=!query||row.textContent.toLowerCase().indexOf(query)>-1;row.hidden=!match;if(match)visible++});
+  $("admCount").textContent=visible+" dari "+rows.length+" akun";
+}
+$("admSearch").addEventListener("input",admFilterRows);
 $("adminBtn").onclick=function(){closeSide();admErr();admDlg.showModal();renderMdlList();wizReset();admRefresh()};
 $("admClose").onclick=function(){admDlg.close()};
 
