@@ -316,6 +316,8 @@ dialog#dlg{width:min(720px,calc(100vw - 24px));max-height:calc(100dvh - 24px)}
 .adm-row small{display:block;color:var(--ink-dim);margin-top:2px}
 .adm-ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-top:9px;border-top:1px solid rgba(128,128,128,.18)}
 .adm-ctl input{width:84px;padding:6px 9px;border-radius:9px;border:1px solid var(--glass-edge);background:rgba(8,11,24,.38);color:var(--ink);font:inherit;font-size:13px}
+.adm-model-pick{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px}
+.adm-model-pick select{flex:1;min-width:180px;max-width:none}
 .mini{font:inherit;font-size:12.5px;padding:6px 10px;border-radius:9px;border:1px solid var(--glass-edge);background:var(--glass);color:var(--ink);cursor:pointer}
 .mini:hover{background:rgba(255,255,255,.2)}
 .mini.del{color:var(--danger)}
@@ -1107,11 +1109,11 @@ html[data-theme^="neu"] .stopfloat .lbl{background:var(--bg);border:0;box-shadow
     <button class="btn" type="button" id="tourAdminDash">Tur admin</button>
     <span>Template Basic/Best sudah tersedia: kuota, harga, dan akses model terisi otomatis.</span>
   </div></form>
-  <div class="adm-sec"><div class="adm-h"><b>Model AI</b><div class="adm-ctl"><button class="mini" type="button" id="mFetch">Ambil dari API</button><button class="mini del" type="button" id="mClear">Hapus semua</button></div></div><div class="mlist" id="mList"></div></div>
+  <div class="adm-sec"><div class="adm-h"><b>Model AI</b><div class="adm-ctl"><button class="mini" type="button" id="mFetch">Ambil semua dari API</button><button class="mini del" type="button" id="mClear">Hapus semua</button></div></div><div class="adm-model-pick"><select id="mOneSelect" aria-label="Pilih satu model dari API" disabled><option value="">Muat daftar model terlebih dahulu</option></select><button class="mini" type="button" id="mOneFetch">Muat daftar</button><button class="mini" type="button" id="mOneAdd" disabled>Tambah satu</button></div><div class="mlist" id="mList"></div></div>
   <div class="adm-err" id="admErr" role="alert"></div>
   <div class="adm-toolbar"><input class="adm-search" type="search" id="admSearch" placeholder="Cari akun..." aria-label="Cari akun"><span class="adm-count" id="admCount" aria-live="polite"></span></div>
   <div class="adm-list" id="admList"></div>
-    <div style="margin-top:14px;text-align:right"><button class="btn danger" type="button" id="wizOpen2">Buat akun (wizard)</button> <button class="btn" type="button" id="admClose">Tutup</button></div>
+    <div style="margin-top:14px;text-align:right"><button class="btn" type="button" id="admClose">Tutup</button></div>
 </div></dialog>
 
 <dialog id="wizDlg"><div class="dlg glass wiz">
@@ -1129,7 +1131,7 @@ html[data-theme^="neu"] .stopfloat .lbl{background:var(--bg);border:0;box-shadow
   <section class="wiz-pane" data-pane="2" hidden>
     <div class="wiz-grid">
       <div class="field"><label for="wU">Username</label><input type="text" id="wU" autocapitalize="off" spellcheck="false" placeholder="mis. budi"></div>
-      <div class="field"><label for="wP">Password</label><div class="wiz-row"><input type="text" id="wP" spellcheck="false" placeholder="minimal 6 karakter"><button type="button" class="mini" id="wGen">Acak</button></div></div>
+      <div class="field"><label for="wP">Password</label><div class="wiz-row"><input type="text" id="wP" spellcheck="false" placeholder="panjang bebas"><button type="button" class="mini" id="wGen">Acak</button></div></div>
       <div class="field"><label for="wT">Masa aktif (s m h d y)</label><input type="text" id="wT" value="30d" placeholder="30d, 12h, 1y"></div>
       <div class="field"><label for="wPin">Limit pin (obrolan)</label><input type="text" id="wPin" value="1" inputmode="numeric"></div>
     </div>
@@ -2388,8 +2390,8 @@ function wizFriendly(m){
 async function wizCreate(){
   if(wizBusy)return;
   var u=$("wU").value.trim().toLowerCase(),p=$("wP").value,ns=parseDur($("wT").value),pin=parseInt($("wPin").value,10);
-  if(!/^[a-z0-9._-]{3,}$/.test(u)){admErr("Username minimal 3 karakter (huruf kecil, angka, titik, garis bawah, strip).");return}
-  if(!p||p.length<6){admErr("Password minimal 6 karakter.");return}
+  if(!/^[a-z0-9._-]+$/.test(u)){admErr("Username wajib diisi; gunakan huruf kecil, angka, titik, garis bawah, atau strip. Panjang bebas.");return}
+  if(!p){admErr("Password wajib diisi.");return}
   if(!ns){admErr(DURERR);return}
   if(!(pin>=0)){admErr("Limit pin tidak valid.");return}
   if(!wizPick){admErr("Pilih template paket dulu.");wizPane(1);return}
@@ -2440,8 +2442,8 @@ function wizGo(){
   if(wizStep===1){if(!wizPick){admErr("Pilih salah satu template paket dulu.");return}wizPane(2);$("wU").focus();return}
   if(wizStep===2){
     var u=$("wU").value.trim().toLowerCase(),p=$("wP").value;
-    if(!/^[a-z0-9._-]{3,}$/.test(u)){admErr("Username minimal 3 karakter (huruf kecil, angka, titik, garis bawah, strip).");return}
-    if(!p||p.length<6){admErr("Password minimal 6 karakter.");return}
+    if(!/^[a-z0-9._-]+$/.test(u)){admErr("Username wajib diisi; gunakan huruf kecil, angka, titik, garis bawah, atau strip. Panjang bebas.");return}
+    if(!p){admErr("Password wajib diisi.");return}
     if(!parseDur($("wT").value)){admErr(DURERR);return}
     admErr("");wizPane(3);return;
   }
@@ -2449,7 +2451,6 @@ function wizGo(){
   admRefresh();wizDlg.close();
 }
 $("wizOpen").onclick=function(){admErr("");wizReset();wizDlg.showModal()};
-$("wizOpen2").onclick=function(){admErr("");wizReset();wizDlg.showModal()};
 $("wizX").onclick=function(){wizDlg.close()};
 $("wizBack").onclick=function(){if(wizStep>1)wizPane(wizStep-1)};
 $("wizNext").onclick=wizGo;
@@ -2482,23 +2483,48 @@ async function saveModels(ids){
   var r=await admT("app_set_models",{ids:ids});if(r===undefined)return false;
   await loadCfg();renderModels();renderMdlList();return true;
 }
+function uniqueModelIds(ids){
+  var seen={};
+  return ids.map(function(id){return typeof id==="string"?id.trim():""}).filter(function(id){if(!id||seen[id])return false;seen[id]=true;return true});
+}
+async function fetchApiModelIds(){
+  if(!settings.baseUrl||!settings.apiKey)throw new Error("Isi Base URL dan API key di Pengaturan dulu.");
+  var r=await fetch(settings.baseUrl.replace(/\/+$/,"")+"/models",{headers:{Authorization:"Bearer "+settings.apiKey}});
+  if(!r.ok)throw new Error("Server mengembalikan error "+r.status+".");
+  var j=await r.json(),arr=Array.isArray(j)?j:(j.data||j.models||[]);
+  var ids=uniqueModelIds(arr.map(function(x){return typeof x==="string"?x:(x&&(x.id||x.name))||""}));
+  if(!ids.length)throw new Error("API tidak mengembalikan daftar model.");
+  return ids;
+}
+var apiModelChoices=[];
+$("mOneFetch").onclick=async function(){
+  var b=$("mOneFetch"),select=$("mOneSelect");admErr();b.disabled=true;b.textContent="Memuat...";
+  try{
+    apiModelChoices=await fetchApiModelIds();select.innerHTML="";
+    var hint=document.createElement("option");hint.value="";hint.textContent="Pilih satu model dari API";select.appendChild(hint);
+    apiModelChoices.forEach(function(id){var op=document.createElement("option");op.value=id;op.textContent=MODELS.indexOf(id)>-1?id+" (sudah ditambahkan)":id;op.disabled=MODELS.indexOf(id)>-1;select.appendChild(op)});
+    select.disabled=false;$("mOneAdd").disabled=!apiModelChoices.some(function(id){return MODELS.indexOf(id)<0});
+    admErr(apiModelChoices.length+" model tersedia. Pilih satu untuk ditambahkan.");
+  }catch(err){admErr(err.message||"Gagal mengambil daftar model dari API.")}
+  finally{b.disabled=false;b.textContent="Muat daftar"}
+};
+$("mOneAdd").onclick=async function(){
+  var id=$("mOneSelect").value;if(!id)return;
+  if(MODELS.indexOf(id)>-1){admErr("Model sudah ditambahkan.");return}
+  if(await saveModels(MODELS.concat([id])))admErr("Model "+id+" ditambahkan.");
+};
 $("mClear").onclick=function(){
   if(!confirm("Hapus semua model kecuali Xozen AI dan MinimumLite? Bisa dipulihkan dengan Ambil dari API."))return;
   saveModels(LOCKED.slice());
 };
 $("mFetch").onclick=async function(){
   var b=$("mFetch");admErr();
-  if(!settings.baseUrl||!settings.apiKey){admErr("Isi Base URL dan API key di Pengaturan dulu.");return}
   b.disabled=true;b.textContent="Mengambil\u2026";
   try{
-    var r=await fetch(settings.baseUrl.replace(/\/+$/,"")+"/models",{headers:{Authorization:"Bearer "+settings.apiKey}});
-    if(!r.ok)throw new Error("Server mengembalikan error "+r.status+".");
-    var j=await r.json(),arr=Array.isArray(j)?j:(j.data||j.models||[]);
-    var ids=arr.map(function(x){return typeof x==="string"?x:(x&&(x.id||x.name))}).filter(Boolean);
-    if(!ids.length)throw new Error("API tidak mengembalikan daftar model.");
-    if(await saveModels(LOCKED.concat(ids)))admErr(ids.length+" model dari API disimpan.");
+    var ids=await fetchApiModelIds();
+    if(await saveModels(uniqueModelIds(LOCKED.concat(ids))))admErr(ids.length+" model dari API disimpan.");
   }catch(err){admErr(err&&err.message&&err.message.indexOf("error")>-1?err.message:"Gagal mengambil model dari API. Periksa Base URL, API key, dan koneksi.")}
-  finally{b.disabled=false;b.textContent="Ambil dari API"}
+  finally{b.disabled=false;b.textContent="Ambil semua dari API"}
 };
 
 /* ---------- dropdown model ---------- */

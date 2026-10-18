@@ -9,6 +9,7 @@ Situs statis (HTML/CSS/JS biasa). Tidak perlu build tool: cukup unggah berkasnya
 |---|---|---|
 | `/` | `index.html` | Landing page: hero, fitur, daftar model, cara pakai, ringkasan harga, teaser blog, FAQ |
 | `/ai/` | `ai/index.html` | **Aplikasi AI** (chat, login, verifikasi wajah, wizard admin, paket) |
+| `/free/` | `free/index.html` | Chat gratis MinimumLite dengan login/daftar Google |
 | `/pricing/` | `pricing/index.html` | Halaman harga lengkap: 6 paket Basic/Best, daftar model, paket Ultra, FAQ |
 | `/blog/` | `blog/index.html` | Daftar artikel |
 | `/blog/cara-menulis-prompt.html` | | Artikel: cara menulis prompt |
@@ -25,6 +26,7 @@ site.css
 site.js
 robots.txt
 ai/              (aplikasi AI)
+free/            (MinimumLite gratis)
 pricing/
 blog/
 ```
@@ -60,6 +62,26 @@ Tambahkan aturan hosting agar `/_internal/` tidak dapat diakses bila folder itu 
 
 Supabase (paket per akun + penanda pengguna baru) diaktifkan dengan menjalankan
 `supabase-member-plan.sql` **sekali** di SQL Editor.
+
+### Login Google untuk `/free/`
+
+Panduan lengkap: [PANDUAN-GOOGLE-SUPABASE.md](PANDUAN-GOOGLE-SUPABASE.md).
+
+Aktifkan provider Google di Supabase **Authentication → Providers → Google**, lalu isi OAuth Client ID dan Secret dari Google Cloud. Tambahkan callback Supabase berikut sebagai authorized redirect URI di Google Cloud:
+
+```
+https://beqlxnlhvarjhkuxndmr.supabase.co/auth/v1/callback
+```
+
+Di Supabase **Authentication → URL Configuration**, tambahkan URL berikut ke daftar Redirect URLs:
+
+```
+https://your-domain.example/free/
+http://localhost:8000/free/
+http://127.0.0.1:8000/free/
+```
+
+Ganti domain contoh dengan domain produksi. Login Google sekaligus menangani pendaftaran pengguna baru; tidak perlu tabel akun aplikasi.
 
 ## Uji lokal
 

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MinimumLite Gratis — Xozen AI</title>
+<meta name="description" content="Gunakan MinimumLite gratis di Xozen AI. Masuk dengan akun Google untuk mulai chat.">
+<meta name="theme-color" content="#070b18">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../site.css">
+<style>
+.free-page{min-height:100vh;display:flex;flex-direction:column}
+.free-head .wrap{min-height:62px}
+.free-head .nav{gap:4px}
+.free-main{width:min(1040px,100%);flex:1;margin:0 auto;padding:24px 20px 32px;display:flex;flex-direction:column}
+.free-top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:8px 0 18px;border-bottom:1px solid var(--line-soft)}
+.free-title{display:flex;align-items:center;gap:12px;min-width:0}
+.free-mark{width:42px;height:42px;flex:none;display:grid;place-items:center;border-radius:13px;color:#06101f;background:var(--grad);font:700 17px var(--display)}
+.free-title h1{margin:0;font-size:20px}
+.free-title p{margin:3px 0 0;color:var(--faint);font-size:13px}
+.free-account{display:flex;align-items:center;gap:10px;color:var(--dim);font-size:13px;min-width:0}
+.free-account span{max-width:min(34vw,280px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.free-account[hidden],.free-state[hidden],.chat-panel[hidden]{display:none}
+.free-work{flex:1;min-height:400px;display:flex;flex-direction:column}
+.free-state{margin:auto;width:min(460px,100%);padding:30px 0;text-align:center}
+.free-state h2{margin:8px 0 10px;font-size:28px}
+.free-state p{max-width:48ch;margin:0 auto 20px;color:var(--dim);font-size:14.5px;line-height:1.65}
+.free-google{min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:11px;padding:0 18px;border:1px solid var(--line);border-radius:12px;background:#fff;color:#202124;font:600 14px var(--font);cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.free-google:hover{background:#f4f6f8}
+.free-google:disabled{opacity:.6;cursor:wait}
+.free-google svg{width:19px;height:19px;flex:none}
+.free-note{margin:16px auto 0!important;font-size:12px!important;color:var(--faint)!important}
+.free-status{min-height:20px;margin:12px 0 0;color:var(--warn);font-size:13px;line-height:1.45}
+.free-status:empty{display:none}
+.chat-panel{flex:1;min-height:0;display:flex;flex-direction:column;padding-top:16px}
+.chat-stream{flex:1;min-height:280px;max-height:calc(100dvh - 250px);overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding:8px 4px 20px;scroll-behavior:smooth}
+.free-msg{max-width:min(82%,700px);padding:12px 15px;border:1px solid var(--line);border-radius:15px;background:var(--surface);color:var(--ink);font-size:14.5px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
+.free-msg.user{align-self:flex-end;background:var(--grad-soft);border-color:rgba(111,123,255,.3)}
+.free-msg.assistant{align-self:flex-start}
+.free-msg.error{border-color:rgba(255,122,138,.38);color:#ffd7dc}
+.free-msg.loading{display:flex;align-items:center;gap:9px;color:var(--dim)}
+.free-dots{display:inline-flex;gap:4px}
+.free-dots i{width:6px;height:6px;border-radius:50%;background:var(--brand-2);animation:free-pulse .9s infinite alternate}
+.free-dots i:nth-child(2){animation-delay:.18s}.free-dots i:nth-child(3){animation-delay:.36s}
+@keyframes free-pulse{to{opacity:.25;transform:translateY(-3px)}}
+.free-compose{position:sticky;bottom:0;padding:12px 0 2px;background:linear-gradient(180deg,transparent,var(--bg) 22%)}
+.free-compose form{display:flex;align-items:flex-end;gap:10px;padding:8px;border:1px solid var(--line);border-radius:17px;background:rgba(12,18,38,.92);box-shadow:var(--shadow)}
+.free-compose textarea{flex:1;min-width:0;max-height:160px;resize:none;padding:9px 10px;border:0;outline:0;background:transparent;color:var(--ink);font:inherit;font-size:14.5px;line-height:1.5}
+.free-compose textarea::placeholder{color:var(--faint)}
+.free-send{width:40px;height:40px;flex:none;display:grid;place-items:center;border:0;border-radius:12px;background:var(--grad);color:#06101f;font-size:19px;font-weight:700;cursor:pointer}
+.free-send:disabled{opacity:.45;cursor:wait}
+.free-controls{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:8px;color:var(--faint);font-size:11.5px}
+.free-clear{padding:5px 8px;border:0;border-radius:7px;background:transparent;color:var(--dim);font:inherit;cursor:pointer}
+.free-clear:hover{background:var(--surface-2);color:var(--ink)}
+.free-footer{width:min(1040px,100%);margin:0 auto;padding:0 20px 18px;color:var(--faint);font-size:11.5px}
+@media(max-width:640px){.free-main{padding:14px 14px 24px}.free-top{align-items:flex-start}.free-title h1{font-size:18px}.free-account{flex-direction:column;align-items:flex-end;gap:4px}.free-account span{max-width:42vw}.free-work{min-height:360px}.chat-stream{max-height:calc(100dvh - 230px)}.free-msg{max-width:92%}.free-state{padding:22px 0}.free-state h2{font-size:24px}.free-footer{padding-inline:14px}}
+@media(prefers-reduced-motion:reduce){.free-dots i{animation:none}.chat-stream{scroll-behavior:auto}}
+</style>
+</head>
+<body class="free-page">
+<header class="site-head free-head">
+  <div class="wrap">
+    <a class="brand" href="../index.html"><img src="https://i.ibb.co.com/8gqQS0t0/xozen.png" alt="" width="34" height="34">Xozen AI</a>
+    <button class="nav-toggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">&#9776;</button>
+    <nav class="nav" id="nav" aria-label="Navigasi utama">
+      <a href="../index.html">Beranda</a>
+      <a href="../pricing/index.html">Paket</a>
+      <a class="btn primary sm" href="../ai/index.html">Aplikasi AI</a>
+    </nav>
+  </div>
+</header>
+<main class="free-main">
+  <div class="free-top">
+    <div class="free-title"><span class="free-mark" aria-hidden="true">M</span><div><h1>MinimumLite</h1><p>Chat gratis · tanpa kuota</p></div></div>
+    <div class="free-account" id="accountBar" hidden><span id="accountLabel"></span><button class="free-clear" id="signOut" type="button">Keluar</button></div>
+  </div>
+  <div class="free-work">
+    <section class="free-state" id="loginState" aria-labelledby="loginTitle">
+      <span class="eyebrow">Akses gratis</span>
+      <h2 id="loginTitle">Mulai ngobrol dengan AI</h2>
+      <p>Masuk atau daftar menggunakan Google untuk memakai MinimumLite. Model ini gratis dan tidak memakai kuota paket.</p>
+      <button class="free-google" id="googleLogin" type="button">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" transform="translate(0 5)"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.75 7.18l7.73 6C44.43 38.08 47 31.84 47 24.55z"/><path fill="#FBBC05" d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.2A23.9 23.9 0 0 0 0 24c0 3.87.93 7.52 2.56 10.78l7.97-6.19z" transform="translate(0 5)"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.15 1.45-4.9 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.2C6.51 42.62 14.62 48 24 48z" transform="translate(0 -5)"/></svg>
+        <span id="googleLabel">Lanjutkan dengan Google</span>
+      </button>
+      <p class="free-note">Riwayat hanya tampil selama halaman ini terbuka. MinimumLite tidak mengingat pesan sebelumnya.</p>
+      <div class="free-status" id="authStatus" role="status" aria-live="polite"></div>
+    </section>
+    <section class="chat-panel" id="chatPanel" hidden aria-label="Chat MinimumLite">
+      <div class="chat-stream" id="messages" aria-live="polite"></div>
+      <div class="free-compose">
+        <form id="promptForm">
+          <textarea id="prompt" rows="1" maxlength="6500" placeholder="Tulis pesan untuk MinimumLite..." aria-label="Pesan"></textarea>
+          <button class="free-send" id="sendButton" type="submit" aria-label="Kirim pesan">↑</button>
+        </form>
+        <div class="free-controls"><span>MinimumLite tidak memakai memory antar pesan.</span><button class="free-clear" id="clearChat" type="button">Hapus riwayat</button></div>
+        <div class="free-status" id="chatStatus" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+  </div>
+</main>
+<footer class="free-footer">MinimumLite tersedia gratis. Untuk percakapan ini, hanya pesan terbaru yang dikirim ke model.</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../site.js"></script>
+<script>
+(function(){
+  "use strict";
+  var SUPA_URL="https://beqlxnlhvarjhkuxndmr.supabase.co";
+  var SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJlcWx4bmxodmFyamhrdXhuZG1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMjQ4ODgsImV4cCI6MjEwNjcwMDg4OH0.FxPj-dfPf6OnfPotgQxFafd7Fx9yIM6oqMm25xMRslw";
+  var LITE_URL="https://api.siputzx.my.id/api/ai/gptoss120b";
+  var SYSTEM="You are MinimumLite, a helpful AI assistant. Reply in Indonesian unless the user asks otherwise. You do not remember previous messages.";
+  var loginState=document.getElementById("loginState"),chatPanel=document.getElementById("chatPanel"),googleLogin=document.getElementById("googleLogin");
+  var authStatus=document.getElementById("authStatus"),chatStatus=document.getElementById("chatStatus"),messagesEl=document.getElementById("messages");
+  var promptEl=document.getElementById("prompt"),sendButton=document.getElementById("sendButton"),accountBar=document.getElementById("accountBar"),accountLabel=document.getElementById("accountLabel");
+  var messages=[],busy=false,client=null;
+  function status(el,text){el.textContent=text||""}
+  function showSession(session){
+    var user=session&&session.user;
+    loginState.hidden=!!user;chatPanel.hidden=!user;accountBar.hidden=!user;
+    accountLabel.textContent=user?(user.user_metadata&&user.user_metadata.full_name||user.email||"Masuk dengan Google"):"";
+    if(user)promptEl.focus();
+  }
+  function addMessage(role,text,extra){
+    var node=document.createElement("div");node.className="free-msg "+role+(extra?" "+extra:"");node.textContent=text;
+    messagesEl.appendChild(node);messagesEl.scrollTop=messagesEl.scrollHeight;return node;
+  }
+  function setBusy(value){busy=value;sendButton.disabled=value;googleLogin.disabled=value;promptEl.disabled=value}
+  async function startGoogleLogin(){
+    status(authStatus,"");
+    if(location.protocol!=="https:"&&location.hostname!=="localhost"&&location.hostname!=="127.0.0.1"){status(authStatus,"Google login perlu dibuka melalui HTTPS atau localhost.");return}
+    googleLogin.disabled=true;document.getElementById("googleLabel").textContent="Membuka Google...";
+    try{
+      var result=await client.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}});
+      if(result.error)throw result.error;
+    }catch(err){
+      status(authStatus,"Login Google belum tersedia. Pastikan provider Google aktif di Supabase Auth, lalu coba lagi.");
+      googleLogin.disabled=false;document.getElementById("googleLabel").textContent="Lanjutkan dengan Google";
+    }
+  }
+  async function sendMessage(event){
+    event.preventDefault();if(busy)return;
+    var text=promptEl.value.trim();if(!text)return;
+    promptEl.value="";promptEl.style.height="auto";addMessage("user",text);status(chatStatus,"");
+    var loading=addMessage("assistant loading","MinimumLite sedang menjawab ");
+    var dots=document.createElement("span");dots.className="free-dots";dots.innerHTML="<i></i><i></i><i></i>";loading.appendChild(dots);
+    setBusy(true);
+    try{
+      var params=new URLSearchParams({prompt:text,system:SYSTEM,temperature:"0.7"});
+      if(params.toString().length>7000)throw new Error("Pesan terlalu panjang untuk MinimumLite.");
+      var response=await fetch(LITE_URL+"?"+params.toString());
+      if(!response.ok)throw new Error("Layanan MinimumLite mengembalikan error "+response.status+".");
+      var data=await response.json(),payload=data&&data.data;
+      var answer=(typeof payload==="string"?payload:(payload&&(payload.response||payload.result||payload.message||payload.content)))||(data&&(data.result||data.response||data.message))||"";
+      if(typeof answer!=="string")answer=JSON.stringify(answer);
+      loading.remove();addMessage("assistant",answer||"Model tidak mengirim jawaban.");
+    }catch(err){loading.remove();addMessage("assistant error",err&&err.message||"Tidak dapat terhubung ke MinimumLite.");}
+    finally{setBusy(false);promptEl.focus()}
+  }
+  document.getElementById("googleLogin").addEventListener("click",startGoogleLogin);
+  document.getElementById("signOut").addEventListener("click",async function(){await client.auth.signOut();messages=[];messagesEl.innerHTML=""});
+  document.getElementById("promptForm").addEventListener("submit",sendMessage);
+  document.getElementById("clearChat").addEventListener("click",function(){messages=[];messagesEl.innerHTML="";status(chatStatus,"")});
+  promptEl.addEventListener("input",function(){this.style.height="auto";this.style.height=Math.min(this.scrollHeight,160)+"px"});
+  promptEl.addEventListener("keydown",function(event){if(event.key==="Enter"&&!event.shiftKey&&!event.isComposing){event.preventDefault();document.getElementById("promptForm").requestSubmit()}});
+  if(!window.supabase||!window.supabase.createClient){status(authStatus,"Komponen login belum termuat. Periksa koneksi internet lalu muat ulang halaman.");googleLogin.disabled=true;return}
+  client=window.supabase.createClient(SUPA_URL,SUPA_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+  client.auth.getSession().then(function(result){if(result.error)throw result.error;showSession(result.data.session)}).catch(function(){status(authStatus,"Tidak dapat memeriksa sesi Google. Muat ulang halaman.")});
+  client.auth.onAuthStateChange(function(event,session){showSession(session)});
+})();
+</script>
+</body>
+</html>
