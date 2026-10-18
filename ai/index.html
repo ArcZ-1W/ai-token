@@ -1285,6 +1285,12 @@ function resolveSystemPrompt(){
   else instruction+="\n\nMODE PROGRESS + FILE: Berikan jawaban normal seperti biasa, lalu sertakan file unduhan yang sesuai.";
   return base+"\n\n"+instruction;
 }
+function xozenDownloadFilename(filename){
+  var basename=String(filename||"").replace(/\\/g,"/").split("/").pop()||"download.txt";
+  var dot=basename.lastIndexOf("."),ext=dot>0?basename.slice(dot+1).toLowerCase():"txt";
+  if(!/^[a-z0-9]+$/.test(ext))ext="txt";
+  return "("+ext+")XozenTemp"+Math.floor(Date.now()/1000)+"."+ext;
+}
 function parseFileDownloadPayload(raw){
   if(!raw||typeof raw!=="string"||normalizeFileResponseMode(settings.fileResponseMode)==="progress")return {content:raw,files:[]};
   var matches=raw.matchAll(/<FILE_DOWNLOAD>\s*(\{[\s\S]*?\}|\[[\s\S]*?\])\s*<\/FILE_DOWNLOAD>/gi);
@@ -1301,7 +1307,7 @@ function parseFileDownloadPayload(raw){
       for(var j=0;j<items.length;j++){
         var item=items[j];
         if(!item||typeof item!=="object")continue;
-        var filename=(item.filename&&String(item.filename).trim())||"download_"+Date.now()+"_"+j+".txt";
+        var filename=xozenDownloadFilename((item.filename&&String(item.filename).trim())||"download.txt");
         var mime=(item.mime&&String(item.mime).trim())||"text/plain";
         var content=(typeof item.content==="string")?item.content:"";
         if(!content)continue;
@@ -1616,7 +1622,7 @@ function bubbleFor(m,isLast){
             usedNames[name.toLowerCase()]=true;zip.file(name,zipContent);
           }
           var archive=await zip.generateAsync({type:"blob",compression:"DEFLATE",compressionOptions:{level:6}});
-          var url=URL.createObjectURL(archive),a=document.createElement("a");a.href=url;a.download="file-ai.zip";document.body.appendChild(a);a.click();a.remove();
+          var url=URL.createObjectURL(archive),a=document.createElement("a");a.href=url;a.download="(zip)XozenTemp"+Math.floor(Date.now()/1000)+".zip";document.body.appendChild(a);a.click();a.remove();
           setTimeout(function(){URL.revokeObjectURL(url)},1000);
         }catch(err){console.error("Gagal membuat ZIP:",err);alert("Gagal membuat ZIP. Silakan coba lagi.")}
         finally{zipBtn.disabled=false;zipBtn.textContent="📦 Download semua (.zip)"}
