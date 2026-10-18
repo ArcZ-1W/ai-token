@@ -1365,8 +1365,24 @@ function ckey(n){return "glassai."+n+"."+(session?session.u:"_")}
 function slimMsg(m){
   var o=Object.assign({},m);
   if(Array.isArray(o.content))o.content=plainOf(o);
-  if(o.files)o.files=o.files.map(function(f){return {name:f.name,size:f.size,url:f.url||"",thumb:f.thumb||"",type:f.type||"",bin:!!f.bin,img:!!f.img,host:f.host||""}});
+  if(o.role==="assistant"){
+    var generated=Array.isArray(o.files)?o.files.filter(function(f){return f&&f.filename&&typeof f.content==="string"}):[];
+    if(!generated.length&&o.file&&o.file.filename&&typeof o.file.content==="string")generated=[o.file];
+    if(!generated.length&&Array.isArray(o.downloadFiles))generated=o.downloadFiles;
+    if(generated.length)o.downloadFiles=generated.map(function(f){return {filename:f.filename,mime:f.mime||"text/plain",content:f.content}});
+    else delete o.downloadFiles;
+    delete o.files;delete o.file;
+  }else if(o.files)o.files=o.files.map(function(f){return {name:f.name,size:f.size,url:f.url||"",thumb:f.thumb||"",type:f.type||"",bin:!!f.bin,img:!!f.img,host:f.host||""}});
   return o;
+}
+function restoreDownloadFiles(m){
+  if(!m||!Array.isArray(m.downloadFiles)||!m.downloadFiles.length)return;
+  if(Array.isArray(m.files)&&m.files.some(function(f){return f&&f.filename&&f.blobUrl}))return;
+  m.files=m.downloadFiles.filter(function(f){return f&&f.filename&&typeof f.content==="string"}).map(function(f){
+    var mime=f.mime||"text/plain",blob=new Blob([f.content],{type:mime});
+    return {filename:f.filename,mime:mime,content:f.content,blobUrl:URL.createObjectURL(blob)};
+  });
+  if(m.files.length)m.file=m.files[0];
 }
 function slimChat(c){return Object.assign({},c,{messages:c.messages.map(slimMsg)})}
 function persist(){
@@ -1511,6 +1527,7 @@ function renderHist(){
   if(rest.length){label("Riwayat");rest.forEach(row)}
 }
 function bubbleFor(m,isLast){
+  restoreDownloadFiles(m);
   var w=document.createElement("div");w.className="msg "+(m.role==="user"?"user":"bot");
   var b=document.createElement("div");b.className="bubble";
   var dlFiles=[];
