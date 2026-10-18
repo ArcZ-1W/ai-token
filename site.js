@@ -41,6 +41,23 @@
     } catch (e) {}
   });
 
+  var pageLoader = document.createElement('div');
+  pageLoader.className = 'page-loading';
+  pageLoader.setAttribute('aria-hidden', 'true');
+  pageLoader.innerHTML = '<span class="page-spinner"></span>';
+  document.body.appendChild(pageLoader);
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var link = e.target.closest && e.target.closest('a[href]');
+    if (!link || link.hasAttribute('download') || (link.target && link.target !== '_self')) return;
+    var destination;
+    try { destination = new URL(link.href, location.href); } catch (err) { return; }
+    if (destination.origin !== location.origin || (destination.pathname === location.pathname && destination.search === location.search)) return;
+    e.preventDefault();
+    pageLoader.classList.add('is-visible');
+    window.setTimeout(function () { location.assign(destination.href); }, 160);
+  });
+
   /* ======================================================================
      Demo ketik sendiri di hero: pengguna minta HTML, AI menuliskan kodenya.
      ====================================================================== */

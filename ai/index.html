@@ -26,7 +26,7 @@
 <meta name="twitter:image" content="https://i.ibb.co.com/FbP0jzwp/20261014-235038.jpg">
 <meta name="twitter:image:alt" content="Xozen AI">
 
-<script>try{var __o=JSON.parse(localStorage.getItem("glassai.settings")||"{}")||{},__t=__o.themeV===2?__o.theme:null;document.documentElement.setAttribute("data-theme",["glass","glassold","glasswhite","neu","neulight"].indexOf(__t)>-1?__t:"neulight")}catch(e){document.documentElement.setAttribute("data-theme","neu")}</script>
+<script>try{var __o=JSON.parse(localStorage.getItem("glassai.settings")||"{}")||{},__t=__o.themeV===2?__o.theme:null;document.documentElement.setAttribute("data-theme",["glass","glassold","glasswhite","neu","neulight"].indexOf(__t)>-1?__t:"glassold")}catch(e){document.documentElement.setAttribute("data-theme","glassold")}</script>
 <!-- ====== KEAMANAN ====== -->
 <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
@@ -292,6 +292,14 @@ select option{background:#14172b;color:var(--ink)}
 .fchips span{padding:3px 10px;border-radius:999px;font-size:12px;background:rgba(255,255,255,.18)}
 dialog#admDlg{width:min(920px,calc(100vw - 20px));max-height:calc(100dvh - 24px)}
 #admDlg .dlg{max-height:calc(100dvh - 24px);overflow-y:auto}
+dialog#dlg{width:min(720px,calc(100vw - 24px));max-height:calc(100dvh - 24px)}
+#dlg .dlg{max-height:calc(100dvh - 24px);overflow-y:auto}
+.settings-section{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12)}
+.settings-section>h3{margin:0 0 10px;font-size:12px;font-weight:700;color:var(--ink-faint);text-transform:uppercase}
+.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px;min-width:0}
+.settings-grid>.field{min-width:0;margin-bottom:10px}
+.settings-grid .span-2{grid-column:1/-1}
+@media (max-width:560px){dialog#dlg{width:calc(100vw - 20px)}.settings-grid{grid-template-columns:1fr}.settings-grid .span-2{grid-column:auto}}
 .adm-new{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-items:end;margin-bottom:6px}
 .adm-new .field{margin-bottom:0}
 .adm-err{min-height:18px;font-size:13px;color:var(--danger);margin:4px 0}
@@ -938,6 +946,11 @@ html[data-theme^="neu"] .stopfloat{background:var(--bg);border:0;box-shadow:var(
 html[data-theme^="neu"] .stopfloat .lbl{background:var(--bg);border:0;box-shadow:var(--inset-xs)}
 @media (max-width:820px){.stopfloat{width:44px;height:44px}.stopfloat .lbl{display:none}}
 @media (prefers-reduced-motion:reduce){.stopfloat,.stopfloat.show{transition:none;animation:none}}
+.page-loading{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:rgba(8,11,24,.5);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .16s ease,visibility .16s ease}
+.page-loading.is-visible{opacity:1;visibility:visible;pointer-events:auto}
+.page-spinner{width:46px;height:46px;border:3px solid rgba(255,255,255,.2);border-top-color:var(--accent-2);border-right-color:var(--accent);border-radius:50%;box-shadow:0 0 24px rgba(53,214,255,.2);animation:page-spin .72s linear infinite}
+@keyframes page-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.page-loading{transition:none}.page-spinner{animation:none}}
 </style>
 </head>
 <body>
@@ -1156,6 +1169,7 @@ html[data-theme^="neu"] .stopfloat .lbl{background:var(--bg);border:0;box-shadow
 <dialog id="dlg">
   <div class="dlg glass">
     <h2>Pengaturan</h2>
+    <div class="settings-section"><h3>Tampilan</h3></div>
     <div class="field"><label id="themeLbl">Tema tampilan</label><div class="themes" id="themePick" role="radiogroup" aria-labelledby="themeLbl">
       <button type="button" class="tbtn" role="radio" aria-checked="false" data-t="glasswhite"><i class="sw sw-glasswhite"></i><span>Glass UI White</span></button>
       <button type="button" class="tbtn" role="radio" aria-checked="false" data-t="glassold"><i class="sw sw-glassold"></i><span>Glass UI Old</span></button>
@@ -1163,25 +1177,37 @@ html[data-theme^="neu"] .stopfloat .lbl{background:var(--bg);border:0;box-shadow
       <button type="button" class="tbtn" role="radio" aria-checked="false" data-t="neu"><i class="sw sw-neu"></i><span>Neu Gelap</span></button>
       <button type="button" class="tbtn" role="radio" aria-checked="false" data-t="neulight"><i class="sw sw-neulight"></i><span>Neu Terang</span></button>
     </div></div>
-    <div id="cfgBox">
+    <div class="settings-section"><h3>Asisten AI</h3></div>
+    <div id="cfgBox" class="settings-grid">
     <div class="field"><label for="sBase">Base URL (disimpan di server)</label><input type="text" id="sBase" autocomplete="off" spellcheck="false"></div>
     <div class="field"><label for="sKey">API key (disimpan di server)</label><input type="password" id="sKey" autocomplete="off" spellcheck="false"></div>
     </div>
-    <div class="field"><label for="sSys">Instruksi sistem</label><textarea id="sSys" placeholder="Contoh: Jawab singkat dalam bahasa Indonesia."></textarea></div>
-    <div class="field"><label for="sTemp">Suhu: <span id="tempVal">0.7</span></label><input type="range" id="sTemp" min="0" max="1.5" step="0.1"></div>
-    <div class="field"><label for="sFileMode">Mode respons</label>
+    <div class="settings-grid">
+      <div class="field span-2"><label for="sSys">Instruksi sistem</label><textarea id="sSys" placeholder="Contoh: Jawab singkat dalam bahasa Indonesia."></textarea></div>
+      <div class="field"><label for="sTemp">Suhu: <span id="tempVal">0.7</span></label><input type="range" id="sTemp" min="0" max="1.5" step="0.1"></div>
+    </div>
+    <div class="settings-section"><h3>File jawaban</h3></div>
+    <div class="settings-grid">
+    <div class="field span-2"><label for="sFileMode">Mode respons</label>
       <select id="sFileMode"><option value="progress">Progress only (default)</option><option value="progress_file">Progress + file</option><option value="file_only">File send only</option></select>
       <div class="adm-note">Progress only menampilkan jawaban biasa. Progress + file menampilkan jawaban dan file unduhan. File send only menampilkan file unduhan tanpa teks jawaban.</div>
     </div>
     <div class="field"><label for="sFileFormat">Format file default</label><select id="sFileFormat"><option value="txt">txt</option><option value="md">md</option><option value="json">json</option><option value="html">html</option><option value="csv">csv</option><option value="js">js</option><option value="py">py</option><option value="css">css</option></select></div>
+    </div>
+    <div class="settings-section"><h3>Media</h3></div>
+    <div class="field">
+      <label>Gambar &amp; video</label>
+      <label class="chk"><input type="checkbox" id="sVision"> Kirim gambar langsung ke model (butuh model vision)</label>
+      <div class="adm-note" id="attNote">Gambar dikecilkan otomatis di perangkat Anda, lalu dikirim ke model sebagai gambar (bukan cuma tautan). Video tidak bisa ditonton model, jadi cuplikan gambarnya yang dikirim, ditambah tautan file. Lampiran diunggah ke host publik sementara (tmpfiles.org, lalu litterbox) supaya bisa dibuka lewat tautan.</div>
+    </div>
+    <div class="settings-section"><h3>Bantuan &amp; paket</h3></div>
+    <div class="settings-grid">
     <div class="field"><label>Paket &amp; harga</label><button type="button" class="btn" id="openPriceInApp">Lihat paket &amp; harga</button></div>
     <div class="field"><label>Panduan pemakaian</label>
       <div class="wiz-row"><button type="button" class="btn" id="tourBtn">Lihat tur pengguna</button><button type="button" class="btn" id="tourAdminBtn" hidden>Tur admin</button></div>
     </div>
-    <div class="field"><label>Gambar &amp; video</label>
-      <label class="chk"><input type="checkbox" id="sVision"> Kirim gambar langsung ke model (butuh model vision)</label>
-      <div class="adm-note" id="attNote">Gambar dikecilkan otomatis di perangkat Anda, lalu dikirim ke model sebagai gambar (bukan cuma tautan). Video tidak bisa ditonton model, jadi cuplikan gambarnya yang dikirim, ditambah tautan file. Lampiran diunggah ke host publik sementara (tmpfiles.org, lalu litterbox) supaya bisa dibuka lewat tautan.</div>
     </div>
+    <div class="settings-section"><h3>Data</h3></div>
     <div class="field"><label>Data obrolan</label><button type="button" class="btn danger" id="clearAll">Hapus semua obrolan</button></div>
     <div class="quota" id="quotaOut"></div>
     <div class="row">
@@ -1204,7 +1230,7 @@ var DEFAULTS={
   temp:0.7,
   model:"glm-5.3",
   model:"auto",           /* bawaan: Xozen AI */
-  theme:"neulight",
+  theme:"glassold",
   fileResponseMode:"progress",
   fileDownloadFormat:"txt"
 };
@@ -1346,7 +1372,7 @@ var PFX=(function(){
 var THEMES=["glasswhite","glassold","glass","neu","neulight"],pendingTheme=null;
 function applyTheme(t){t=THEMES.indexOf(t)>-1?t:"neulight";document.documentElement.setAttribute("data-theme",t);PFX.sync(t)}
 function markTheme(t){Array.prototype.forEach.call(document.querySelectorAll("#themePick .tbtn"),function(b){b.setAttribute("aria-checked",b.getAttribute("data-t")===t?"true":"false")})}
-if(settings.themeV!==2){settings.theme="neulight";settings.themeV=2}   /* tema bawaan: Neu Terang */
+if(settings.themeV!==2){settings.theme="glassold";settings.themeV=2}   /* tema bawaan: Glass UI Old */
 applyTheme(settings.theme);   /* base URL & API key hanya dari Supabase */
 if(settings.modelV!==1){settings.model="auto";settings.modelV=1}   /* model bawaan: Xozen AI */
 var chats=[];            /* dimuat per akun setelah login (boot) */
@@ -1940,7 +1966,7 @@ function openSettings(){
   $("sBase").value=settings.baseUrl;$("sKey").value=settings.apiKey;$("sSys").value=settings.system||"";
   $("sTemp").value=settings.temp;$("tempVal").textContent=settings.temp;$("quotaOut").style.display="none";
   $("sFileMode").value=normalizeFileResponseMode(settings.fileResponseMode);$("sFileFormat").value=normalizeFileFormat(settings.fileDownloadFormat);
-  pendingTheme=THEMES.indexOf(settings.theme)>-1?settings.theme:"neulight";markTheme(pendingTheme);
+  pendingTheme=THEMES.indexOf(settings.theme)>-1?settings.theme:"glassold";markTheme(pendingTheme);
   var adm=!!(session&&session.admin);$("cfgBox").style.display=adm?"":"none";$("checkQuota").style.display=adm?"":"none";
   $("tourAdminBtn").hidden=!adm;
   $("sVision").checked=visionOn();
@@ -2710,7 +2736,7 @@ var TOUR=[
   {ic:"\uD83E\uDDE9",t:"Pilih model AI",d:"Klik tombol model di kanan atas. Muncul daftar model dengan kotak pencarian, filter (Basic, Best, atau keluarga model seperti Kimi, GLM, DeepSeek), dan tanda centang pada model yang sedang dipakai.",el:"dd"},
   {ic:"\u26A1",t:"Pantau kuota & paket",d:"Kartu di sidebar menunjukkan paket Anda, sisa kuota, dan masa aktif akun. Sisa kuota ditampilkan dalam xoz token; tiap pemakaian model memakai sejumlah token. Model MinimumLite gratis dan tidak memakai token.",el:"qCard"},
   {ic:"\uD83D\uDCE4",t:"Kirim pesan & lampiran",d:"Tulis pesan lalu tekan Enter untuk kirim (Shift+Enter untuk baris baru). Tombol klip di kiri untuk melampirkan file, dan tombol kotak untuk menghentikan jawaban yang sedang berjalan.",el:"attachBtn"},
-  {ic:"\u2699\uFE0F",t:"Riwayat, tema, dan paket",d:"Semua obrolan tersimpan di sidebar dan bisa di-pin. Tema tampilan, instruksi sistem, dan daftar paket & harga ada di menu Pengaturan.",el:"openSettings",last:true}
+  {ic:"\u2699\uFE0F",t:"Pengaturan aplikasi",d:"Buka Pengaturan dari sidebar untuk memilih tema, mengatur instruksi sistem dan suhu AI, memilih mode serta format file unduhan, dan mengatur pengiriman gambar ke model. Tekan Simpan untuk menerapkan. Paket & harga juga bisa dibuka dari sini.",el:"openSettings",last:true}
 ];
 var TOUR_ADMIN=[
   {ic:"\uD83D\uDEE1\uFE0F",t:"Tur singkat untuk admin",d:"Enam langkah mengelola akun paket, model AI, dan konfigurasi. Tombol \u00d7 menutup tur kapan saja; bisa dibuka lagi dari Pengaturan \u2192 Tur admin."},
@@ -3283,5 +3309,6 @@ if(session)boot();else renderAll();
 renderPricing();                                   /* isi halaman paket & harga sejak awal */
 })();
 </script>
+<script src="../site.js"></script>
 </body>
   </html>
