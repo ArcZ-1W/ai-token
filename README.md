@@ -8,6 +8,7 @@ Situs statis (HTML/CSS/JS biasa). Tidak perlu build tool: cukup unggah berkasnya
 | URL | Berkas | Isi |
 |---|---|---|
 | `/` | `index.html` | Pemilih layanan; Xozen AI membuka landing page AI yang ada, ArcZ Community membuka halaman chat |
+| `/auth/` | `auth/index.html` | Callback verifikasi email Community, lalu mengarahkan sesi valid ke chat |
 | `/ai/` | `ai/index.html` | **Aplikasi AI** (chat, login, verifikasi wajah, wizard admin, paket) |
 | `/community/` | `community/index.html` | **ArcZ Community** (akun email/password terpisah dari login Xozen AI dan chat realtime) |
 | `/free/` | `free/index.html` | Chat gratis MinimumLite dengan akun sementara anonim |
@@ -26,6 +27,7 @@ index.html
 site.css
 site.js
 robots.txt
+auth/             (callback verifikasi email Community)
 ai/              (aplikasi AI)
 community/       (chat ArcZ Community)
 free/            (MinimumLite gratis)
@@ -78,6 +80,9 @@ Jalankan `community/schema.sql` sekali di Supabase SQL Editor untuk membuat tabe
 kebijakan akses RLS, dan mengaktifkan realtime. Pastikan provider Email aktif di Supabase
 Auth. Community memakai Supabase Auth dengan session key tersendiri; login Xozen AI tetap
 menggunakan akun aplikasi AI dan tidak dibagikan ke Community.
+Tambahkan `https://xozen.web.id/auth?tokenrahasia=true` ke daftar **Redirect URLs** Supabase
+Auth. Callback hanya meneruskan pengguna ke chat jika Supabase berhasil memulihkan sesi
+Community; parameter `tokenrahasia=true` sendiri bukan token autentikasi.
 
 ### Akun sementara untuk `/free/`
 
