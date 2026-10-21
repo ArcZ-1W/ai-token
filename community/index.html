@@ -75,7 +75,7 @@
     <p>Akun Community terpisah dari Xozen AI. Gunakan nama pengguna dan password; alamat email tidak diperlukan.</p>
     <form class="auth-form" id="authForm">
       <label id="displayNameField" hidden>Nama tampilan<input id="displayName" type="text" maxlength="40" autocomplete="nickname"></label>
-      <label>Nama pengguna<input id="username" type="text" minlength="3" maxlength="30" pattern="[a-zA-Z0-9._-]+" autocomplete="username" autocapitalize="none" spellcheck="false" required></label>
+      <label>Nama pengguna<input id="username" type="text" minlength="3" maxlength="30" pattern="[a-zA-Z0-9._\-]+" title="3–30 karakter: huruf, angka, titik, garis bawah, atau strip" autocomplete="username" autocapitalize="none" spellcheck="false" required></label>
       <label>Password<input id="password" type="password" minlength="8" maxlength="128" autocomplete="current-password" required></label>
       <button class="btn primary" id="authSubmit" type="submit">Masuk</button>
     </form>
@@ -106,7 +106,7 @@
   var authTitle=document.getElementById("authTitle"),authSubmit=document.getElementById("authSubmit"),authToggle=document.getElementById("authToggle");
   var displayNameField=document.getElementById("displayNameField"),displayName=document.getElementById("displayName");
   var username=document.getElementById("username");
-  var email=document.getElementById("email"),password=document.getElementById("password"),authStatus=document.getElementById("authStatus");
+  var password=document.getElementById("password"),authStatus=document.getElementById("authStatus");
   var accountActions=document.getElementById("accountActions"),accountLabel=document.getElementById("accountLabel");
   var messageList=document.getElementById("messageList"),emptyState=document.getElementById("emptyState"),messageInput=document.getElementById("messageInput");
   var messageForm=document.getElementById("messageForm"),sendMessage=document.getElementById("sendMessage"),messageCount=document.getElementById("messageCount"),chatStatus=document.getElementById("chatStatus");
@@ -160,14 +160,15 @@
     try{
       var result,name=username.value.trim().toLowerCase();
       if(!name)throw new Error("Masukkan nama pengguna.");
+      /* hanya nama pengguna: tanpa email. '@' tidak boleh dipakai. */
+      if(!/^[a-z0-9._-]{3,30}$/.test(name))throw new Error("Nama pengguna harus 3–30 karakter: huruf, angka, titik, garis bawah, atau strip.");
       if(authMode==="signup"){
-        if(!/^[a-z0-9._-]{3,30}$/.test(name))throw new Error("Nama pengguna harus 3–30 karakter: huruf, angka, titik, garis bawah, atau strip.");
         result=await client.auth.signUp({email:name+"@community.arcz.invalid",password:password.value,options:{data:{username:name,display_name:displayName.value.trim()||name}}});
         if(result.error)throw result.error;
         if(result.data.session)setSession(result.data.session.user);
-        else setStatus(authStatus,"Akun dibuat, tetapi belum bisa digunakan. Minta admin mematikan Confirm email di Supabase Auth.");
+        else setStatus(authStatus,"Akun dibuat, tetapi belum bisa dipakai. Minta admin mematikan pengaturan \"Confirm email\" di Supabase Auth.");
       }else{
-        result=await client.auth.signInWithPassword({email:name.indexOf("@")>-1?name:name+"@community.arcz.invalid",password:password.value});
+        result=await client.auth.signInWithPassword({email:name+"@community.arcz.invalid",password:password.value});
         if(result.error)throw result.error;
         setSession(result.data.user);
       }

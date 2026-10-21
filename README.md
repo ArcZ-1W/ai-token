@@ -130,6 +130,24 @@ Auth dan matikan **Confirm email** agar akun baru langsung bisa digunakan tanpa 
 email. Community memakai Supabase Auth dengan session key tersendiri; login Xozen AI tetap
 menggunakan akun aplikasi AI dan tidak dibagikan ke Community.
 
+**Community memakai nama pengguna + password, tanpa email.** Formulirnya tidak punya
+kolom email sama sekali, dan nama pengguna hanya boleh huruf, angka, titik, garis bawah,
+atau strip (3–30 karakter).
+
+Supabase Auth tetap memerlukan alamat email di belakang layar, jadi aplikasi membuat
+alamat sintetis `<nama-pengguna>@community.arcz.invalid` untuk masuk. Alamat ini tidak
+pernah ditampilkan ke pengguna, dan nama aslinya diambil dari `user_metadata.username`.
+
+| Yang dilihat pengguna | Nilai |
+|---|---|
+| Field form | `Nama pengguna` + `Password` (+ `Nama tampilan` saat daftar) |
+| Alamat dikirim ke Supabase | `<nama-pengguna>@community.arcz.invalid` |
+| Disimpan di `user_metadata` | `username`, `display_name` |
+| Ditampilkan di sidebar | `display_name` atau `username` (tanpa domain sintetis) |
+
+Catatan: akun Community yang dibuat **sebelum** pindah ke nama pengguna (yang memakai
+alamat email asli) tidak bisa masuk lagi — buat ulang lewat form Daftar.
+
 ### Akun sementara untuk `/free/`
 
 Panduan lengkap: [PANDUAN-AKUN-SEMENTARA.md](PANDUAN-AKUN-SEMENTARA.md).
