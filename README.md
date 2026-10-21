@@ -96,6 +96,27 @@ Tambahkan aturan hosting agar `/_internal/` tidak dapat diakses bila folder itu 
 Supabase (paket per akun + penanda pengguna baru) diaktifkan dengan menjalankan
 `supabase-member-plan.sql` **sekali** di SQL Editor.
 
+### Model bermask (Xozen Code & Xozen Mini)
+
+Beberapa model punya nama panggilan (mask) sendiri. Di pemilih model tampil sebagai
+nama panggilan, tapi request ke API tetap memakai ID model aslinya, dan **model aslinya
+tetap bisa dipilih sendiri**:
+
+| Nama tampilan | ID model yang dikirim | Paket |
+|---|---|---|
+| Xozen Code | `kimi-k2.7-code-highspeed` | Best |
+| Xozen Mini | `hy3` | Basic & Best |
+
+Keterangan:
+
+- Kuota dihitung mengikuti model aslinya (kuota **Model lain**), bukan kuota Xozen AI.
+- Keterbukaan paket mengikuti model aslinya, jadi Xozen Code hanya muncul di paket Best.
+- Mask tidak bisa dihapus di panel admin. Kalau model aslinya dihapus dari daftar,
+  mask-nya ikut hilang supaya tidak membuka model yang sengaja ditutup.
+
+Tambah mask baru: ubah `MODEL_MASK` di `ai/index.html` (isi `ID model` → `nama panggilan`),
+lalu tambahkan juga ke `MASK_LABEL` dan `BUILTIN_MODELS`.
+
 Untuk mengizinkan model tambahan pada akun member, jalankan `supabase-member-models.sql`
 sekali di SQL Editor. Admin perlu menambahkan ID model lewat bagian **Model AI** di
 dashboard, lalu memilih **Model custom** pada baris akun member. Model yang ditetapkan

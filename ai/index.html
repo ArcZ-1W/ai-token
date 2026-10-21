@@ -1256,7 +1256,16 @@ var MAKE_IT_BETTER_INSTRUCTION="For the next answer, improve usefulness and qual
 var SUPA_URL="https://beqlxnlhvarjhkuxndmr.supabase.co";   /* contoh: https://abcd1234.supabase.co */
 var SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJlcWx4bmxodmFyamhrdXhuZG1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMjQ4ODgsImV4cCI6MjEwNjcwMDg4OH0.FxPj-dfPf6OnfPotgQxFafd7Fx9yIM6oqMm25xMRslw";   /* anon public key */
 var LITE_URL="https://api.siputzx.my.id/api/ai/gptoss120b";
-var MODELS=["auto","minimumlite"];   /* daftar lengkap diambil dari Supabase */
+/* ---------- model bermask (alias branded) ---------- */
+/* "Xozen Code" dan "Xozen Mini" adalah nama untuk model yang sudah ada.
+   Request ke API tetap memakai model aslinya, dan model aslinya tetap
+   bisa dipilih sendiri lewat pemilih model. */
+var MODEL_MASK={"xozen-code":"kimi-k2.7-code-highspeed","xozen-mini":"hy3"};
+var MASK_LABEL={"xozen-code":"Xozen Code","xozen-mini":"Xozen Mini"};
+var BUILTIN_MODELS=["auto","minimumlite","xozen-code","xozen-mini"];
+var MODELS=BUILTIN_MODELS.slice();   /* daftar lengkap diambil dari Supabase */
+function realModel(m){return MODEL_MASK[m]||m}
+function isMask(m){return !!MODEL_MASK[m]}
 var SUGGEST=[
   "Jelaskan cara kerja blockchain dengan bahasa sederhana",
   "Buatkan fungsi JavaScript untuk debounce beserta contohnya",
@@ -1518,14 +1527,21 @@ function planFromLimits(la,lo){
   return hit||"basic";
 }
 function allowedModels(){
-  if(!session||session.admin||!memberPlan)return MODELS.slice();
+  if(!session||session.admin||!memberPlan)return MODELS.filter(function(m){return !isMask(m)||MODELS.indexOf(realModel(m))>-1});
   var white=PLAN_MODELS[memberPlan]||[];
-  return MODELS.filter(function(m){return m==="auto"||m==="minimumlite"||white.indexOf(m)>-1||memberCustomModels.indexOf(m)>-1});
+  return MODELS.filter(function(m){
+    if(m==="auto"||m==="minimumlite")return true;
+    var r=realModel(m);
+    if(isMask(m)&&MODELS.indexOf(r)<0)return false;   /* model aslinya sudah dihapus admin */
+    return white.indexOf(r)>-1||memberCustomModels.indexOf(r)>-1;
+  });
 }
 function modelAllowed(m){
-  if(!session||session.admin||!memberPlan)return true;
+  if(!session||session.admin||!memberPlan)return !isMask(m)||MODELS.indexOf(realModel(m))>-1;
   if(m==="auto"||m==="minimumlite")return true;
-  return (PLAN_MODELS[memberPlan]||[]).indexOf(m)>-1||(MODELS.indexOf(m)>-1&&memberCustomModels.indexOf(m)>-1);
+  var r=realModel(m);
+  if(isMask(m)&&MODELS.indexOf(r)<0)return false;
+  return (PLAN_MODELS[memberPlan]||[]).indexOf(r)>-1||(MODELS.indexOf(r)>-1&&memberCustomModels.indexOf(r)>-1);
 }
 async function resolveMemberModels(){
   memberCustomModels=[];
@@ -1831,7 +1847,7 @@ async function stream(c){
     var res=await fetch(settings.baseUrl.replace(/\/+$/,"")+"/chat/completions",{
       method:"POST",signal:ctrl.signal,
       headers:{"Content-Type":"application/json","Authorization":"Bearer "+settings.apiKey},
-      body:JSON.stringify({model:c.model||settings.model,messages:history,stream:true,temperature:Number(settings.temp)})
+      body:JSON.stringify({model:realModel(c.model||settings.model),messages:history,stream:true,temperature:Number(settings.temp)})
     });
     status=res.status;
     if(!res.ok){
@@ -2556,7 +2572,7 @@ $("wizAgain").onclick=function(){wizReset()};
 $("wT").addEventListener("input",wizMarkDur);
 
 /* ---------- kelola model (admin) ---------- *//* ---------- kelola model (admin) ---------- */
-var LOCKED=["auto","minimumlite"];
+var LOCKED=["auto","minimumlite","xozen-code","xozen-mini"];
 function renderMdlList(){
   var box=$("mList");box.innerHTML="";
   MODELS.forEach(function(m){
@@ -2636,7 +2652,7 @@ $("mFetch").onclick=async function(){
 
 /* ---------- dropdown model ---------- */
 var dd=$("dd"),ddBtn=$("ddBtn");
-function mlabel(m){return m==="auto"?"Xozen AI":m==="minimumlite"?"MinimumLite (Gratis)":m}
+function mlabel(m){return m==="auto"?"Xozen AI":m==="minimumlite"?"MinimumLite (Gratis)":MASK_LABEL[m]||m}
 function priceCard(t){
   var d=document.createElement("div");d.className="pcard"+(t.best?" best":"");
   var waTxt="Halo admin, saya mau paket "+planLabel(t.plan)+" "+xozPair(t.x,t.y)+" ("+t.price+"). Mohon info pembayaran dan aktivasi akunnya.";
@@ -2677,9 +2693,10 @@ function pickModel(m){
 /* ---------- pemilih model (popup dengan pencarian & filter) ---------- */
 var modelPick=$("modelPick"),mpList=$("mpList"),mpSearch=$("mpSearch"),mpFilters=$("mpFilters");
 var mpFilter="all",mpClosing=false;
-var FAM_NAME={bawaan:"Xozen & Gratis",deepseek:"DeepSeek",glm:"GLM",kimi:"Kimi",gpt:"GPT",mimo:"MiMo",hy:"HY",step:"Step",lain:"Lainnya"};
+var FAM_NAME={bawaan:"Xozen & Gratis",xozen:"Xozen",deepseek:"DeepSeek",glm:"GLM",kimi:"Kimi",gpt:"GPT",mimo:"MiMo",hy:"HY",step:"Step",lain:"Lainnya"};
 function modelFamily(m){
   if(m==="auto"||m==="minimumlite")return"bawaan";
+  if(isMask(m))return"xozen";
   if(/^deepseek/.test(m))return"deepseek";
   if(/^glm/.test(m))return"glm";
   if(/^kimi/.test(m))return"kimi";
@@ -2690,31 +2707,32 @@ function modelFamily(m){
   return"lain";
 }
 function modelTags(m){
-  var t=[];
+  var t=[],r=realModel(m);
   if(m==="auto")t.push("otomatis");
   if(m==="minimumlite")t.push("gratis");
-  if(/highspeed/.test(m))t.push("kilat");else if(/flash/.test(m))t.push("cepat");
-  if(/pro/.test(m))t.push("pro");
-  if(/code/.test(m))t.push("coding");
-  if(/vision/.test(m))t.push("vision");
-  if(/mod/.test(m))t.push("mod");
-  if(/luna/.test(m))t.push("luna");
-  if(/preview/.test(m))t.push("preview");
+  if(/highspeed/.test(r))t.push("kilat");else if(/flash/.test(r))t.push("cepat");
+  if(/pro/.test(r))t.push("pro");
+  if(/code/.test(r))t.push("coding");
+  if(/vision/.test(r))t.push("vision");
+  if(/mod/.test(r))t.push("mod");
+  if(/luna/.test(r))t.push("luna");
+  if(/preview/.test(r))t.push("preview");
   return t.slice(0,3);
 }
 function modelDesc(m){
   if(m==="auto")return"Pilihan otomatis Xozen AI: cepat, pintar, hemat kuota.";
   if(m==="minimumlite")return"Gratis tanpa kuota, tanpa memori obrolan.";
-  var fam=FAM_NAME[modelFamily(m)]||"Model";
-  var kind=/code/.test(m)?"jago coding":/vision/.test(m)?"bisa baca gambar":/highspeed|flash/.test(m)?"respons kilat":/pro/.test(m)?"penalaran kuat":"serba bisa";
-  return fam+" \u00b7 "+kind+".";
+  var r=realModel(m),fam=FAM_NAME[modelFamily(m)]||"Model";
+  var kind=/code/.test(r)?"jago coding":/vision/.test(r)?"bisa baca gambar":/highspeed|flash/.test(r)?"respons kilat":/pro/.test(r)?"penalaran kuat":"serba bisa";
+  return fam+" \u00b7 "+kind+(isMask(m)?" (mask dari "+r+")":"")+".";
 }
 function modelPlanOf(m){
   if(m==="auto")return"xozen";
   if(m==="minimumlite")return"gratis";
-  if(memberCustomModels.indexOf(m)>-1)return"custom";
-  if(PLAN_MODELS.basic.indexOf(m)>-1)return"basic";
-  if(PLAN_MODELS.best.indexOf(m)>-1)return"best";
+  var r=realModel(m);
+  if(memberCustomModels.indexOf(r)>-1)return"custom";
+  if(PLAN_MODELS.basic.indexOf(r)>-1)return"basic";
+  if(PLAN_MODELS.best.indexOf(r)>-1)return"best";
   return"lain";
 }
 var MPLAN_LABEL={xozen:"Xozen",gratis:"Gratis",basic:"Basic",best:"Best",custom:"Custom",lain:"\u2014"};
@@ -2757,8 +2775,8 @@ function mpRenderFilters(){
   var chips=[["all","Semua"]];
   if(favN)chips.push(["fav","\u2605 Favorit ("+favN+")"]);
   if(recN)chips.push(["recent","\u23F1 Terakhir dipakai"]);
-  var hasB=list.some(function(m){return PLAN_MODELS.basic.indexOf(m)>-1});
-  var hasT=list.some(function(m){return PLAN_MODELS.best.indexOf(m)>-1});
+  var hasB=list.some(function(m){return PLAN_MODELS.basic.indexOf(realModel(m))>-1});
+  var hasT=list.some(function(m){return PLAN_MODELS.best.indexOf(realModel(m))>-1});
   if(hasB)chips.push(["plan-basic","Basic ("+planCount("basic")+")"]);
   if(hasT)chips.push(["plan-best","Best ("+planCount("best")+")"]);
   fams.forEach(function(f){if(f!=="bawaan"||list.length>2)chips.push(["fam-"+f,FAM_NAME[f]||f])});
@@ -2771,12 +2789,12 @@ function mpRenderFilters(){
 }
 function mpMatch(m){
   var q=(mpSearch.value||"").trim().toLowerCase();
-  if(q&&m.toLowerCase().indexOf(q)<0&&mlabel(m).toLowerCase().indexOf(q)<0)return false;
+  if(q&&m.toLowerCase().indexOf(q)<0&&mlabel(m).toLowerCase().indexOf(q)<0&&realModel(m).toLowerCase().indexOf(q)<0)return false;
   if(mpFilter==="all")return true;
   if(mpFilter==="fav")return mfIsFav(m);
   if(mpFilter==="recent")return mrecent.indexOf(m)>-1;
-  if(mpFilter==="plan-basic")return m==="auto"||m==="minimumlite"||PLAN_MODELS.basic.indexOf(m)>-1;
-  if(mpFilter==="plan-best")return m==="auto"||m==="minimumlite"||PLAN_MODELS.best.indexOf(m)>-1;
+  if(mpFilter==="plan-basic")return m==="auto"||m==="minimumlite"||PLAN_MODELS.basic.indexOf(realModel(m))>-1;
+  if(mpFilter==="plan-best")return m==="auto"||m==="minimumlite"||PLAN_MODELS.best.indexOf(realModel(m))>-1;
   if(mpFilter.indexOf("fam-")===0)return modelFamily(m)===mpFilter.slice(4);
   return true;
 }
@@ -3233,7 +3251,7 @@ async function loadCfg(){
   try{
     var c=await tcall("app_cfg_get");
     settings.baseUrl=(c&&c.base_url)||"";settings.apiKey=(c&&c.api_key)||"";
-    if(c&&Array.isArray(c.models)&&c.models.length)MODELS=c.models;
+    if(c&&Array.isArray(c.models)&&c.models.length)MODELS=uniqueModelIds(BUILTIN_MODELS.concat(c.models));
     pinLimit=(c&&c.pin_limit!==undefined)?c.pin_limit:null;
   }catch(e){handleAuthErr(e)}
   if(MODELS.indexOf(settings.model)<0)settings.model="auto";
