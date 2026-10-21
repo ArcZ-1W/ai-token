@@ -1,0 +1,313 @@
+/* ==========================================================================
+   Xozen AI — Glass UI
+   Diadaptasi dari React Bits "Glass Surface"
+   (https://www.reactbits.dev/components/glass-surface)
+
+   Cara kerja:
+   - Semua panel kaca memakai variabel --g-bf (backdrop-filter) dan --g-bg
+     (isi panel). glass.js menulis --g-bf = url(#filter) pada elemen ber-
+     tanda data-glass="refract", sehingga efek pembelokan PTFE (React Bits)
+     menggantikan blur biasa tanpa menimpa gaya komponen.
+   - Tanpa JS / browser tanpa dukungan -> otomatis jadi frosted glass.
+
+   File ini hanya dimuat di halaman pemasaran (index, harga, gratis,
+   community, blog). Aplikasi AI memakai glass-app.css.
+   ========================================================================== */
+
+:root{
+  /* --- token kaca --- */
+  --g-fill:linear-gradient(145deg,rgba(255,255,255,.115),rgba(255,255,255,.032));
+  --g-fill-2:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.045));
+  --g-sheen:linear-gradient(135deg,
+    rgba(255,255,255,.17) 0%,
+    rgba(255,255,255,0) 42%,
+    rgba(255,255,255,0) 64%,
+    rgba(255,255,255,.075) 100%);
+  --g-edge:rgba(255,255,255,.13);
+  --g-edge-2:rgba(255,255,255,.2);
+  --g-hi:rgba(255,255,255,.34);
+  --g-lo:rgba(255,255,255,.05);
+  --g-blur:18px;
+  --g-sat:170%;
+  --g-shadow:0 18px 46px -26px rgba(3,7,20,.92);
+  --g-shadow-lg:0 30px 70px -30px rgba(3,7,20,.95);
+  --g-light-x:50%;
+  --g-light-y:-10%;
+}
+
+/* ---------- latar: aurora agar efek kaca punya warna untuk dibelokkan ---------- */
+body::before{
+  background:
+    radial-gradient(48% 38% at 10% 2%,rgba(111,123,255,.44),transparent 62%),
+    radial-gradient(44% 36% at 88% 6%,rgba(53,214,255,.34),transparent 62%),
+    radial-gradient(56% 46% at 48% 102%,rgba(255,95,200,.22),transparent 62%),
+    radial-gradient(40% 34% at 82% 58%,rgba(90,255,190,.13),transparent 64%);
+}
+body::after{
+  content:"";position:fixed;inset:-25%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(34vmax 34vmax at 24% 26%,rgba(124,92,255,.30),transparent 68%),
+    radial-gradient(30vmax 30vmax at 76% 74%,rgba(39,211,255,.20),transparent 68%);
+  animation:glassDrift 38s ease-in-out infinite alternate;
+}
+@keyframes glassDrift{
+  from{transform:translate3d(0,0,0) scale(1)}
+  to{transform:translate3d(-3%,2%,0) scale(1.08)}
+}
+@media (prefers-reduced-motion:reduce){body::after{animation:none}}
+
+/* ==========================================================================
+   1. DASAR: semua elemen kaca
+   ========================================================================== */
+.glass-surface,
+.card,
+.plan,
+.step,
+.post,
+details.faq,
+.toc,
+.band,
+.service-option,
+.code-demo,
+.article .cta,
+.article blockquote{
+  --g-bf:blur(var(--g-blur)) saturate(var(--g-sat));
+  --g-bg:var(--g-sheen),var(--g-fill);
+  background:var(--g-bg);
+  -webkit-backdrop-filter:var(--g-bf);
+  backdrop-filter:var(--g-bf);
+  border:1px solid var(--g-edge);
+  box-shadow:inset 0 1px 0 var(--g-hi),inset 0 -1px 0 var(--g-lo),var(--g-shadow);
+}
+
+/* ==========================================================================
+   2. PRIMITIF GLASS SURFACE (dipakai glass.js)
+   ========================================================================== */
+.glass-surface{position:relative;isolation:isolate}
+.glass-surface__filter{
+  position:absolute;inset:0;width:100%;height:100%;
+  pointer-events:none;opacity:0;z-index:-1;
+}
+
+/* mode refraction: latar di belakang panel dibelokkan (SVG displacement map).
+   Spesifikasi (0,2,0) -> menang atas kelas komponen mana pun. */
+.glass-surface.glass-surface--svg{
+  --g-bf:var(--filter-id) saturate(var(--glass-saturation,1.6));
+}
+/* mode fallback: frosted glass (Safari, Firefox, browser lama) */
+.glass-surface.glass-surface--fallback{
+  --g-bf:blur(var(--g-blur)) saturate(var(--g-sat));
+}
+/* kilau + rim tipis di tepi, mengikuti kursor */
+.glass-surface--svg::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  border-radius:inherit;
+  background:radial-gradient(46% 40% at var(--glass-light-x) var(--glass-light-y),
+    rgba(255,255,255,.14),rgba(255,255,255,0) 70%);
+  box-shadow:
+    inset 0 0 2px 1px rgba(255,255,255,.18),
+    inset 0 0 10px 4px rgba(255,255,255,.06);
+  opacity:0;transition:opacity .3s ease;
+}
+.glass-surface--svg:hover::before{opacity:1}
+
+/* ==========================================================================
+   3. PANEL KACA DI SELURUH SITUS
+   ========================================================================== */
+
+/* --- header --- */
+.site-head{
+  background:linear-gradient(180deg,rgba(10,15,34,.74),rgba(7,11,24,.56));
+  -webkit-backdrop-filter:blur(22px) saturate(180%);
+  backdrop-filter:blur(22px) saturate(180%);
+  border-bottom:1px solid rgba(255,255,255,.085);
+  box-shadow:0 10px 30px -22px rgba(3,7,20,.9);
+}
+.brand img{border:1px solid rgba(255,255,255,.18);box-shadow:0 4px 14px -6px rgba(0,0,0,.8)}
+.nav a[aria-current=page]{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22);
+}
+.nav a:hover{background:rgba(255,255,255,.075)}
+
+/* --- tombol --- */
+.btn{
+  background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.045));
+  -webkit-backdrop-filter:blur(14px) saturate(160%);
+  backdrop-filter:blur(14px) saturate(160%);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 10px 26px -16px rgba(3,7,20,.95);
+}
+.btn:hover{background:linear-gradient(145deg,rgba(255,255,255,.2),rgba(255,255,255,.07))}
+.btn.primary{
+  background:var(--grad);border-color:rgba(255,255,255,.22);color:#06101f;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 14px 34px -14px rgba(83,150,255,.85);
+}
+.btn.ghost{background:rgba(255,255,255,.04);box-shadow:inset 0 1px 0 rgba(255,255,255,.16)}
+
+/* --- badge & chip --- */
+.badge{
+  background:rgba(255,255,255,.07);
+  -webkit-backdrop-filter:blur(12px) saturate(160%);
+  backdrop-filter:blur(12px) saturate(160%);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.24);
+}
+.chips span{
+  background:rgba(255,255,255,.08);
+  -webkit-backdrop-filter:blur(8px);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.12);
+}
+.card .ic{
+  background:linear-gradient(145deg,rgba(255,255,255,.18),rgba(255,255,255,.05));
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 8px 18px -12px rgba(0,0,0,.9);
+}
+
+/* --- pilihan layanan (hero) --- */
+.service-option{
+  --g-bg:var(--g-sheen),linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.04));
+  --g-bf:blur(20px) saturate(175%);
+  box-shadow:inset 0 1px 0 var(--g-hi),inset 0 -1px 0 var(--g-lo),0 22px 50px -26px rgba(3,7,20,.95);
+}
+.service-option:hover{
+  --g-bg:var(--g-sheen),linear-gradient(145deg,rgba(255,255,255,.19),rgba(255,255,255,.07));
+  border-color:rgba(53,214,255,.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 26px 60px -24px rgba(53,214,255,.28);
+}
+.service-option>img,.community-mark{
+  border:1px solid rgba(255,255,255,.2);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 8px 20px -12px rgba(0,0,0,.9);
+}
+
+/* --- paket harga --- */
+.plan.featured{
+  --g-bg:linear-gradient(160deg,rgba(111,123,255,.26),rgba(53,214,255,.10)),var(--g-sheen);
+  border-color:rgba(111,123,255,.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.34),
+    0 0 0 1px rgba(111,123,255,.32),
+    0 0 46px -14px rgba(111,123,255,.55),
+    var(--g-shadow-lg);
+}
+.plan .tag{
+  background:var(--grad);border:1px solid rgba(255,255,255,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 20px -10px rgba(83,150,255,.9);
+}
+
+/* --- langkah --- */
+.step b{
+  border:1px solid rgba(255,255,255,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 18px -10px rgba(83,150,255,.9);
+}
+
+/* --- blog --- */
+.post .thumb{
+  background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(255,255,255,.04)),var(--grad-soft);
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+/* --- CTA band --- */
+.band{
+  --g-bg:linear-gradient(160deg,rgba(111,123,255,.28),rgba(53,214,255,.10)),var(--g-sheen);
+  --g-bf:blur(22px) saturate(175%);
+  border:1px solid rgba(255,255,255,.17);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.34),0 30px 70px -30px rgba(3,7,20,.95);
+}
+
+/* --- artikel --- */
+.article .cta{
+  --g-bg:linear-gradient(160deg,rgba(111,123,255,.22),rgba(53,214,255,.08)),var(--g-sheen);
+  border-color:rgba(255,255,255,.16);
+}
+.article blockquote{
+  border:1px solid rgba(255,255,255,.13);
+  border-left:3px solid var(--brand);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22);
+}
+.article code{
+  background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.1);
+}
+.article pre{
+  background:rgba(5,10,21,.72);
+  -webkit-backdrop-filter:blur(14px) saturate(150%);
+  backdrop-filter:blur(14px) saturate(150%);
+  border:1px solid rgba(255,255,255,.11);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12);
+}
+.article figure img{border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 44px -24px rgba(3,7,20,.95)}
+
+/* --- demo kode di hero --- */
+.code-demo{
+  --g-bg:linear-gradient(180deg,rgba(12,18,38,.66),rgba(7,11,24,.5));
+  --g-bf:blur(20px) saturate(170%);
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),var(--g-shadow-lg);
+}
+.cd-bar{background:rgba(255,255,255,.045);border-bottom-color:rgba(255,255,255,.09)}
+.cd-msg.a{
+  background:rgba(255,255,255,.08);
+  -webkit-backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);
+  border-color:rgba(255,255,255,.14);
+}
+.cd-msg.code{background:rgba(4,8,18,.8);border-color:rgba(255,255,255,.12)}
+.cd-code-head{background:rgba(255,255,255,.05);border-bottom-color:rgba(255,255,255,.08)}
+.cd-foot{border-top-color:rgba(255,255,255,.09)}
+
+/* --- footer --- */
+.site-foot{
+  background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.022));
+  border-top:1px solid rgba(255,255,255,.075);
+}
+
+/* --- halaman gratis & community --- */
+.free-msg,.community-message{
+  background:rgba(255,255,255,.075);
+  -webkit-backdrop-filter:blur(12px) saturate(160%);
+  backdrop-filter:blur(12px) saturate(160%);
+  border-color:rgba(255,255,255,.14);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2);
+}
+.free-msg.user,.community-message.mine{
+  background:linear-gradient(145deg,rgba(111,123,255,.3),rgba(53,214,255,.14));
+  border-color:rgba(255,255,255,.2);
+}
+.free-compose form,.chat-compose form{
+  background:rgba(12,18,38,.62);
+  -webkit-backdrop-filter:blur(18px) saturate(170%);
+  backdrop-filter:blur(18px) saturate(170%);
+  border-color:rgba(255,255,255,.15);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.26),var(--g-shadow);
+}
+.auth-form input{
+  background:rgba(255,255,255,.07);
+  -webkit-backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);
+  border-color:rgba(255,255,255,.14);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
+}
+.auth-view{
+  padding:30px 28px;border-radius:24px;
+  background:var(--g-sheen),var(--g-fill);
+  -webkit-backdrop-filter:blur(20px) saturate(175%);
+  backdrop-filter:blur(20px) saturate(175%);
+  border:1px solid var(--g-edge);
+  box-shadow:inset 0 1px 0 var(--g-hi),inset 0 -1px 0 var(--g-lo),var(--g-shadow-lg);
+}
+
+/* ==========================================================================
+   4. FALLBACK & AKSESIBILITAS
+   ========================================================================== */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .card,.plan,.step,.post,details.faq,.toc,.band,.service-option,.code-demo,
+  .article .cta,.article blockquote,.glass-surface,.auth-view{
+    background:linear-gradient(160deg,#141b34,#0d1426);
+  }
+  .btn{background:#1a223c}
+}
+@media (prefers-reduced-motion:reduce){
+  .glass-surface--svg::before{transition:none}
+  .service-option{transition:none}
+}

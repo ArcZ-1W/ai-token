@@ -960,9 +960,10 @@ html[data-theme^="neu"] .fthumb{box-shadow:var(--raise-xs);border:0}
 @keyframes page-spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.page-loading{transition:none}.page-spinner{animation:none}}
 </style>
+<link rel="stylesheet" href="../glass-app.css">
 </head>
 <body>
-<div class="login" id="login"><form class="glass" id="loginForm" autocomplete="off">
+<div class="login" id="login"><form class="glass" id="loginForm" data-glass="refract" autocomplete="off">
   <div class="lspin" aria-hidden="true"><i></i><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
   <h2>Masuk ke Xozen AI</h2><p>Login untuk melanjutkan.</p>
   <div class="field"><label for="lUser">Username</label><input type="text" id="lUser" autocomplete="username" autocapitalize="off"></div>
@@ -971,7 +972,7 @@ html[data-theme^="neu"] .fthumb{box-shadow:var(--raise-xs);border:0}
   <button class="btn primary" type="submit">Masuk</button>
   <div class="lalt">Belum punya akun?<button type="button" id="openPrice">Lihat paket &amp; harga</button></div>
 </form></div>
-<div class="login" id="pricePage" aria-hidden="true"><div class="dlg glass price" role="dialog" aria-modal="true" aria-labelledby="priceTitle">
+<div class="login" id="pricePage" aria-hidden="true"><div class="dlg glass price" data-glass="refract" role="dialog" aria-modal="true" aria-labelledby="priceTitle">
   <button type="button" class="pclose" id="priceClose" aria-label="Tutup halaman harga">&times;</button>
   <div class="phead">
     <img class="plogo" src="https://i.ibb.co.com/8gqQS0t0/xozen.png" alt="Logo Xozen AI" width="52" height="52">
@@ -1012,7 +1013,7 @@ html[data-theme^="neu"] .fthumb{box-shadow:var(--raise-xs);border:0}
   <div class="pnote">Harga dalam Rupiah. Pembayaran dan aktivasi akun diproses manual oleh admin: setelah transfer, kirim bukti pembayaran ke WhatsApp admin agar akun Anda segera dibuatkan.</div>
   <div class="prow"><a class="btn" href="../pricing/index.html">Halaman paket lengkap</a><a class="btn" href="../blog/index.html">Blog</a><button type="button" class="btn" id="priceBack">Tutup</button></div>
 </div></div>
-<div class="login" id="faceBox"><div class="glass face-card" id="faceCard">
+<div class="login" id="faceBox"><div class="glass face-card" id="faceCard" data-glass="refract">
   <div class="lspin" aria-hidden="true"><i></i><svg class="ck" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><svg class="xx" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
   <h2 id="fTitle">Verifikasi wajah</h2><p id="fSub"></p>
   <div class="fvid" id="fVid"><div class="fclip"><video id="fVideo" playsinline muted autoplay></video><div class="fscan"></div></div></div>
@@ -1118,7 +1119,7 @@ html[data-theme^="neu"] .fthumb{box-shadow:var(--raise-xs);border:0}
     <div style="margin-top:14px;text-align:right"><button class="btn" type="button" id="admClose">Tutup</button></div>
 </div></dialog>
 
-<dialog id="wizDlg"><div class="dlg glass wiz">
+<dialog id="wizDlg"><div class="dlg glass wiz" data-glass="refract">
   <div class="wiz-top"><h2>Buat akun baru</h2><button type="button" class="pclose" id="wizX" aria-label="Tutup wizard">&times;</button></div>
   <ol class="wiz-steps" id="wizSteps">
     <li data-s="1">1. Paket</li><li data-s="2">2. Data akun</li><li data-s="3">3. Ringkasan</li><li data-s="4">4. Selesai</li>
@@ -1171,7 +1172,7 @@ html[data-theme^="neu"] .fthumb{box-shadow:var(--raise-xs);border:0}
 </div></dialog>
 
 <dialog id="dlg">
-  <div class="dlg glass">
+  <div class="dlg glass" data-glass="refract">
     <h2>Pengaturan</h2>
     <div class="settings-section"><h3>Tampilan</h3></div>
     <div class="field"><label id="themeLbl">Tema tampilan</label><div class="themes" id="themePick" role="radiogroup" aria-labelledby="themeLbl">
@@ -3443,5 +3444,6 @@ renderPricing();                                   /* isi halaman paket & harga 
 })();
 </script>
 <script src="../site.js"></script>
+<script src="../glass.js?v=1"></script>
 </body>
   </html>

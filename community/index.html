@@ -52,6 +52,7 @@
 @media(max-width:640px){.community-main{padding:18px 14px 20px}.community-heading h1{font-size:19px}.auth-view{padding:24px 0}.auth-view h2{font-size:24px}.chat-stream{max-height:calc(100dvh - 230px);padding:18px 0}.community-message{max-width:90%}.account-label{max-width:42vw}.chat-note{font-size:10.5px}}
 @media(prefers-reduced-motion:reduce){.chat-stream{scroll-behavior:auto}}
 </style>
+<link rel="stylesheet" href="../glass.css">
 </head>
 <body class="community-page">
 <header class="site-head community-head">
@@ -68,7 +69,7 @@
     <span class="community-logo" aria-hidden="true">AC</span>
     <div><h1>ArcZ Community</h1><p>Ruang chat komunitas</p></div>
   </div>
-  <section class="auth-view" id="authView" aria-labelledby="authTitle">
+  <section class="auth-view" id="authView" data-glass="refract" aria-labelledby="authTitle">
     <span class="eyebrow">Akun Community</span>
     <h2 id="authTitle">Masuk ke Community</h2>
     <p>Akun Community terpisah dari Xozen AI. Gunakan nama pengguna dan password; alamat email tidak diperlukan.</p>
@@ -196,5 +197,6 @@
   client.auth.onAuthStateChange(function(event,session){window.setTimeout(function(){setSession(session&&session.user)},0)});
 })();
 </script>
+<script src="../glass.js?v=1"></script>
 </body>
 </html>

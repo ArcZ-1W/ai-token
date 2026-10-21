@@ -17,7 +17,33 @@ Situs statis (HTML/CSS/JS biasa). Tidak perlu build tool: cukup unggah berkasnya
 | `/blog/memilih-model-coding.html` | | Artikel: memilih model untuk coding |
 | `/blog/model-vision-gambar.html` | | Artikel: model vision / kirim gambar |
 
-Aset bersama: `site.css` (gaya situs), `site.js` (menu mobile, FAQ, tahun footer, animasi demo ketik di hero). Halaman pemasaran tidak memakai gambar aplikasi — hero memakai animasi ketik kode yang dibuat oleh `site.js`.
+Aset bersama: `site.css` (gaya situs), `site.js` (menu mobile, FAQ, tahun footer, animasi demo ketik di hero), `glass.css` + `glass.js` (tampilan kaca / glassmorphism), `glass-app.css` (tampilan kaca khusus aplikasi AI). Halaman pemasaran tidak memakai gambar aplikasi — hero memakai animasi ketik kode yang dibuat oleh `site.js`.
+
+## Glass UI (glassmorphism)
+
+Tampilan kaca di seluruh situs memakai adaptasi dari React Bits
+[Glass Surface](https://www.reactbits.dev/components/glass-surface). Situs ini tidak memakai
+React, jadi efeknya ditulis ulang tanpa dependensi:
+
+| Berkas | Isi |
+|---|---|
+| `glass.css` | Primitif `.glass-surface` + gaya kaca untuk semua panel halaman pemasaran (card, plan, step, post, faq, band, tombol, header, dst) |
+| `glass.js` | Pembuat filter SVG (displacement map + `feDisplacementMap`) yang membuat latar di belakang panel **dibelokkan** di tepinya, plus pantulan cahaya yang mengikuti kursor |
+| `glass-app.css` | Lapisan kaca tambahan untuk aplikasi AI (`/ai/`) — rim cahaya + kilau, hanya untuk tema `glass` / `glassold` / `glasswhite` |
+
+Cara memberi efek kaca pada elemen baru:
+
+```html
+<!-- frosted glass (default, ringan) -->
+<div class="card">...</div>
+
+<!-- refraction penuh: latar dibelokkan di tepi (berat, pakai untuk hero) -->
+<div class="service-option" data-glass="refract">...</div>
+```
+
+Opsi per elemen: `data-glass-radius`, `data-glass-blur`, `data-glass-distortion`,
+`data-glass-saturation`. Tanpa JavaScript (atau di Safari/Firefox yang tidak mendukung
+`backdrop-filter: url(#filter)`) semua panel otomatis turun ke mode frosted biasa.
 
 ## Berkas yang diunggah (deploy)
 
@@ -25,6 +51,9 @@ Aset bersama: `site.css` (gaya situs), `site.js` (menu mobile, FAQ, tahun footer
 index.html
 site.css
 site.js
+glass.css
+glass.js
+glass-app.css
 robots.txt
 ai/              (aplikasi AI)
 community/       (chat ArcZ Community)

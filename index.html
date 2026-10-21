@@ -24,6 +24,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@400..800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="glass.css">
 </head>
 <body class="awaiting-service">
 <a class="skip" href="#utama">Lewati ke konten</a>
@@ -52,12 +53,12 @@
       <h1 id="chooser-title">Kamu sedang mencari apa?</h1>
       <p class="chooser-lead">Pilih ruang yang ingin kamu buka.</p>
       <div class="service-options">
-        <a class="service-option xozen-option" href="#landing-ai">
+        <a class="service-option xozen-option" data-glass="refract" href="#landing-ai">
           <img src="https://i.ibb.co.com/8gqQS0t0/xozen.png" alt="" width="48" height="48">
           <span class="service-copy"><strong>Xozen AI</strong><span>Lihat landing page, fitur, model, dan paket AI.</span></span>
           <span class="service-arrow" aria-hidden="true">&#8599;</span>
         </a>
-        <a class="service-option community-option" href="community/">
+        <a class="service-option community-option" data-glass="refract" href="community/">
           <span class="community-mark" aria-hidden="true">AC</span>
           <span class="service-copy"><strong>ArcZ Community</strong><span>Masuk ke ruang chat komunitas dengan akun Community.</span></span>
           <span class="service-arrow" aria-hidden="true">&#8599;</span>
@@ -83,7 +84,7 @@
           <span>&#10003; Riwayat obrolan tersimpan</span>
         </div>
       </div>
-      <div class="code-demo" id="codeDemo">
+      <div class="code-demo" id="codeDemo" data-glass="refract">
         <div class="cd-bar">
           <span class="cd-dots" aria-hidden="true"><i></i><i></i><i></i></span>
           <span class="cd-title">Xozen AI &mdash; obrolan baru</span>
@@ -196,7 +197,7 @@
           </ul>
           <a class="btn" href="pricing/index.html">Lihat detail</a>
         </div>
-        <div class="plan featured">
+        <div class="plan featured" data-glass="refract">
           <span class="tag">Best value</span>
           <h3>Best</h3>
           <div class="quota">10&times; Xozen AI + 3&times; AI lain</div>
@@ -282,7 +283,7 @@
   <!-- ================= CTA ================= -->
   <section class="tight">
     <div class="wrap">
-      <div class="band">
+      <div class="band" data-glass="refract">
         <h2>Siap mencoba Xozen AI?</h2>
         <p>Buka aplikasinya, pilih model, dan mulai dari pertanyaan pertama Anda. Butuh paket lebih besar? Admin siap membantu lewat WhatsApp.</p>
         <a class="btn primary lg" href="ai/index.html">Buka aplikasi AI</a>
@@ -328,5 +329,6 @@
 </footer>
 
 <script src="site.js?v=chooser-1"></script>
+<script src="glass.js?v=1"></script>
 </body>
 </html>
