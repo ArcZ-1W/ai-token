@@ -2578,10 +2578,27 @@ function uniqueModelIds(ids){
 }
 async function fetchApiModelIds(){
   if(!settings.baseUrl||!settings.apiKey)throw new Error("Isi Base URL dan API key di Pengaturan dulu.");
-  var r=await fetch(settings.baseUrl.replace(/\/+$/,"")+"/models",{headers:{Authorization:"Bearer "+settings.apiKey}});
-  if(!r.ok)throw new Error("Server mengembalikan error "+r.status+".");
-  var j=await r.json(),arr=Array.isArray(j)?j:(j.data||j.models||[]);
-  var ids=uniqueModelIds(arr.map(function(x){return typeof x==="string"?x:(x&&(x.id||x.name))||""}));
+  var r=await fetch(settings.baseUrl.replace(/\/+$/,"")+"/models",{headers:{Authorization:"Bearer "+settings.apiKey,Accept:"application/json"}});
+  var body=await r.text(),j=null;
+  try{j=body?JSON.parse(body):null}catch(e){}
+  if(!r.ok){
+    var detail=j&&(typeof j.error==="string"?j.error:j.error&&j.error.message||j.message);
+    throw new Error(detail||("Server mengembalikan error "+r.status+(body?": "+body.slice(0,250):".")));
+  }
+  if(!j)throw new Error("Respons API model kosong atau bukan JSON yang valid.");
+  var arr=Array.isArray(j)?j:[];
+  if(!arr.length&&j&&typeof j==="object"){
+    var containers=[j.data,j.models,j.items,j.result];
+    for(var i=0;i<containers.length&&!arr.length;i++){
+      var value=containers[i];
+      if(Array.isArray(value))arr=value;
+      else if(value&&typeof value==="object"){
+        if(Array.isArray(value.data))arr=value.data;
+        else if(Array.isArray(value.models))arr=value.models;
+      }
+    }
+  }
+  var ids=uniqueModelIds(arr.map(function(x){return typeof x==="string"?x:(x&&(x.id||x.name||x.model))||""}));
   if(!ids.length)throw new Error("API tidak mengembalikan daftar model.");
   return ids;
 }

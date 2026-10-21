@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ArcZ Community Chat</title>
-<meta name="description" content="Masuk ke chat ArcZ Community dengan akun Community yang terpisah dari akun Xozen AI.">
+<meta name="description" content="Masuk ke chat ArcZ Community menggunakan nama pengguna dan password.">
 <meta name="theme-color" content="#070b18">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,10 +71,10 @@
   <section class="auth-view" id="authView" aria-labelledby="authTitle">
     <span class="eyebrow">Akun Community</span>
     <h2 id="authTitle">Masuk ke Community</h2>
-    <p>Akun ini terpisah dari akun Xozen AI. Buat akun Community baru atau masuk dengan akun yang sudah ada.</p>
+    <p>Akun Community terpisah dari Xozen AI. Gunakan nama pengguna dan password; alamat email tidak diperlukan.</p>
     <form class="auth-form" id="authForm">
       <label id="displayNameField" hidden>Nama tampilan<input id="displayName" type="text" maxlength="40" autocomplete="nickname"></label>
-      <label>Email<input id="email" type="email" maxlength="254" autocomplete="email" required></label>
+      <label>Nama pengguna<input id="username" type="text" minlength="3" maxlength="30" pattern="[a-zA-Z0-9._-]+" autocomplete="username" autocapitalize="none" spellcheck="false" required></label>
       <label>Password<input id="password" type="password" minlength="8" maxlength="128" autocomplete="current-password" required></label>
       <button class="btn primary" id="authSubmit" type="submit">Masuk</button>
     </form>
@@ -104,6 +104,7 @@
   var authView=document.getElementById("authView"),chatView=document.getElementById("chatView"),authForm=document.getElementById("authForm");
   var authTitle=document.getElementById("authTitle"),authSubmit=document.getElementById("authSubmit"),authToggle=document.getElementById("authToggle");
   var displayNameField=document.getElementById("displayNameField"),displayName=document.getElementById("displayName");
+  var username=document.getElementById("username");
   var email=document.getElementById("email"),password=document.getElementById("password"),authStatus=document.getElementById("authStatus");
   var accountActions=document.getElementById("accountActions"),accountLabel=document.getElementById("accountLabel");
   var messageList=document.getElementById("messageList"),emptyState=document.getElementById("emptyState"),messageInput=document.getElementById("messageInput");
@@ -121,9 +122,13 @@
   }
   function setSession(nextUser){
     user=nextUser||null;authView.hidden=!!user;chatView.hidden=!user;accountActions.hidden=!user;
-    accountLabel.textContent=user?(user.user_metadata&&user.user_metadata.display_name||user.email||"Anggota"):"";
+    accountLabel.textContent=user?(user.user_metadata&&(user.user_metadata.display_name||user.user_metadata.username)||usernameFromUser(user)):"";
     if(user){loadMessages();subscribeMessages();messageInput.focus()}
     else{if(channel)client.removeChannel(channel);channel=null;messageList.replaceChildren(emptyState);seen={}}
+  }
+  function usernameFromUser(value){
+    var meta=value&&value.user_metadata||{},name=meta.username||value&&value.email||"";
+    return String(name).replace(/@community\.arcz\.invalid$/i,"")||"Anggota";
   }
   function formatTime(value){var date=new Date(value);return isNaN(date.getTime())?"":date.toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"})}
   function renderMessage(row){
@@ -137,9 +142,11 @@
   }
   async function loadMessages(){
     setStatus(chatStatus,"");
-    var result=await client.from("community_messages").select("id,user_id,content,created_at").order("created_at",{ascending:false}).limit(100);
-    if(result.error){setStatus(chatStatus,"Chat belum siap. Admin perlu memasang community/schema.sql di Supabase.");return}
-    result.data.reverse().forEach(renderMessage);
+    try{
+      var result=await client.from("community_messages").select("id,user_id,content,created_at").order("created_at",{ascending:false}).limit(100);
+      if(result.error){setStatus(chatStatus,"Chat belum siap. Pastikan community/schema.sql sudah dijalankan di Supabase.");return}
+      result.data.reverse().forEach(renderMessage);
+    }catch(error){setStatus(chatStatus,"Tidak dapat memuat pesan. Periksa koneksi internet lalu coba muat ulang halaman.")}
   }
   function subscribeMessages(){
     if(channel)client.removeChannel(channel);
@@ -150,28 +157,32 @@
   async function handleAuth(event){
     event.preventDefault();setStatus(authStatus,"");authSubmit.disabled=true;
     try{
-      var result;
+      var result,name=username.value.trim().toLowerCase();
+      if(!name)throw new Error("Masukkan nama pengguna.");
       if(authMode==="signup"){
-        result=await client.auth.signUp({email:email.value.trim(),password:password.value,options:{data:{display_name:displayName.value.trim()||email.value.trim().split("@")[0]}}});
+        if(!/^[a-z0-9._-]{3,30}$/.test(name))throw new Error("Nama pengguna harus 3–30 karakter: huruf, angka, titik, garis bawah, atau strip.");
+        result=await client.auth.signUp({email:name+"@community.arcz.invalid",password:password.value,options:{data:{username:name,display_name:displayName.value.trim()||name}}});
         if(result.error)throw result.error;
         if(result.data.session)setSession(result.data.session.user);
-        else setStatus(authStatus,"Akun belum bisa langsung digunakan. Admin perlu menonaktifkan Confirm email di pengaturan Supabase Auth.");
+        else setStatus(authStatus,"Akun dibuat, tetapi belum bisa digunakan. Minta admin mematikan Confirm email di Supabase Auth.");
       }else{
-        result=await client.auth.signInWithPassword({email:email.value.trim(),password:password.value});
+        result=await client.auth.signInWithPassword({email:name.indexOf("@")>-1?name:name+"@community.arcz.invalid",password:password.value});
         if(result.error)throw result.error;
         setSession(result.data.user);
       }
-    }catch(error){setStatus(authStatus,error&&error.message||"Tidak dapat memproses akun. Periksa email dan password.")}
+    }catch(error){setStatus(authStatus,error&&error.message||"Tidak dapat memproses akun. Periksa nama pengguna dan password.")}
     finally{authSubmit.disabled=false}
   }
   async function postMessage(event){
     event.preventDefault();if(busy||!user)return;
     var content=messageInput.value.trim();if(!content)return;
     busy=true;sendMessage.disabled=true;setStatus(chatStatus,"");
-    var result=await client.from("community_messages").insert({user_id:user.id,content:content}).select("id,user_id,content,created_at").single();
-    if(result.error)setStatus(chatStatus,"Pesan belum terkirim. Coba lagi sebentar.");
-    else{renderMessage(result.data);messageInput.value="";messageInput.style.height="auto";messageCount.textContent="0/2000"}
-    busy=false;sendMessage.disabled=false;messageInput.focus();
+    try{
+      var result=await client.from("community_messages").insert({user_id:user.id,content:content}).select("id,user_id,content,created_at").single();
+      if(result.error)setStatus(chatStatus,"Pesan belum terkirim. Periksa koneksi dan pastikan community/schema.sql sudah dijalankan.");
+      else{renderMessage(result.data);messageInput.value="";messageInput.style.height="auto";messageCount.textContent="0/2000"}
+    }catch(error){setStatus(chatStatus,"Tidak dapat mengirim pesan. Periksa koneksi internet lalu coba lagi.")}
+    finally{busy=false;sendMessage.disabled=false;messageInput.focus()}
   }
   authForm.addEventListener("submit",handleAuth);
   authToggle.addEventListener("click",function(){setAuthMode(authMode==="login"?"signup":"login")});
