@@ -2724,7 +2724,7 @@ function modelDesc(m){
   if(m==="minimumlite")return"Gratis tanpa kuota, tanpa memori obrolan.";
   var r=realModel(m),fam=FAM_NAME[modelFamily(m)]||"Model";
   var kind=/code/.test(r)?"jago coding":/vision/.test(r)?"bisa baca gambar":/highspeed|flash/.test(r)?"respons kilat":/pro/.test(r)?"penalaran kuat":"serba bisa";
-  return fam+" \u00b7 "+kind+(isMask(m)?" (mask dari "+r+")":"")+".";
+  return fam+" \u00b7 "+kind+".";
 }
 function modelPlanOf(m){
   if(m==="auto")return"xozen";
