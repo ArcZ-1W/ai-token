@@ -2362,7 +2362,7 @@ function pbCloseMenu(){
 }
 function pbOpenMenu(kind){
   if(pbOpenKind===kind){pbCloseMenu();return}
-  pbOpenKind=kind;pbCursor=0;
+  pbOpenKind=kind;
   pbPlus.toggleAttribute("data-on",kind==="file");
   pbTypeBtn.toggleAttribute("data-on",kind==="type");
   pbEffBtn.toggleAttribute("data-on",kind==="eff");
