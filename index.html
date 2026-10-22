@@ -35,7 +35,7 @@
     <button class="nav-toggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">&#9776;</button>
     <nav class="nav" id="nav" aria-label="Navigasi utama">
       <a href="#fitur">Fitur</a>
-      <a href="#model">Model</a>
+      <a href="#harga">Model &amp; Harga</a>
       <a href="#cara">Cara pakai</a>
       <a href="plan/index.html">Plan AI</a>
       <a href="free/">Gratis</a>
@@ -47,6 +47,9 @@
 </header>
 
 <main id="utama">
+  <!-- kandidat latar LaserFlow: satu kanvas fixed untuk semua section di bawah home (target section aktif di-set site.js) -->
+  <div class="laser-bg" data-laser-flow data-color="#6f7bff" data-intensity="1.6" data-fog="0.18" data-dust="1.2" data-speed="1.4" aria-hidden="true"></div>
+  <div class="laser-veil" aria-hidden="true"></div>
 
   <section class="chooser" id="pilih-layanan" aria-labelledby="chooser-title">
     <div class="wrap chooser-wrap">
@@ -145,34 +148,6 @@
     </div>
   </section>
 
-  <!-- ================= MODEL ================= -->
-  <section id="model">
-    <div class="wrap">
-      <div class="sec-head">
-        <div class="eyebrow">Model AI</div>
-        <h2>Pilih sesuai tugas, bukan sesuai tebakan</h2>
-        <p>Model cepat untuk balasan panjang, model penalaran untuk kode dan analisis, model vision untuk gambar.</p>
-      </div>
-      <div class="grid g2">
-        <div class="card">
-          <h3>Paket Basic &mdash; 9 model</h3>
-          <p>Cocok untuk pemakaian harian: menulis, meringkas, menjawab pertanyaan.</p>
-          <div class="chips">
-            <span>kimi-k2.5</span><span>kimi-k2.6</span><span>kimi-k2.7-code</span><span>mimo-v2.5-pro</span><span>hy3</span><span>hy4</span><span>glm-5.3</span><span>glm-5.2</span><span>deepseek-v4-pro</span><span>+ Xozen Mini (mask hy3)</span>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Paket Best &mdash; 31 model</h3>
-          <p>Termasuk seri <code>deepseek-v4</code>, <code>glm-5.3-flashx</code>, <code>gpt-5.6</code>, dan model vision.</p>
-          <div class="chips">
-            <span>deepseek-v4-flash</span><span>deepseek-v4-pro</span><span>deepseek-v4.1-mod</span><span>glm-5.3-flashx</span><span>glm-5.3-flashx-mod</span><span>gpt-5.6</span><span>gpt-5.6-luna</span><span>kimi-k2.8</span><span>mimo-v2.6-pro</span><span>step-5-preview</span><span>deepseek-v4-flash-vision-exp</span><span>+20 lainnya</span><span>+ Xozen Code</span><span>+ Xozen Mini</span>
-          </div>
-          <p style="margin-top:14px"><a href="pricing/index.html">Lihat daftar lengkap &amp; harga &rarr;</a></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ================= CARA PAKAI ================= -->
   <section id="cara">
     <div class="wrap">
@@ -193,9 +168,9 @@
   <section id="harga">
     <div class="wrap">
       <div class="sec-head">
-        <div class="eyebrow">Harga</div>
+        <div class="eyebrow">Harga &amp; model</div>
         <h2>Bayar sekali, kuota langsung aktif</h2>
-        <p>Harga dalam Rupiah, Basic bisa dimulai gratis. Pembayaran dan aktivasi akun diproses manual oleh admin melalui WhatsApp.</p>
+        <p>Harga dalam Rupiah, Basic bisa dimulai gratis. Kartu kecil di setiap paket menunjukkan model yang bisa dipakai. Pembayaran dan aktivasi akun diproses manual oleh admin melalui WhatsApp.</p>
       </div>
       <div class="plans grid g4">
         <div class="plan">
@@ -207,6 +182,12 @@
             <li>Satu saldo token 7.000 xoz</li>
             <li>Riwayat obrolan tersimpan</li>
           </ul>
+          <div class="pm-label">Model di paket ini</div>
+          <div class="pm-models">
+            <div class="mcard"><b>Xozen AI</b><span>Mode otomatis</span></div>
+            <div class="mcard"><b>MinimumLite</b><span>Ringan &amp; hemat</span></div>
+            <div class="mcard"><b>XozenLow</b><span>Cepat</span></div>
+          </div>
           <a class="btn" href="https://wa.me/6289523042979?text=Halo%20admin%2C%20saya%20mau%20akun%20gratis%20Xozen%20AI%20(paket%20Basic%3A%207.000%20xoz%20token%2C%20Xozen%20AI%20%2B%20MinimumLite%20%2B%20XozenLow)" target="_blank" rel="noopener noreferrer">Minta akun gratis</a>
         </div>
         <div class="plan">
@@ -218,6 +199,16 @@
             <li>Satu saldo token 15.000 xoz</li>
             <li>Pin obrolan &amp; riwayat</li>
           </ul>
+          <div class="pm-label">Model di paket ini</div>
+          <div class="pm-models">
+            <div class="mcard"><b>Xozen AI</b><span>Otomatis</span></div>
+            <div class="mcard"><b>Xozen Mini</b><span>Brand Xozen</span></div>
+            <div class="mcard"><b>XozenLow</b><span>Brand Xozen</span></div>
+            <div class="mcard"><b>glm-5.3</b><span>Umum</span></div>
+            <div class="mcard"><b>kimi-k2.7-code</b><span>Kode</span></div>
+            <div class="mcard"><b>deepseek-v4-pro</b><span>Penalaran</span></div>
+            <a class="mcard more" href="pricing/index.html#plus"><b>+6 lainnya</b><span>Semua model Plus</span></a>
+          </div>
           <a class="btn primary" href="https://wa.me/6289523042979?text=Halo%20admin%2C%20saya%20mau%20paket%20Plus%20Xozen%20AI%20(15.000%20xoz%20token%2C%209%20model%2C%20Rp%205.000)" target="_blank" rel="noopener noreferrer">Pesan paket ini</a>
         </div>
         <div class="plan featured" data-glass="refract">
@@ -230,6 +221,16 @@
             <li>Plan AI 5.000 token/hari</li>
             <li>Satu saldo token 30.000 xoz</li>
           </ul>
+          <div class="pm-label">Model di paket ini</div>
+          <div class="pm-models">
+            <div class="mcard"><b>glm-5.3-flashx</b><span>Flash</span></div>
+            <div class="mcard"><b>gpt-5.6</b><span>Unggulan</span></div>
+            <div class="mcard"><b>kimi-k2.8</b><span>Kode</span></div>
+            <div class="mcard"><b>mimo-v2.6-pro</b><span>Kode</span></div>
+            <div class="mcard"><b>deepseek-v4-pro</b><span>Penalaran</span></div>
+            <div class="mcard"><b>v4-flash-vision-exp</b><span>Vision</span></div>
+            <a class="mcard more" href="pricing/index.html#pro"><b>+25 lainnya</b><span>Daftar 31 model</span></a>
+          </div>
           <a class="btn primary" href="https://wa.me/6289523042979?text=Halo%20admin%2C%20saya%20mau%20paket%20Pro%20Xozen%20AI%20(30.000%20xoz%20token%2C%2031%20model%2C%20Plan%20AI%205.000%20token%2Fhari%2C%20Rp%2010.000)" target="_blank" rel="noopener noreferrer">Pesan paket ini</a>
         </div>
         <div class="plan">
@@ -241,6 +242,15 @@
             <li>Plan AI 15.000 token/hari</li>
             <li>Tiga pin obrolan aktif</li>
           </ul>
+          <div class="pm-label">Model di paket ini</div>
+          <div class="pm-models">
+            <div class="mcard"><b>Xozen Code</b><span>Kode</span></div>
+            <div class="mcard"><b>gpt-5.6</b><span>Unggulan</span></div>
+            <div class="mcard"><b>glm-5.3-flashx-mod</b><span>Flash</span></div>
+            <div class="mcard"><b>deepseek-v4.1-flash</b><span>Cepat</span></div>
+            <div class="mcard"><b>kimi-k3-mod</b><span>Varian</span></div>
+            <a class="mcard more" href="pricing/index.html#ultracoder"><b>Semua model</b><span>41+ terbuka</span></a>
+          </div>
           <a class="btn" href="https://wa.me/6289523042979?text=Halo%20admin%2C%20saya%20mau%20paket%20Ultra%20Coder%20Xozen%20AI%20(50.000%20xoz%20token%2C%20semua%20model%2C%203%20pin%2C%20Plan%20AI%2015.000%20token%2Fhari%2C%20Rp%2020.000)" target="_blank" rel="noopener noreferrer">Pesan paket ini</a>
         </div>
       </div>
@@ -355,5 +365,6 @@
 <script src="site.js?v=chooser-1"></script>
 <script src="reveal.js" defer></script>
 <script src="glass.js?v=2"></script>
+<script src="laser-flow.js" defer></script>
 </body>
 </html>

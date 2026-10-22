@@ -278,3 +278,42 @@ body.full-slides main>section>.wrap{width:100%}
   html:has(body.full-slides){scroll-snap-type:y proximity}
 }
 @media (prefers-reduced-motion:reduce){html:has(body.full-slides){scroll-snap-type:none}}
+
+/* ==========================================================================
+   LaserFlow (ReactBits, port WebGL2) — latar semua section selain home.
+   Satu kanvas fixed full-viewport di belakang konten: saat slide bergeser
+   ke bawah, cahayanya ikut "menyinari" .wrap section yang aktif
+   (target di-set dari site.js supaya bergerak sejalan dengan slide).
+   ========================================================================== */
+.laser-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .8s ease}
+.laser-bg canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.laser-bg.on{opacity:1}
+.laser-veil{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .8s ease;
+  background:linear-gradient(180deg,var(--bg) 0%,rgba(7,11,24,.6) 16%,rgba(7,11,24,.18) 30%,transparent 44%),
+             linear-gradient(0deg,rgba(7,11,24,.55) 0%,transparent 24%)}
+.laser-veil.on{opacity:1}
+
+/* konten harus menyala di atas kanvas laser supaya terbaca */
+main>section{position:relative;z-index:1}
+footer.site-foot{position:relative;z-index:1}
+
+/* sinar jatuh pada section aktif: lapisan cahaya lembut di belakang isinya */
+main>section::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .8s ease;
+  background:radial-gradient(72% 62% at 50% 46%,rgba(111,123,255,.14),rgba(111,123,255,.05) 55%,transparent 76%)}
+main>section.lit::before{opacity:1}
+@media (prefers-reduced-motion:reduce){
+  .laser-bg,.laser-veil,main>section::before{transition:none}
+  .laser-bg{display:none}
+}
+
+/* ---------- kartu model mini di dalam kartu plan ---------- */
+.pm-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.pm-models{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.mcard{display:flex;flex-direction:column;gap:2px;min-width:0;padding:8px 10px;border-radius:12px;
+  border:1px solid rgba(111,123,255,.3);background:rgba(111,123,255,.1);text-decoration:none}
+.mcard b{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mcard span{font-size:10.5px;line-height:1.3;color:var(--faint)}
+.mcard.more{justify-content:center;gap:1px;border-style:dashed;background:rgba(111,123,255,.05)}
+.mcard.more b{color:var(--brand-2)}
+a.mcard:hover,.mcard.more:hover{text-decoration:none;border-color:rgba(53,214,255,.55)}
+@media (max-width:640px){.pm-models{gap:6px}.mcard{padding:7px 9px}}

@@ -182,3 +182,55 @@
     else { renderStatic(); setTimeout(function () { clearAll(); loop(); }, 2600); }
   }
 })();
+
+/* ============ LaserFlow: cahaya mengikuti section aktif (landing) ============ */
+(function () {
+  "use strict";
+  function start() {
+    var bg = document.querySelector(".laser-bg");
+    var veil = document.querySelector(".laser-veil");
+    var sections = Array.prototype.slice.call(document.querySelectorAll("body.full-slides main>section"));
+    if (!bg || !sections.length) return;
+    var hero = document.getElementById("landing-ai") || sections[1];
+    var activeIdx = -2;
+    function pick() {
+      var lf = bg._laserFlow && bg._laserFlow.setTarget ? bg._laserFlow : null;
+      var mid = window.innerHeight * 0.56;
+      var idx = -1, i, r;
+      for (i = 0; i < sections.length; i++) {
+        r = sections[i].getBoundingClientRect();
+        if (r.top <= mid && r.bottom > mid) { idx = i; break; }
+      }
+      if (idx < 0) idx = sections[sections.length - 1].getBoundingClientRect().top <= mid ? sections.length - 1 : 0;
+      var pastHome = hero.getBoundingClientRect().bottom <= window.innerHeight * 0.72;
+      var waiting = document.body.classList.contains("awaiting-service");
+      var zone = pastHome && !waiting && idx >= 2;
+      bg.classList.toggle("on", !!(zone && lf));
+      if (veil) veil.classList.toggle("on", !!zone);
+      if (lf) {
+        if (zone) {
+          lf.setTarget(sections[idx].querySelector(".wrap") || sections[idx]);
+          lf.show();
+        } else {
+          lf.hide();
+        }
+      }
+      if (activeIdx !== idx) {
+        for (i = 0; i < sections.length; i++) sections[i].classList.toggle("lit", !!(zone && i === idx));
+        activeIdx = idx;
+      }
+    }
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { ticking = false; pick(); });
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    document.addEventListener("DOMContentLoaded", pick);
+    pick();
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+  else start();
+})();
