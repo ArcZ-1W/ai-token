@@ -7,11 +7,12 @@ Situs statis (HTML/CSS/JS biasa). Tidak perlu build tool: cukup unggah berkasnya
 
 | URL | Berkas | Isi |
 |---|---|---|
-| `/` | `index.html` | Pemilih layanan; Xozen AI membuka landing page AI yang ada, ArcZ Community membuka halaman chat |
-| `/ai/` | `ai/index.html` | **Aplikasi AI** (chat, login, verifikasi wajah, wizard admin, paket) |
+| `/` | `index.html` | Pemilih layanan; Xozen AI membuka landing page AI yang ada, ArcZ Community membuka halaman chat, Xozen Planner membuka Plan AI |
+| `/ai/` | `ai/index.html` | **Aplikasi AI** (chat, login, verifikasi wajah, wizard admin, paket Basic/Plus/Pro/Ultra Coder + Plan AI) |
 | `/community/` | `community/index.html` | **ArcZ Community** (akun email/password terpisah dari login Xozen AI dan chat realtime) |
+| `/plan/` | `plan/index.html` | **Xozen Planner (Plan AI)** — ubah ide fitur jadi rencana siap build; masuk lewat akun Xozen AI, kuota harian Pro/Ultra Coder |
 | `/free/` | `free/index.html` | Chat gratis MinimumLite dengan akun sementara anonim |
-| `/pricing/` | `pricing/index.html` | Halaman harga lengkap: 6 paket Basic/Best, daftar model, paket Ultra, FAQ |
+| `/pricing/` | `pricing/index.html` | Halaman harga lengkap: Basic gratis, Plus, Pro, Ultra Coder, daftar model, FAQ |
 | `/blog/` | `blog/index.html` | Daftar artikel |
 | `/blog/cara-menulis-prompt.html` | | Artikel: cara menulis prompt |
 | `/blog/memilih-model-coding.html` | | Artikel: memilih model untuk coding |
@@ -57,6 +58,7 @@ glass-app.css
 robots.txt
 ai/              (aplikasi AI)
 community/       (chat ArcZ Community)
+plan/            (Xozen Planner / Plan AI)
 free/            (MinimumLite gratis)
 pricing/
 blog/
@@ -67,6 +69,7 @@ blog/
 | Berkas/folder | Alasan |
 |---|---|
 | `supabase-member-plan.sql` | skrip database (tidak untuk publik) |
+| `supabase-member-plan-v2.sql` | skrip database v2 — paket baru + kuota Plan AI (tidak untuk publik) |
 | `supabase-member-models.sql` | skrip database (tidak untuk publik) |
 | `community/schema.sql` | skrip database (tidak untuk publik) |
 | `_internal/` | arsip lama, tangkapan layar, dan skrip uji lokal |

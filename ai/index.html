@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Xozen AI</title>
 <!-- pratinjau saat tautan dibagikan (WhatsApp, Telegram, Facebook, X, Discord) -->
-<meta name="description" content="Xozen AI — asisten AI dalam satu aplikasi. Chat cepat dengan banyak pilihan model (kimi, glm, deepseek, gpt, dan lainnya). Paket Basic mulai Rp 3.000.">
+<meta name="description" content="Xozen AI — asisten AI dalam satu aplikasi. Chat cepat dengan banyak pilihan model (kimi, glm, deepseek, gpt, dan lainnya). Paket mulai gratis: Basic 7.000 xoz token, Plus Rp 5.000, Pro Rp 10.000, Ultra Coder Rp 20.000.">
 <meta name="theme-color" content="#0b1020">
 <meta name="application-name" content="Xozen AI">
 <meta name="apple-mobile-web-app-title" content="Xozen AI">
@@ -15,14 +15,14 @@
 <meta property="og:site_name" content="Xozen AI">
 <meta property="og:locale" content="id_ID">
 <meta property="og:title" content="Xozen AI — Asisten AI dalam Satu Aplikasi">
-<meta property="og:description" content="Chat cepat dengan banyak pilihan model AI, langsung dari browser tanpa install. Paket Basic mulai Rp 3.000, paket Best Value mulai Rp 5.000.">
+<meta property="og:description" content="Chat cepat dengan banyak pilihan model AI, langsung dari browser tanpa install. Paket mulai gratis (Basic 7.000 xoz token), Plus Rp 5.000, Pro Rp 10.000, Ultra Coder Rp 20.000.">
 <meta property="og:image" content="https://i.ibb.co.com/FbP0jzwp/20261014-235038.jpg">
 <meta property="og:image:secure_url" content="https://i.ibb.co.com/FbP0jzwp/20261014-235038.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:alt" content="Xozen AI">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Xozen AI — Asisten AI dalam Satu Aplikasi">
-<meta name="twitter:description" content="Chat cepat dengan banyak pilihan model AI, langsung dari browser tanpa install. Paket Basic mulai Rp 3.000.">
+<meta name="twitter:description" content="Chat cepat dengan banyak pilihan model AI, langsung dari browser tanpa install. Paket mulai gratis (Basic 7.000 xoz token).">
 <meta name="twitter:image" content="https://i.ibb.co.com/FbP0jzwp/20261014-235038.jpg">
 <meta name="twitter:image:alt" content="Xozen AI">
 
@@ -182,6 +182,11 @@ body{
 .q-refresh.spin svg{animation:qspin .8s linear infinite}
 @keyframes qspin{to{transform:rotate(360deg)}}
 .q-num{font-size:25px;font-weight:650;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.2;margin-top:2px}
+/* bar progres pemakaian saldo token: 50% terpakai = bar setengah berisi */
+.qbar{margin-top:6px;height:6px;border-radius:999px;overflow:hidden;background:rgba(128,128,128,.25)}
+.qbar i{display:block;height:100%;width:0;border-radius:999px;background:var(--accent);transition:width .45s ease}
+.qbar.warn{background:rgba(224,160,63,.28)}.qbar.warn i{background:#e0a03f}
+.qbar.crit{background:rgba(224,91,91,.28)}.qbar.crit i{background:#e05b5b}
 .q-num small{font-size:13px;color:var(--ink-dim);font-weight:500;margin-left:5px;letter-spacing:0}
 .q-bar{height:11px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden;margin:10px 0 9px;box-shadow:inset 0 1px 3px rgba(0,0,0,.4)}
 .q-fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 0 14px rgba(53,214,255,.55),inset 0 1px 0 rgba(255,255,255,.45);transition:width .9s cubic-bezier(.2,.8,.2,1)}
@@ -367,6 +372,12 @@ textarea::placeholder{color:var(--ink-faint)}
 .send:disabled{opacity:.4;cursor:not-allowed}
 .send svg{width:18px;height:18px}
 .foot-note{text-align:center;font-size:12px;color:var(--ink-faint);margin-top:8px}
+/* kotak kecil (tipe hasil & mode berkas) + baris lampiran terpisah */
+.cmini{flex:none;height:38px;padding:0 10px;border-radius:12px;border:1px solid var(--glass-edge);background:var(--glass);color:var(--ink);font:inherit;font-size:12.5px;cursor:pointer}
+.att-row{max-width:780px;margin:8px auto 0;display:flex;align-items:flex-start;gap:8px}
+.att-row .chips{flex:1;max-width:none;margin:0;display:none;flex-wrap:wrap;gap:6px}
+.att-row .cmini{margin-left:auto}
+@media (max-width:560px){.att-row{flex-wrap:wrap}.att-row .cmini{width:100%;margin-left:0}}
 
 /* dialog */
 dialog{margin:auto;border:0;background:none;color:var(--ink);width:min(480px,calc(100vw - 28px))}
@@ -380,8 +391,12 @@ dialog::backdrop{background:rgba(4,6,16,.55);backdrop-filter:blur(6px)}
 }
 .field textarea{min-height:80px;resize:vertical}
 .field input[type=range]{width:100%;accent-color:var(--accent)}
-.download-file{margin-top:6px;padding-left:4px;display:flex;gap:8px;flex-wrap:wrap}
-.download-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:var(--ink);font:inherit;font-size:12.8px;cursor:pointer}
+.download-file{margin-top:8px;padding-left:0;display:flex;gap:8px;flex-wrap:wrap}
+.download-btn{display:inline-flex;align-items:center;gap:10px;padding:11px 16px;border-radius:14px;border:1px solid rgba(130,170,255,.38);background:linear-gradient(180deg,rgba(120,160,255,.30),rgba(70,100,230,.20));color:var(--ink);font:inherit;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 2px 12px rgba(80,120,255,.22),inset 0 1px 0 rgba(255,255,255,.25);transition:transform .16s ease,box-shadow .2s ease,filter .2s ease}
+.download-btn:hover{transform:translateY(-1px);filter:brightness(1.07);box-shadow:0 5px 18px rgba(80,120,255,.32)}
+.download-btn:active{transform:translateY(0);filter:brightness(.97)}
+.download-btn.zip{border-color:rgba(160,200,255,.30);background:linear-gradient(180deg,rgba(150,190,255,.22),rgba(60,90,190,.16))}
+.download-btn.zip:hover{filter:brightness(1.05)}
 .download-btn:hover{background:rgba(255,255,255,.16)}
 .download-btn.zip{border-color:rgba(53,214,255,.4);background:rgba(53,214,255,.12)}
 .row{display:flex;gap:10px;justify-content:flex-end;margin-top:6px;flex-wrap:wrap}
@@ -407,6 +422,9 @@ dialog::backdrop{background:rgba(4,6,16,.55);backdrop-filter:blur(6px)}
 
 /* pin */
 .item .pin{border:0;background:none;cursor:pointer;font-size:13px;line-height:1;padding:2px 4px;border-radius:6px;opacity:.4;filter:grayscale(1);flex:none}
+/* tombol edit nama obrolan (posisi lama tombol pin) */
+.item .rn{border:0;background:none;cursor:pointer;font-size:13px;line-height:1;padding:2px 4px;border-radius:6px;opacity:.4;filter:grayscale(1);flex:none}
+.item .rn:hover,.item .pin:hover{opacity:1;filter:none}
 .item .pin.on{opacity:1;filter:none}
 .item:hover .pin,.item .pin:focus-visible{opacity:1}
 .item .pin:hover{background:rgba(255,255,255,.1)}
@@ -797,8 +815,12 @@ html[data-theme^="neu"] .mpanel{box-shadow:var(--raise)}
 .mplan{font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(128,128,128,.2)}
 .mplan.xozen{background:var(--accent);color:#fff}
 .mplan.gratis{background:rgba(47,184,106,.24)}
-.mplan.basic{background:rgba(53,214,255,.24)}
-.mplan.best{background:rgba(143,123,255,.3)}
+.mplan.free{background:rgba(47,184,106,.24)}
+.mplan.plus{background:rgba(53,214,255,.24)}
+.mplan.pro{background:rgba(143,123,255,.3)}
+.mplan.ultra{background:var(--accent);color:#fff}
+.mplan.basic{background:rgba(128,128,128,.24)}
+.mplan.best{background:rgba(128,128,128,.24)}
 .mcheck{flex:none;width:20px;text-align:center;font-size:15px;color:var(--accent)}
 .mempty{grid-column:1/-1;padding:26px 6px;text-align:center;font-size:13.5px;color:var(--ink-faint)}
 .mfoot{padding:10px 18px 14px;border-top:1px solid var(--menu-line);font-size:12.5px;line-height:1.5;color:var(--ink-faint)}
@@ -876,8 +898,12 @@ html[data-theme^="neu"] .tcard{box-shadow:var(--raise)}
 .adm-note{margin:8px 0;padding:9px 12px;border-radius:12px;font-size:12.5px;line-height:1.55;background:rgba(128,128,128,.12);color:var(--ink-dim)}
 .adm-note.bad{color:var(--danger);box-shadow:inset 0 0 0 1px rgba(255,122,138,.42)}
 .wplan{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(128,128,128,.18);letter-spacing:.02em}
-.wplan.best{background:var(--accent);color:#fff}
+.wplan.best{background:rgba(143,123,255,.3)}
 .wplan.basic{background:rgba(47,184,106,.22)}
+.wplan.plus{background:rgba(53,214,255,.28)}
+.wplan.pro{background:rgba(143,123,255,.3)}
+.wplan.ultra{background:var(--accent);color:#fff}
+.wplan.free{background:rgba(47,184,106,.22)}
 .psel{font:inherit;font-size:12.5px;padding:6px 8px;border-radius:9px;border:1px solid var(--glass-edge);background:var(--glass);color:var(--ink);cursor:pointer}
 #wizDlg{width:min(780px,calc(100vw - 20px))}
 .wiz{position:relative;padding:20px 20px 16px;max-height:calc(100dvh - 28px);overflow-y:auto}
@@ -978,36 +1004,37 @@ html[data-theme^="neu"] .fthumb{box-shadow:var(--raise-xs);border:0}
     <img class="plogo" src="https://i.ibb.co.com/8gqQS0t0/xozen.png" alt="Logo Xozen AI" width="52" height="52">
     <div>
       <h2 id="priceTitle">Paket &amp; Harga Xozen AI</h2>
-      <p>Sekali bayar, kuota langsung aktif. Kuota dihitung dalam xoz token (1 limit = 1.000 xoz token); tiap pemakaian model memakai sejumlah token. Ingin mencoba dulu? Model <b>MinimumLite</b> gratis dan tidak memakai kuota.</p>
+              <p>Sekali setel, kuota langsung aktif. Kuota dihitung dalam <b>xoz token</b> dengan satu saldo token per paket: 1.000 token = 1 pemakaian; tampilan pemakaian per pesan tampak bervariasi seperti hitungan token model sungguhan. Paket <b>Pro</b> dan <b>Ultra Coder</b> juga mendapat kuota <b>Plan AI</b> harian di halaman <a href="../plan/index.html">Xozen Planner</a>. Ingin mencoba dulu? Model <b>MinimumLite</b> bebas tanpa kuota.</p>
       <p class="myplan" id="myPlan" hidden></p>
     </div>
   </div>
 
   <div class="psec">
-    <div class="psec-h"><b>Basic</b><span class="pbin">Hemat</span></div>
-    <p>Pas untuk pemakaian harian. Terbuka <b id="basicCount">9</b> model favorit yang paling sering dipakai.</p>
-    <div class="pgrid" id="planBasic"></div>
-    <div class="pchips" id="planBasicModels"></div>
+    <div class="psec-h"><b>Basic</b><span class="pbin">Gratis</span></div>
+    <p>Mulai tanpa biaya: <b>7.000 xoz token</b> dengan Xozen AI, MinimumLite, dan XozenLow. Tanpa pin.</p>
+    <div class="pgrid" id="planFree"></div>
+    <div class="pchips" id="planFreeModels"></div>
   </div>
 
   <div class="psec">
-    <div class="psec-h"><b>Best Value</b><span class="pbin">Paling untung</span></div>
-    <p>Kuota lebih lega plus akses <b id="bestCount">31</b> model, termasuk seri deepseek-v4, glm-5.3-flashx, dan gpt-5.6.</p>
-    <div class="pgrid" id="planBest"></div>
-    <details class="pmodels"><summary id="bestSummary">Lihat 31 model yang bisa dipakai</summary><div class="pchips" id="planBestModels"></div></details>
+    <div class="psec-h"><b>Plus</b><span class="pbin">Terlaris</span></div>
+    <p>Satu saldo token <b>15.000 xoz token</b> dengan <b id="plusCount">9</b> model favorit dari daftar Basic lama.</p>
+    <div class="pgrid" id="planPlus"></div>
+    <div class="pchips" id="planPlusModels"></div>
   </div>
 
   <div class="psec">
-    <div class="psec-h"><b>Ultra</b><span class="pbin">Custom</span></div>
-    <p>Butuh kuota besar, akses penuh semua model, atau paket khusus untuk tim? Semuanya bisa diatur sesuai kebutuhan Anda.</p>
-    <div class="pgrid">
-      <div class="pcard wide">
-        <div class="pname">Paket Ultra (custom)</div>
-        <div class="pmeta">Kuota, model, dan masa aktif menyesuaikan kebutuhan</div>
-        <div class="pprice">Hubungi admin<small>via WhatsApp</small></div>
-        <a class="btn primary pbuy" href="https://wa.me/6289523042979?text=Halo%20admin%2C%20saya%20mau%20tanya%20paket%20Ultra%20Xozen%20AI.%20Boleh%20dibantu%20info%20kuota%2C%20model%2C%20dan%20harganya%3F" target="_blank" rel="noopener noreferrer">Chat admin di WhatsApp</a>
-      </div>
-    </div>
+    <div class="psec-h"><b>Pro</b><span class="pbin">Plan AI</span></div>
+    <p>Saldo <b>30.000 xoz token</b>, akses <b id="proCount">31</b> model termasuk Xozen Code, gpt-5.6 dan vision, plus <b>Plan AI 5.000 token/hari</b>.</p>
+    <div class="pgrid" id="planPro"></div>
+    <details class="pmodels"><summary id="proSummary">Lihat 31 model yang bisa dipakai</summary><div class="pchips" id="planProModels"></div></details>
+  </div>
+
+  <div class="psec">
+    <div class="psec-h"><b>Ultra Coder</b><span class="pbin">Terbuka semua</span></div>
+    <p><b>50.000 xoz token</b>, semua model AI terbuka, <b>3 pin</b>, dan <b>Plan AI 15.000 token/hari</b>.</p>
+    <div class="pgrid" id="planUltra"></div>
+    <div class="pchips" id="planUltraModels"></div>
   </div>
 
   <div class="pnote">Harga dalam Rupiah. Pembayaran dan aktivasi akun diproses manual oleh admin: setelah transfer, kirim bukti pembayaran ke WhatsApp admin agar akun Anda segera dibuatkan.</div>
@@ -1068,9 +1095,11 @@ html[data-theme^="neu"] .fthumb{box-shadow:var(--raise-xs);border:0}
         <button class="q-refresh" id="qRefresh" type="button" aria-label="Muat ulang sisa token"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
       </div>
       <div class="q-num" id="qNum">—</div>
+      <div class="qbar" id="qbar" aria-hidden="true"><i id="qbarFill"></i></div>
       <div class="q-meta" id="qMeta"><span>Memuat…</span></div>
     </div>
     <div class="side-foot">
+      <a class="btn" id="planAILink" href="../plan/index.html" title="Xozen Planner (Plan AI)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg><span>Plan AI</span></a>
       <a class="btn" id="homeLink" href="../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg><span>Beranda</span></a>
       <button class="btn" id="openSettings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg><span>Pengaturan</span></button>
       <button class="btn" id="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4"/></svg><span>Keluar</span></button>
@@ -1092,12 +1121,15 @@ html[data-theme^="neu"] .fthumb{box-shadow:var(--raise-xs);border:0}
         <button type="button" id="jTop" aria-label="Ke awal jawaban terbaru" title="Awal jawaban terbaru"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11l6-6 6 6M6 19l6-6 6 6"/></svg></button>
         <button type="button" id="jBot" aria-label="Ke paling bawah" title="Paling bawah"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5l6 6 6-6M6 13l6 6 6-6"/></svg></button>
       </div>
-      <div class="chips" id="chips"></div>
       <div class="box">
         <input type="file" id="fileIn" multiple hidden>
-        <button type="button" class="attach" id="attachBtn" aria-label="Lampirkan file" title="Lampirkan file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11l-8.6 8.6a5 5 0 0 1-7-7l8.6-8.6a3.4 3.4 0 0 1 5 5L10.3 17.6a1.8 1.8 0 0 1-2.5-2.5L15 8"/></svg></button>
         <textarea id="input" rows="1" placeholder="Tulis pesan…" aria-label="Pesan"></textarea>
         <button class="send" id="send" aria-label="Kirim"></button>
+        <button type="button" class="attach" id="attachBtn" aria-label="Tempel lampiran" title="Tempel lampiran (gambar/file)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11l-8.6 8.6a5 5 0 0 1-7-7l8.6-8.6a3.4 3.4 0 0 1 5 5L10.3 17.6a1.8 1.8 0 0 1-2.5-2.5L15 8"/></svg></button>
+      </div>
+      <div class="att-row">
+        <div class="chips" id="chips"></div>
+        <select id="sFileMode" class="cmini" aria-label="Mode jawaban berkas" title="File only = hanya file unduhan. Progress + file = jawaban + file unduhan. Progress only = jawaban biasa saja."><option value="progress">Progress only</option><option value="progress_file">Progress + file</option><option value="file_only">File only</option></select>
       </div>
       <div class="foot-note">Enter untuk kirim, Shift+Enter untuk baris baru</div>
     </div>
@@ -1110,7 +1142,7 @@ html[data-theme^="neu"] .fthumb{box-shadow:var(--raise-xs);border:0}
   <div class="adm-new-adm">
     <button class="btn primary" type="button" id="wizOpen">+ Buat akun baru (wizard paket)</button>
     <button class="btn" type="button" id="tourAdminDash">Tur admin</button>
-    <span>Template Basic/Best sudah tersedia: kuota, harga, dan akses model terisi otomatis.</span>
+    <span>Template Basic / Plus / Pro / Ultra Coder sudah tersedia: kuota, harga, Plan AI, dan akses model terisi otomatis.</span>
   </div></form>
   <div class="adm-sec"><div class="adm-h"><b>Model AI</b><div class="adm-ctl"><button class="mini" type="button" id="mFetch">Ambil semua dari API</button><button class="mini del" type="button" id="mClear">Hapus semua</button></div></div><div class="adm-model-pick"><select id="mOneSelect" aria-label="Pilih satu model dari API" disabled><option value="">Muat daftar model terlebih dahulu</option></select><button class="mini" type="button" id="mOneFetch">Muat daftar</button><button class="mini" type="button" id="mOneAdd" disabled>Tambah satu</button></div><div class="mlist" id="mList"></div></div>
   <div class="adm-err" id="admErr" role="alert"></div>
@@ -1193,11 +1225,7 @@ html[data-theme^="neu"] .fthumb{box-shadow:var(--raise-xs);border:0}
     </div>
     <div class="settings-section"><h3>File jawaban</h3></div>
     <div class="settings-grid">
-    <div class="field span-2"><label for="sFileMode">Mode respons</label>
-      <select id="sFileMode"><option value="progress">Progress only (default)</option><option value="progress_file">Progress + file</option><option value="file_only">File send only</option></select>
-      <div class="adm-note">Progress only menampilkan jawaban biasa. Progress + file menampilkan jawaban dan file unduhan. File send only menampilkan file unduhan tanpa teks jawaban.</div>
-    </div>
-    <div class="field"><label for="sFileFormat">Format file default</label><select id="sFileFormat"><option value="txt">txt</option><option value="md">md</option><option value="json">json</option><option value="html">html</option><option value="csv">csv</option><option value="js">js</option><option value="py">py</option><option value="css">css</option></select></div>
+    <div class="field"><label for="sFileFormat">Tipe file hasil unduhan</label><select id="sFileFormat"><option value="txt">txt</option><option value="md">md</option><option value="json">json</option><option value="html">html</option><option value="csv">csv</option><option value="js">js</option><option value="py">py</option><option value="css">css</option></select><div class="adm-note">Tipe file yang dibuat dari jawaban (txt, md, json, dst.). Mode <b>File only / Progress + file / Progress only</b> tersedia di baris lampiran chat.</div></div>
     </div>
     <div class="settings-section"><h3>Media</h3></div>
     <div class="field">
@@ -1233,7 +1261,6 @@ var DEFAULTS={
   apiKey:"",
   system:"",
   temp:0.7,
-  model:"glm-5.3",
   model:"auto",           /* bawaan: Xozen AI */
   theme:"glassold",
   fileResponseMode:"progress",
@@ -1257,12 +1284,21 @@ var SUPA_URL="https://beqlxnlhvarjhkuxndmr.supabase.co";   /* contoh: https://ab
 var SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJlcWx4bmxodmFyamhrdXhuZG1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMjQ4ODgsImV4cCI6MjEwNjcwMDg4OH0.FxPj-dfPf6OnfPotgQxFafd7Fx9yIM6oqMm25xMRslw";   /* anon public key */
 var LITE_URL="https://api.siputzx.my.id/api/ai/gptoss120b";
 /* ---------- model bermask (alias branded) ---------- */
-/* "Xozen Code" dan "Xozen Mini" adalah nama untuk model yang sudah ada.
-   Request ke API tetap memakai model aslinya, dan model aslinya tetap
-   bisa dipilih sendiri lewat pemilih model. */
-var MODEL_MASK={"xozen-code":"kimi-k2.7-code-highspeed","xozen-mini":"hy3"};
-var MASK_LABEL={"xozen-code":"Xozen Code","xozen-mini":"Xozen Mini"};
-var BUILTIN_MODELS=["auto","minimumlite","xozen-code","xozen-mini"];
+/* "Xozen Code", "Xozen Mini", dan "XozenLow" adalah nama samaran untuk
+   model yang sudah ada. Request ke API tetap memakai model asli di nilai
+   pemetaan di bawah; di UI hanya nama samaran yang tampil. */
+var MODEL_MASK={"xozen-code":"kimi-k2.7-code-highspeed","xozen-low":"hy3","xozen-mini":"glm-5.3-flash"};
+var MASK_LABEL={"xozen-code":"Xozen Code","xozen-low":"XozenLow","xozen-mini":"Xozen Mini"};
+var BUILTIN_MODELS=["auto","minimumlite","xozen-code","xozen-low","xozen-mini"];
+function brandOfRaw(m){
+  if(MODEL_MASK[m])return null;
+  for(var k in MODEL_MASK)if(MODEL_MASK[k]===m)return k;
+  return null;
+}
+function dedupeBrands(list){
+  /* model mentah yang punya nama samaran disembunyikan; tampil lewat nama samaran */
+  return list.filter(function(m){return !brandOfRaw(m)});
+}
 var MODELS=BUILTIN_MODELS.slice();   /* daftar lengkap diambil dari Supabase */
 function realModel(m){return MODEL_MASK[m]||m}
 function isMask(m){return !!MODEL_MASK[m]}
@@ -1303,13 +1339,18 @@ function resolveSystemPrompt(makeItBetter){
   return prompt;
 }
 function xozenDownloadFilename(filename){
-  var basename=String(filename||"").replace(/\\/g,"/").split("/").pop()||"download.txt";
-  var dot=basename.lastIndexOf("."),ext=dot>0?basename.slice(dot+1).toLowerCase():"txt";
-  if(!/^[a-z0-9]+$/.test(ext))ext="txt";
-  return "("+ext+")XozenTemp"+Math.floor(Date.now()/1000)+"."+ext;
+  /* format penamaan: xozen_<detik>.<ekstensi> — ekstensi mengikuti tipe hasil yang dipilih */
+  var basename=String(filename||"").replace(/\\/g,"/").split("/").pop()||"file";
+  var dot=basename.lastIndexOf("."),ext=dot>0?basename.slice(dot+1).toLowerCase():"";
+  if(!/^[a-z0-9]{1,8}$/.test(ext))ext=normalizeFileFormat(settings.fileDownloadFormat);
+  return "xozen_"+Math.floor(Date.now()/1000)+"."+ext;
 }
 function parseFileDownloadPayload(raw){
-  if(!raw||typeof raw!=="string"||normalizeFileResponseMode(settings.fileResponseMode)==="progress")return {content:raw,files:[]};
+  if(!raw||typeof raw!=="string")return {content:raw,files:[]};
+  if(normalizeFileResponseMode(settings.fileResponseMode)==="progress"){
+    /* progress only: jawaban normal — blok file yang bocor dihapus dari tampilan */
+    return {content:String(raw).replace(/<FILE_DOWNLOAD>[\s\S]*?<\/FILE_DOWNLOAD>/gi,"").replace(/\n{3,}/g,"\n\n").trim(),files:[]};
+  }
   var matches=raw.matchAll(/<FILE_DOWNLOAD>\s*(\{[\s\S]*?\}|\[[\s\S]*?\])\s*<\/FILE_DOWNLOAD>/gi);
   var blocks=[];
   for(var m of matches){blocks.push(m[1]);}
@@ -1481,6 +1522,14 @@ function md(src){
 /* ---------- paket member: daftar model & template harga ---------- */
 /* ---------- xoz token: 1 limit = 1.000 xoz token, pemakaian dibagi acak (konsisten per akun) ---------- */
 var TOK=1000,tokCache={},tokFlash=null;
+var TOK_MAX_USES=999999;   /* nilai "maks" untuk saldo token (praktis tanpa batas di UI) */
+function isMaks(v){return +v>=TOK_MAX_USES-1}
+function limParse(v){
+  v=(v||"").trim().toLowerCase();
+  if(v==="maks"||v==="unlimited"||v==="\u221e")return TOK_MAX_USES;
+  var n=parseInt(v,10);
+  return !isNaN(n)&&n>=0?n:null;
+}
 function xozFmt(n){return Math.round(+n||0).toLocaleString("id-ID")}
 function tokHash(str){var h=2166136261;for(var i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
 function tokRng(seed){return function(){seed=(seed+0x6D2B79F5)|0;var t=Math.imul(seed^(seed>>>15),1|seed);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296}}
@@ -1501,7 +1550,8 @@ function tokUsed(user,kind,limit,used){
   for(var i=0;i<n;i++)s+=p[i];return s;
 }
 function tokRem(user,kind,limit,used){return Math.max(0,Math.max(0,Math.floor(+limit||0))*TOK-tokUsed(user,kind,limit,used))}
-function xozPair(x,y){return xozFmt(x*TOK)+" xoz token Xozen AI + "+xozFmt(y*TOK)+" xoz token model AI lain"}
+function xozPair(x){return xozFmt((+x||0)*TOK)+" xoz token \u00b7 satu saldo token"}
+function xozPool(n){return xozFmt(n*TOK)+" xoz token"}
 var PLAN_MODELS={
   basic:["kimi-k2.5","kimi-k2.6","kimi-k2.7-code","mimo-v2.5-pro","hy3","hy4","glm-5.3","glm-5.2","deepseek-v4-pro"],
   best:["deepseek-v4-flash","deepseek-v4-flash-0731","deepseek-v4-mod","deepseek-v4-pro","deepseek-v4-pro-0813","deepseek-v4.1-mod","glm-5.2","glm-5.2-mod","glm-5.3","glm-5.3-mod","hy3","hy4","kimi-k2.5","kimi-k2.6","kimi-k2.7-code","kimi-k2.7-code-highspeed","mimo-v2.5-pro","deepseek-v4-flash-vision-exp","deepseek-v4.1-flash","glm-5.3-flash","glm-5.3-flash-mod","glm-5.3-flashx","glm-5.3-flashx-mod","gpt-5.6","gpt-5.6-luna","gpt-5.6-luna-b","kimi-k2.8","kimi-k3-mod","mimo-v2.6-flash","mimo-v2.6-pro","step-5-preview"],
@@ -1516,32 +1566,80 @@ var PLAN_TEMPLATES=[
   {plan:"best",x:15,y:5,price:"Rp 7.000",tag:"Paling pas",best:true},
   {plan:"best",x:20,y:8,price:"Rp 10.000"}
 ];
+/* ---------- paket baru v2: satu saldo token (1.000 token = 1 pemakaian) ---------- */
+var NEW_PLANS={
+  free:{tokens:7, price:"Gratis",   pins:0, planai:0,  tag:"Mulai gratis"},
+  plus:{tokens:15,price:"Rp 5.000", pins:1, planai:0,  tag:"Terlaris",best:true},
+  pro:{tokens:30, price:"Rp 10.000",pins:1, planai:5,  tag:"Plan AI 5.000 token/hari"},
+  ultra:{tokens:50,price:"Rp 20.000",pins:3,planai:15, tag:"Semua model terbuka"}
+};
+var FREE_MODELS=["auto","minimumlite","xozen-low"];
+var PLUS_MODELS=FREE_MODELS.concat(["xozen-mini"],PLAN_MODELS.basic);
+var PRO_MODELS=FREE_MODELS.concat(["xozen-mini","xozen-code"],PLAN_MODELS.best);
+function isNewPlan(p){return p==="free"||p==="plus"||p==="pro"||p==="ultra"}
+function planCount(p){
+  var m=planModels(p);
+  if(!m)return dedupeBrands(MODELS).length;
+  var n=0;
+  m.forEach(function(x){if(MODEL_MASK[x]||!brandOfRaw(x))n++});
+  return n;
+}
+function planChipsDisplay(list){
+  /* teks chip = nama tampilan: nama samaran menggantikan model mentah yang duplikat */
+  var out=[];
+  list.forEach(function(m){
+    if(MODEL_MASK[m]){if(out.indexOf(MASK_LABEL[m])<0)out.push(MASK_LABEL[m]);return}
+    var mid=brandOfRaw(m);
+    if(mid){if(out.indexOf(MASK_LABEL[mid])<0)out.push(MASK_LABEL[mid]);return}
+    if(out.indexOf(m)<0)out.push(m);
+  });
+  return out;
+}
+function planModels(p){
+  if(p==="free")return FREE_MODELS.slice();
+  if(p==="plus")return PLUS_MODELS.slice();
+  if(p==="pro")return PRO_MODELS.slice();
+  if(p==="ultra")return null;                       /* semua model terbuka */
+  return PLAN_MODELS[p]||PLAN_MODELS.basic;         /* paket lama */
+}
+function planLabel(p){return p==="free"?"Basic":p==="plus"?"Plus":p==="pro"?"Pro":p==="ultra"?"Ultra Coder":p==="best"?"Best Value (lama)":p==="basic"?"Basic (lama)":"belum diset"}
+function planName(p){return p==="admin"?"Admin":planLabel(p)+" ("+planCount(p)+" model)"}
 var WA_ADMIN="6289523042979";
 var memberPlan=null,planFromServer=false,planApiOk=true,memberCustomModels=[];
-function planLabel(p){return p==="best"?"Best Value":p==="basic"?"Basic":"belum diset"}
-function planCount(p){return (PLAN_MODELS[p]||[]).length}
-function planName(p){return p==="admin"?"Admin":planLabel(p)+" ("+planCount(p)+" model)"}
 function planFromLimits(la,lo){
   var hit=null;
   PLAN_TEMPLATES.forEach(function(t){if(t.x===+la&&t.y===+lo&&(!hit||t.plan==="best"))hit=t.plan});
   return hit||"basic";
 }
 function allowedModels(){
-  if(!session||session.admin||!memberPlan)return MODELS.filter(function(m){return !isMask(m)||MODELS.indexOf(realModel(m))>-1});
-  var white=PLAN_MODELS[memberPlan]||[];
+  if(!session||session.admin||!memberPlan)return dedupeBrands(MODELS.filter(function(m){return !isMask(m)||MODELS.indexOf(realModel(m))>-1}));
+  var white=planModels(memberPlan);
+  if(!white){   /* paket Ultra Coder: semua model terbuka */
+    return dedupeBrands(MODELS.filter(function(m){var r=realModel(m);return !isMask(m)||MODELS.indexOf(r)>-1}));
+  }
   return MODELS.filter(function(m){
     if(m==="auto"||m==="minimumlite")return true;
-    var r=realModel(m);
-    if(isMask(m)&&MODELS.indexOf(r)<0)return false;   /* model aslinya sudah dihapus admin */
-    return white.indexOf(r)>-1||memberCustomModels.indexOf(r)>-1;
+    if(MODEL_MASK[m]){   /* brand khusus: hanya bila model aslinya masih ada */
+      if(MODELS.indexOf(realModel(m))<0)return false;
+      return white.indexOf(m)>-1||white.indexOf(realModel(m))>-1;
+    }
+    var mid=brandOfRaw(m);
+    if(mid)return white.indexOf(mid)>-1||memberCustomModels.indexOf(m)>-1;   /* tampil lewat nama samaran */
+    return white.indexOf(m)>-1||(MODELS.indexOf(m)>-1&&memberCustomModels.indexOf(m)>-1);
   });
 }
 function modelAllowed(m){
   if(!session||session.admin||!memberPlan)return !isMask(m)||MODELS.indexOf(realModel(m))>-1;
+  var white=planModels(memberPlan);
+  if(!white)return !isMask(m)||MODELS.indexOf(realModel(m))>-1;   /* Ultra Coder */
   if(m==="auto"||m==="minimumlite")return true;
-  var r=realModel(m);
-  if(isMask(m)&&MODELS.indexOf(r)<0)return false;
-  return (PLAN_MODELS[memberPlan]||[]).indexOf(r)>-1||(MODELS.indexOf(r)>-1&&memberCustomModels.indexOf(r)>-1);
+  if(MODEL_MASK[m]){   /* brand khusus */
+    if(MODELS.indexOf(realModel(m))<0)return false;
+    return white.indexOf(m)>-1||white.indexOf(realModel(m))>-1;
+  }
+  var mid=brandOfRaw(m);
+  if(mid)return white.indexOf(mid)>-1||white.indexOf(m)>-1||memberCustomModels.indexOf(m)>-1;
+  return white.indexOf(m)>-1||(MODELS.indexOf(m)>-1&&memberCustomModels.indexOf(m)>-1);
 }
 async function resolveMemberModels(){
   memberCustomModels=[];
@@ -1557,11 +1655,12 @@ async function resolvePlan(){
   var got=null;
   try{
     var r=await rpc("app_plan_get",{u:session.u,p:session.p});
-    if(r&&r.plan)got=(r.plan==="best"?"best":"basic");
+    if(r&&r.plan)got=(["basic","best","free","plus","pro","ultra"].indexOf(r.plan)>-1?r.plan:null);
     planApiOk=true;
   }catch(e){if(handleAuthErr(e))return;planApiOk=false}
   planFromServer=!!got;memberPlan=got||planFromLimits(session.la,session.lo);
   await resolveMemberModels();
+  planaiGet();
   renderModels();
 }
 function renderModels(){
@@ -1570,19 +1669,68 @@ function renderModels(){
   list.forEach(function(m){var o=document.createElement("option");o.value=m;o.textContent=mlabel(m);modelSel.appendChild(o)});
   var c=active(),want=(c&&c.model)||settings.model;if(list.indexOf(want)<0)want="auto";modelSel.value=want;syncDD();
 }
-function canPin(){return !!session&&(session.admin||pinLimit>0)}
+var planaiState=null;
+function planaiCap(){var p=session&&!session.admin?NEW_PLANS[memberPlan]:null;return p&&p.planai>0?+p.planai:0}
+async function planaiGet(){
+  if(!session||session.admin){planaiState=null;return}
+  var cap=planaiCap();
+  if(!cap){planaiState={daily:0,used:0,remaining:0};return}
+  try{
+    var r=await rpc("app_planai_get",{u:session.u,p:session.p,t:session.t});
+    if(r&&r.daily!==undefined)planaiState=r;else planaiState={daily:cap,used:0,remaining:cap};
+  }catch(e){handleAuthErr(e);planaiState={daily:cap,used:0,remaining:cap}}
+  showAcct();
+}
+async function planaiSpendShow(){
+  if(!session||session.admin)return;
+  var cap=planaiCap();if(!cap)return;
+  var amt=800+Math.floor(Math.random()*400);   /* 800..1.199 token, "terasa" seperti hitungan model asli */
+  var local=null;
+  if(planaiState&&planaiState.daily!==0)local=planaiState;   /* >0 kuota penuh, <0 tanpa batas */
+  else local={daily:cap,used:0,remaining:cap};
+  if(planaiState&&planaiState.daily<0){   /* admin set "maks": catat pakai, tanpa klamp */
+    try{var xr=await rpc("app_planai_spend",{u:session.u,p:session.p,t:session.t,n:amt});if(xr&&xr.remaining!==undefined)planaiState=xr;else planaiState={daily:-1,used:(local.used||0)+amt,remaining:-1}}
+    catch(e){if(!handleAuthErr(e))planaiState={daily:-1,used:(local.used||0)+amt,remaining:-1}}
+    showAcct();return;
+  }
+  try{
+    var r=await rpc("app_planai_spend",{u:session.u,p:session.p,t:session.t,n:amt});
+    if(r&&r.remaining!==undefined)planaiState=r;
+    else planaiState={daily:local.daily,used:(local.used||0)+amt,remaining:Math.max(0,local.remaining-amt)};
+  }catch(e){
+    if(!handleAuthErr(e))planaiState={daily:local.daily,used:(local.used||0)+amt,remaining:Math.max(0,local.remaining-amt)};
+    return;
+  }
+  showAcct();
+}
+function planaiLeft(){return planaiState?(planaiState.daily>0?+(planaiState.remaining||0):null):null}
+function canPin(){
+  if(!session)return false;
+  if(session.admin)return true;
+  if(isNewPlan(memberPlan))return NEW_PLANS[memberPlan].pins>0;
+  return pinLimit>0;
+}
+function pinCap(){
+  if(!session)return 0;
+  if(session.admin)return Infinity;
+  if(isNewPlan(memberPlan))return NEW_PLANS[memberPlan].pins;
+  return pinLimit>0?pinLimit:0;
+}
 function renderHist(){
   hist.innerHTML="";
   function label(t){var l=document.createElement("div");l.className="hist-label";l.textContent=t;hist.appendChild(l)}
   function row(c){
     var d=document.createElement("div");d.className="item"+(c.id===activeId?" on":"");d.setAttribute("role","listitem");d.tabIndex=0;
-    var s=document.createElement("span");s.textContent=c.title;d.appendChild(s);
     if(canPin()||c.pinned){
       var pn=document.createElement("button");pn.className="pin"+(c.pinned?" on":"");pn.type="button";pn.textContent="\uD83D\uDCCC";
       pn.setAttribute("aria-pressed",c.pinned?"true":"false");pn.setAttribute("aria-label",(c.pinned?"Lepas pin ":"Pin ")+c.title);
       pn.title=c.pinned?"Lepas pin":"Pin: simpan di server";
       pn.onclick=function(e){e.stopPropagation();togglePin(c)};d.appendChild(pn);
     }
+    var s=document.createElement("span");s.textContent=c.title;d.appendChild(s);
+    var rn=document.createElement("button");rn.className="rn";rn.type="button";rn.textContent="\u270f";
+    rn.setAttribute("aria-label","Edit nama obrolan "+c.title);rn.title="Edit nama obrolan";
+    rn.onclick=function(e){e.stopPropagation();renameChat(c)};d.appendChild(rn);
     var x=document.createElement("button");x.className="x";x.type="button";x.textContent="\u00d7";x.setAttribute("aria-label","Hapus obrolan "+c.title);
     x.onclick=function(e){e.stopPropagation();delChat(c.id)};
     d.onclick=function(){if(busy)return;activeId=c.id;persist();renderAll();closeSide()};
@@ -1740,7 +1888,7 @@ function editUserMessage(message,index){
   if(session&&!session.admin){
     if(session.exp&&Date.now()>=session.exp){acctQuota();return}
     if(!modelAllowed(model)){alert("Model ini tidak termasuk paket "+planLabel(memberPlan)+" Anda. Pilih model lain atau upgrade paket lewat menu Lihat paket & harga.");return}
-    if(model!=="minimumlite"&&remOf(model)<=0){alert("Jatah pakai "+(model==="auto"?"Xozen AI":"model lain")+" Anda sudah habis. Hubungi admin.");return}
+    if(model!=="minimumlite"&&remOf(model)<=0){alert("Saldo xoz token Anda sudah habis. Hubungi admin.");return}
   }
   var original=typeof message.text==="string"?message.text:message.content;
   var edited=prompt("Edit pesan yang akan dikirim ulang:",original||"");
@@ -1895,8 +2043,10 @@ async function stream(c){
     }
     finalizeResponseFile(asst);
     if(!asst.content){asst.content="(Model tidak mengirim jawaban.)";asst.error=true}
-    ctrl=null;setBusy(false);persist();renderMsgs();toBottom(true);
-    if(asst.content&&!asst.error)recordUsage(c.model||settings.model);
+    ctrl=null;setBusy(false);
+    var um=c.messages.length>1&&c.messages[c.messages.length-2].role==="user"?c.messages[c.messages.length-2]:null;
+    if(asst.content&&!asst.error)recordUsage(c.model||settings.model,um,asst);
+    persist();renderMsgs();toBottom(true);
     if(c.pinned)pushPin(c).catch(handleAuthErr);
     setTimeout(fetchQuota,900);
   }
@@ -1908,7 +2058,7 @@ function send(text){
     if(session.exp&&Date.now()>=session.exp){acctQuota();return}
     var mm=modelSel.value||settings.model;
     if(!modelAllowed(mm)){alert("Model ini tidak termasuk paket "+planLabel(memberPlan)+" Anda. Pilih model lain atau upgrade paket lewat menu Lihat paket & harga.");return}
-    if(mm!=="minimumlite"&&remOf(mm)<=0){alert("Jatah pakai "+(mm==="auto"?"Xozen AI":"model lain")+" Anda sudah habis. Hubungi admin.");return}
+    if(mm!=="minimumlite"&&remOf(mm)<=0){alert("Saldo xoz token Anda sudah habis. Hubungi admin.");return}
   }
   var c=active();
   if(!c){c={id:uid(),title:"Obrolan baru",model:modelSel.value||settings.model,messages:[]};chats.unshift(c);activeId=c.id}
@@ -2009,6 +2159,7 @@ function parseQuota(j){
 }
 function qMessage(text,bad){
   qCard.classList.remove("low","crit","unk");
+  var qbarEl=$("qbar");qbarEl.style.display="none";qbarEl.classList.remove("warn","crit");
   qNum.textContent="\u2014";
   qMeta.innerHTML="";var s=document.createElement("span");if(bad)s.className="bad";s.textContent=text;qMeta.appendChild(s);
 }
@@ -2021,6 +2172,7 @@ function daysSpan(expAt){
 }
 function showQuota(q){
   if(q.remaining===null){qMessage("Format data kuota tidak dikenali. Buka Pengaturan, tekan Cek kuota.",true);return}
+  $("qbar").style.display="none";$("qbar").classList.remove("warn","crit");
   qNum.innerHTML="";qNum.appendChild(document.createTextNode(nf(q.remaining)));
   var sm=document.createElement("small");sm.textContent="token";qNum.appendChild(sm);
   qCard.classList.remove("low","crit","unk");if(q.remaining<=0)qCard.classList.add("crit");
@@ -2057,6 +2209,9 @@ function openSettings(){
   closeSide();dlg.showModal();
 }
 $("sTemp").oninput=function(){$("tempVal").textContent=this.value};
+/* mode & tipe file langsung aktif saat diganti di baris lampiran / pengaturan */
+$("sFileMode").onchange=function(){settings.fileResponseMode=normalizeFileResponseMode(this.value);save("fileResponseMode",settings.fileResponseMode)};
+$("sFileFormat").onchange=function(){settings.fileDownloadFormat=normalizeFileFormat(this.value);save("fileDownloadFormat",settings.fileDownloadFormat)};
 $("closeDlg").onclick=function(){dlg.close()};
 $("saveDlg").onclick=async function(){
   settings.system=$("sSys").value;
@@ -2175,7 +2330,23 @@ async function rpc(fn,args){
   return j;
 }
 function setSession(a,p,t){session={u:a.username,p:p||session.p,t:t||(session&&session.t),admin:!!a.is_admin,la:+a.limit_auto,lo:+a.limit_other,ua:+a.used_auto,uo:+a.used_other,exp:a.expires_at?Date.parse(a.expires_at):null};save("glassai.auth",session)}
-function remOf(m){return m==="auto"?session.la-session.ua:session.lo-session.uo}
+/* biaya per pesan bertingkat: prompt pendek lebih murah; randomizer tetap jalan.
+   <10 karakter \u2248200  \u00b7  10\u201315 \u22481  250\u2013400  \u00b7  16\u201335 \u2248400\u2013500 (tidak lebih dari 500)  \u00b7  >35 \u2248500\u20131.000 */
+function msgCost(chars){
+  var n=+chars||0;
+  if(n<10)return 150+Math.floor(Math.random()*101);
+  if(n<=15)return 250+Math.floor(Math.random()*151);
+  if(n<=35)return 400+Math.floor(Math.random()*101);
+  return 500+Math.floor(Math.random()*501);
+}
+function tokSpent(){
+  /* total token habis menurut catatan biaya per pesan; pesan lama tanpa catatan dihitung \u22481000 */
+  var s=0,n=0;
+  chats.forEach(function(c){(c.messages||[]).forEach(function(m){if(m.role==="assistant"&&typeof m.cost==="number"&&!m.error){n++;s+=m.cost}})});
+  var usd=((+session.ua||0)+(+session.uo||0)),un=Math.max(0,usd-n);
+  return s+un*TOK;
+}
+function remOf(m){/* satu saldo token: semua model memotong saldo yang sama */return Math.max(0,(+session.la||0)+(+session.lo||0))*TOK-tokSpent()}
 function fmtLeft(ms){
   var s=Math.floor((ms-Date.now())/1000);if(s<=0)return"kedaluwarsa";
   var u=[["y",31536000],["d",86400],["h",3600],["m",60],["s",1]],o=[];
@@ -2184,21 +2355,49 @@ function fmtLeft(ms){
 }
 function showAcct(){
   var m=modelSel.value||settings.model;
-  $("qTitle").textContent="Sisa xoz token \u00b7 "+(m==="auto"?"Xozen AI":m==="minimumlite"?"MinimumLite":"Model lain");
+  var pool=session&&!session.admin&&isNewPlan(memberPlan);
+  if(session.admin){
+    $("qTitle").textContent="Sisa token \u00b7 admin";
+    qNum.innerHTML="";qCard.classList.remove("low","crit","unk");
+    $("qbar").style.display="none";$("qbar").classList.remove("warn","crit");
+    var smA=document.createElement("small");smA.textContent="admin";
+    qNum.appendChild(document.createTextNode("\u221e"));qNum.appendChild(smA);
+    qMeta.innerHTML="";
+    var aa=document.createElement("span");aa.textContent="Admin \u2014 semua model, token & pin tak terbatas";qMeta.appendChild(aa);
+    if(session.exp)qMeta.appendChild(daysSpan(session.exp));
+    return;
+  }
+  $("qTitle").textContent="Sisa xoz token \u00b7 satu saldo token";
   qNum.innerHTML="";qCard.classList.remove("low","crit","unk");
+  var qbarEl=$("qbar"),qbarFill=$("qbarFill");qbarEl.classList.remove("warn","crit");
   var sm=document.createElement("small");
-  if(m==="minimumlite"){qNum.appendChild(document.createTextNode("\u221e"));sm.textContent="gratis"}
-  else{
-    var tk=m==="auto"?"auto":"other",tL=tk==="auto"?session.la:session.lo,tU=tk==="auto"?session.ua:session.uo;
-    var rem=Math.max(0,remOf(m));
-    qNum.appendChild(document.createTextNode(xozFmt(tokRem(session.u,tk,tL,tU))));sm.textContent="xoz token";
+  if(m==="minimumlite"){qNum.appendChild(document.createTextNode("\u221e"));sm.textContent="gratis";qNum.appendChild(sm)}
+  else if(isMaks(session.la)||isMaks(session.lo)){
+    /* satu saldo "maks": praktis tanpa batas */
+    qbarEl.style.display="none";
+    sm.textContent="xoz token \u00b7 tanpa batas";
+    qNum.appendChild(document.createTextNode("\u221e"));qNum.appendChild(sm);
+  }else{
+    var tot=(+session.la||0)+(+session.lo||0);
+    var spent=tokSpent();
+    var rem=Math.max(0,tot*TOK-spent);
+    qbarEl.style.display="";
+    var pct=tot>0?Math.max(0,Math.min(100,Math.round((tot*TOK-rem)/(tot*TOK)*100))):0;
+    qbarFill.style.width=pct+"%";
+    qbarEl.classList.toggle("warn",pct>=75&&pct<95);
+    qbarEl.classList.toggle("crit",pct>=95);
+    qNum.appendChild(document.createTextNode(xozFmt(rem)));sm.textContent="xoz token";
     if(rem<=0)qCard.classList.add("crit");
     qNum.appendChild(sm);
-    if(tokFlash&&tokFlash.k===tk&&Date.now()-tokFlash.t<6000){var fl=document.createElement("span");fl.className="qflash";fl.textContent="\u2212"+xozFmt(tokFlash.v);qNum.appendChild(fl)}
+    if(tokFlash&&Date.now()-tokFlash.t<6000){var fl=document.createElement("span");fl.className="qflash";fl.textContent="\u2212"+xozFmt(tokFlash.v);qNum.appendChild(fl)}
   }
-  if(m==="minimumlite")qNum.appendChild(sm);
   qMeta.innerHTML="";
-  if(m!=="minimumlite"){var tt=document.createElement("span");tt.textContent="dari "+xozFmt((m==="auto"?session.la:session.lo)*TOK);qMeta.appendChild(tt)}
+  if(m!=="minimumlite"){var tt=document.createElement("span");tt.textContent=(isMaks(session.la)||isMaks(session.lo))?"dari \u221e":"dari "+xozFmt(((+session.la||0)+(+session.lo||0))*TOK);qMeta.appendChild(tt)}
+  if(pool&&memberPlan&&NEW_PLANS[memberPlan]&&NEW_PLANS[memberPlan].planai>0){
+    var pl=document.createElement("span");
+    pl.textContent=planaiState?(planaiState.daily<0?"Plan AI: tanpa batas":"Plan AI: "+xozFmt(planaiState.remaining)+" token hari ini"):"Plan AI: memeriksa\u2026";
+    qMeta.appendChild(pl);
+  }
   if(session&&!session.admin&&memberPlan){var ps=document.createElement("span");ps.textContent="Paket "+planName(memberPlan);qMeta.appendChild(ps)}
   if(session.exp)qMeta.appendChild(daysSpan(session.exp));
 }
@@ -2212,14 +2411,18 @@ async function acctQuota(){
   finally{qRefresh.classList.remove("spin")}
   showAcct();
 }
-async function recordUsage(model){
+async function recordUsage(model,uMsg,asstMsg){
   if(!session||session.admin||model==="minimumlite")return;
-  var k=model==="auto"?"auto":"other";
-  function tu(){return tokUsed(session.u,k,k==="auto"?session.la:session.lo,k==="auto"?session.ua:session.uo)}
-  var before=tu();
-  try{var a=await rpc("app_add_usage",{u:session.u,p:session.p,k:k});if(a&&a.username)setSession(a)}
-  catch(e){if(k==="auto")session.ua++;else session.uo++;save("glassai.auth",session)}
-  var after=tu();if(after>before)tokFlash={t:Date.now(),v:after-before,k:k};
+  /* biaya pesan ini: bertingkat menurut panjang prompt, lalu tampil sebagai potongan \u2212 di kartu kuota */
+  if(asstMsg){
+    var txt=uMsg?(typeof uMsg.text==="string"?uMsg.text:(typeof uMsg.content==="string"?uMsg.content:"")):"";
+    var cost=msgCost(txt.length);
+    if(typeof asstMsg.cost!=="number")asstMsg.cost=cost;
+    tokFlash={t:Date.now(),v:asstMsg.cost,k:"auto"};
+  }
+  try{var a=await rpc("app_add_usage",{u:session.u,p:session.p,k:"auto"});if(a&&a.username)setSession(a)}
+  catch(e){session.ua=(+session.ua||0)+1;save("glassai.auth",session)}
+  if(isNewPlan(memberPlan))planaiSpendShow();   /* Plan AI: sesi Pro/Ultra memakai kuota harian bersama saldo token */
   showAcct();
 }
 setInterval(function(){
@@ -2235,7 +2438,7 @@ function gate(){
 }
 function logout(msg){
   if(session&&session.t)rpc("app_logout",{t:session.t}).catch(function(){});
-  session=null;save("glassai.auth",null);chats=[];activeId=null;pinLimit=null;closeSide();gate();renderAll();
+  session=null;save("glassai.auth",null);chats=[];activeId=null;memberPlan=null;planaiState=null;pinLimit=null;closeSide();gate();renderAll();
   if(typeof msg==="string")$("lErr").textContent=msg;
 }
 var loginBusy=false;
@@ -2251,7 +2454,7 @@ $("loginForm").onsubmit=async function(e){
     var a=await rpc("app_login",{u:u,p:p});
     if(a&&a.expired)throw new Error("Masa aktif akun habis. Akun sudah dihapus.");
     var has=await rpc("app_face_status",{u:u,p:p});
-    res={u:u,p:p,has:!!has};
+    res={u:u,p:p,has:!!has,account:a.account,token:a.token};
   }catch(ex){err=ex}
   await minWait;
   f.removeAttribute("aria-busy");
@@ -2303,7 +2506,7 @@ var DURERR="Masa aktif tidak valid. Contoh: 30d, 12h, 1y, 1d12h.";
 async function admPlanMap(){
   try{
     var list=await rpc("app_plan_list",{u:session.u,p:session.p});
-    var m={};(list||[]).forEach(function(x){m[x.username]=x.plan});
+    var m={};(list||[]).forEach(function(x){m[x.username]={plan:x.plan,planai_daily:(x.planai_daily===undefined?null:x.planai_daily)}});
     planApiOk=true;return m;
   }catch(e){if(handleAuthErr(e))return{};planApiOk=false;return{}}
 }
@@ -2322,10 +2525,10 @@ function planNote(){
   var n=$("planNote");if(!n)return;
   if(planApiOk){
     n.className="adm-note ok";
-    n.textContent="Paket per akun aktif: akun Basic hanya melihat "+planCount("basic")+" model, akun Best melihat "+planCount("best")+" model (diatur otomatis dari wizard).";
+    n.textContent="Paket per akun aktif. Paket baru (satu saldo token): Basic gratis \u2014 Xozen AI, MinimumLite, XozenLow; Plus \u2014 "+planCount("plus")+" model; Pro \u2014 "+planCount("pro")+" model + Plan AI 5.000 token/hari; Ultra Coder \u2014 semua model + Plan AI 15.000 token/hari. Paket lama (Basic/Best, kuota terpisah) tetap didukung.";
   }else{
     n.className="adm-note bad";
-    n.textContent="Penyimpanan paket per akun belum aktif di server. Jalankan sekali file supabase-member-plan.sql di Supabase SQL Editor agar pembatasan model tersimpan per akun. Sementara ini aplikasi menebak paket dari kuota akun (template Basic 20x/8x dianggap Best).";
+    n.textContent="Penyimpanan paket per akun belum aktif di server. Jalankan sekali supabase-member-plan.sql lalu supabase-member-plan-v2.sql di Supabase SQL Editor agar pembatasan model, kuota Plan AI, dan saldo token tersimpan per akun.";
   }
   if(!customModelApiOk)n.textContent+=" Penetapan model custom perlu menjalankan supabase-member-models.sql di Supabase SQL Editor.";
 }
@@ -2334,12 +2537,23 @@ async function setPlanFor(nu,plan,reload){
   try{
     var r=await rpc("app_plan_set",{u:session.u,p:session.p,nu:nu,plan:plan});
     planApiOk=true;planNote();
+    if(plan&&isNewPlan(plan)&&NEW_PLANS[plan]){
+      /* kuota mengikuti paket otomatis (satu saldo token); admin bisa menyetel ulang manual */
+      var def=NEW_PLANS[plan].tokens;
+      var cur=await admCall("app_admin_update",{nu:nu,la:def,lo:0,ns:null,reset:false,np:null});
+      admErr(cur===undefined
+        ?"Paket "+planName(plan)+" tersimpan untuk "+nu+", tetapi kuota saldo gagal disetel otomatis."
+        :"Paket "+planName(plan)+" aktif untuk "+nu+" \u2014 kuota disetel otomatis: "+xozFmt(def*TOK)+" xoz token ("+def+" pemakaian; satu saldo token). Ubah lewat kolom Limit saldo token bila perlu beda.");
+    }
     if(reload)admRefresh();
     return r;
   }catch(e){
     if(handleAuthErr(e))return;
     planApiOk=false;planNote();
-    admErr("Gagal menyimpan paket: "+e.message+(/404|does not exist|Could not find/i.test(e.message)?" — jalankan supabase-member-plan.sql di Supabase.":""));
+    var hint="";
+    if(/404|does not exist|Could not find|PGRST202/i.test(e.message))hint=" \u2014 jalankan supabase-member-plan.sql lalu supabase-member-plan-v2.sql di Supabase SQL Editor.";
+    else if(/check constraint|violates/i.test(e.message))hint=" \u2014 constraint lama masih aktif; jalankan ulang supabase-member-plan-v2.sql agar paket baru (Basic gratis/Plus/Pro/Ultra) diizinkan.";
+    admErr("Gagal menyimpan paket: "+e.message+hint);
     return undefined;
   }
 }
@@ -2352,17 +2566,23 @@ async function admRefresh(){
   var box=$("admList");box.innerHTML="";
   list.forEach(function(a){
     var e=em[a.username]||{},hasFace=!!e.has_face,plim=(e.pin_limit===null||e.pin_limit===undefined)?1:e.pin_limit;
-    var plan=a.is_admin?null:(pm[a.username]||null);
+    var po=a.is_admin?{}:(pm[a.username]||{});
+    var plan=a.is_admin?null:(po.plan||null);
+    var pav=a.is_admin?null:(po.planai_daily===undefined?null:po.planai_daily);
     var row=document.createElement("div");row.className="adm-row";
     var exp=a.expires_at?Date.parse(a.expires_at):null;
     var badge=a.is_admin?'<span class="wplan">Admin</span>':'<span class="wplan '+(plan||"")+'">'+(plan?planName(plan):"paket belum diset")+'</span>';
-    row.innerHTML='<div class="adm-person"><div class="adm-identity"><b>'+esc(a.username)+'</b>'+badge+'</div><div class="adm-metrics"><small>Xozen AI '+xozFmt(tokUsed(a.username,"auto",a.limit_auto,a.used_auto))+'/'+xozFmt(a.limit_auto*TOK)+' token ('+a.used_auto+'/'+a.limit_auto+' limit)</small><small>Model lain '+xozFmt(tokUsed(a.username,"other",a.limit_other,a.used_other))+'/'+xozFmt(a.limit_other*TOK)+' token ('+a.used_other+'/'+a.limit_other+' limit)</small><small>'+(exp?'Aktif '+fmtLeft(exp)+' lagi · '+esc(new Date(exp).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"})):'Tanpa batas waktu')+'</small><small>Wajah: '+(hasFace?'terdaftar':'belum terdaftar')+(a.is_admin?'':' · Pin '+(e.pins||0)+'/'+plim)+'</small></div></div>';
+    var poolRow=!a.is_admin&&plan&&isNewPlan(plan);
+    var totMaks=isMaks(a.limit_auto)||isMaks(a.limit_other),totLim=(+a.limit_auto||0)+(+a.limit_other||0),totUsed=(+a.used_auto||0)+(+a.used_other||0);
+    var m1='<small>'+(poolRow?'Saldo token '+xozFmt(tokUsed(a.username,"auto",a.limit_auto,a.used_auto))+'/'+(isMaks(a.limit_auto)?"\u221e":xozFmt(a.limit_auto*TOK))+' ('+a.used_auto+'/'+(isMaks(a.limit_auto)?"\u221e":a.limit_auto)+' pemakaian)':'Saldo token '+xozFmt(tokUsed(a.username,"auto",totLim,totUsed))+'/'+(totMaks?"\u221e":xozFmt(totLim*TOK))+' ('+totUsed+'/'+(totMaks?"\u221e":totLim)+' pemakaian)')+'</small>';
+    var m2=poolRow?'<small>Plan AI: '+(pav!==null&&pav!==undefined?(pav<0?"tanpa batas":xozFmt(pav)+" token/hari"):(NEW_PLANS[plan]&&NEW_PLANS[plan].planai?xozFmt(NEW_PLANS[plan].planai)+" token/hari":"\u2013"))+'</small>':'';
+    row.innerHTML='<div class="adm-person"><div class="adm-identity"><b>'+esc(a.username)+'</b>'+badge+'</div><div class="adm-metrics">'+m1+m2+'<small>'+(exp?'Aktif '+fmtLeft(exp)+' lagi · '+esc(new Date(exp).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"})):'Tanpa batas waktu')+'</small><small>Wajah: '+(hasFace?'terdaftar':'belum terdaftar')+(a.is_admin?'':' · Pin '+(e.pins||0)+'/'+plim)+'</small></div></div>';
     var ctl=document.createElement("div");ctl.className="adm-ctl";
     function inp(v,label,ph){var i=document.createElement("input");i.type="text";i.value=v;i.placeholder=ph||"";i.setAttribute("aria-label",label+" "+a.username);ctl.appendChild(i);return i}
     function btn(t,cls,fn){var b=document.createElement("button");b.type="button";b.className="mini "+(cls||"");b.textContent=t;b.onclick=fn;ctl.appendChild(b)}
     if(!a.is_admin){
       var sel=document.createElement("select");sel.className="psel";sel.setAttribute("aria-label","Paket "+a.username);
-      [["","— paket —"],["basic","Basic"],["best","Best"]].forEach(function(o){var op=document.createElement("option");op.value=o[0];op.textContent=o[1];sel.appendChild(op)});
+      [["","— paket —"],["free","Basic (gratis)"],["plus","Plus"],["pro","Pro"],["ultra","Ultra Coder"],["basic","Basic (lama)"],["best","Best Value (lama)"]].forEach(function(o){var op=document.createElement("option");op.value=o[0];op.textContent=o[1];sel.appendChild(op)});
       sel.value=plan||"";
       sel.onchange=function(){if(!sel.value)return;setPlanFor(a.username,sel.value,true)};
       ctl.appendChild(sel);
@@ -2378,15 +2598,26 @@ async function admRefresh(){
           memberCustomModelMap[a.username]=saved&&Array.isArray(saved.models)?saved.models:ids;customModelApiOk=true;admRefresh();
         }catch(err){if(!handleAuthErr(err)){customModelApiOk=false;planNote();admErr("Gagal menyimpan model custom: "+err.message+( /404|does not exist|Could not find/i.test(err.message)?" — jalankan supabase-member-models.sql di Supabase.":""))}}
       });
-      var ia=inp(a.limit_auto,"Limit Xozen AI (1 limit = 1.000 xoz token)"),io=inp(a.limit_other,"Limit model lain (1 limit = 1.000 xoz token)"),ip=inp(plim,"Limit pin","pin"),it=inp("","Ubah masa aktif","ubah: 30d");it.style.width="100px";ip.style.width="56px";ip.title="Limit pin";
+      var ia=inp(totMaks?"maks":totLim,"Limit saldo token \u2014 angka atau ketik 'maks' untuk tanpa batas (1 pemakaian = 1.000 xoz token)"),ip=inp(plim,"Limit pin","pin"),it=inp("","Ubah masa aktif","ubah: 30d");
+      it.style.width="100px";ip.style.width="56px";ip.title="Limit pin";
+      ia.title="Satu saldo token untuk semua model; ketik 'maks' untuk tanpa batas";
+      var ipi=poolRow?inp(pav===null||pav===undefined?"":(pav<0?"maks":String(pav)),"Kuota Plan AI harian \u2014 ketik 'maks' untuk tanpa batas","maks / angka"):null;
+      if(ipi){ipi.style.width="86px";ipi.title="Kuota Plan AI harian; 'maks' = tanpa batas (-1)"}
       btn("Simpan",0,async function(){
-        var x=parseInt(ia.value,10),y=parseInt(io.value,10),pl=parseInt(ip.value,10),ns=null;
-        if(!(x>=0)||!(y>=0)||!(pl>=0)){admErr("Limit tidak valid.");return}
+        var x=limParse(ia.value),pl=parseInt(ip.value,10),ns=null;
+        if(x===null||!(pl>=0)){admErr("Limit tidak valid. Gunakan angka, atau ketik 'maks' untuk tanpa batas.");return}
         if(it.value.trim()){ns=parseDur(it.value);if(!ns){admErr(DURERR);return}}
-        if(await admCall("app_admin_update",{nu:a.username,la:x,lo:y,ns:ns,reset:false,np:null})===undefined)return;
+        if(ipi&&ipi.value.trim()){
+          var iv=(ipi.value.trim().toLowerCase()==="maks"||ipi.value.trim()==="\u221e")?-1:parseInt(ipi.value,10);
+          if(isNaN(iv)||iv<-1){admErr("Kuota Plan AI: angka, 0, atau 'maks' (tanpa batas).");return}
+          if(await admT("app_planai_set_daily",{nu:a.username,daily:iv})===undefined)return;
+        }
+        /* satu saldo token: limit_other diset 0; kuota lama otomatis masuk ke limit saldo */
+        if(await admCall("app_admin_update",{nu:a.username,la:x,lo:0,ns:ns,reset:false,np:null})===undefined)return;
         if(await admT("app_admin_setpin",{nu:a.username,lim:pl})===undefined)return;
         admRefresh();
       });
+      if(poolRow&&NEW_PLANS[plan]&&NEW_PLANS[plan].planai>0)btn("Reset Plan AI",0,async function(){if(await admCall("app_planai_reset",{nu:a.username})!==undefined){admErr("Pakai Plan AI hari ini untuk "+a.username+" direset.");admRefresh()}});
       btn("Reset pakai",0,async function(){if(await admCall("app_admin_update",{nu:a.username,la:null,lo:null,ns:null,reset:true,np:null})!==undefined)admRefresh()});
       btn("Ganti pass",0,async function(){var np=prompt("Password baru untuk "+a.username+":");if(!np)return;if(await admCall("app_admin_update",{nu:a.username,la:null,lo:null,ns:null,reset:false,np:np})!==undefined)admErr("Password diganti.")});
     }
@@ -2444,39 +2675,51 @@ function wizMarkDur(){
 }
 function wizBuildPlans(){
   var box=$("wizPlans");box.innerHTML="";
-  PLAN_TEMPLATES.forEach(function(t){
-    var d=document.createElement("div");d.className="pcard"+(t.best?" best":"");
-    d.innerHTML=(t.tag?'<span class="ptag">'+esc(t.tag)+'</span>':"")+
-      '<div class="pname">'+xozFmt(t.x*TOK)+' xoz token</div>'+
-      '<div class="pmeta">Xozen AI + '+xozFmt(t.y*TOK)+' token model AI lain \u00b7 '+planLabel(t.plan)+'</div>'+
-      '<div class="pprice">'+esc(t.price)+'<small>/ akun</small></div>'+
+  Object.keys(NEW_PLANS).forEach(function(pv){
+    var p=NEW_PLANS[pv];
+    var d=document.createElement("div");d.className="pcard"+(p.best?" best":"");
+    var meta=xozFmt(p.tokens*TOK)+" xoz token \u00b7 satu saldo token \u00b7 "+(pv==="ultra"?"semua model":planCount(pv)+" model")+
+      (p.planai?" \u00b7 Plan AI "+xozFmt(p.planai)+"/hari":"")+" \u00b7 "+(p.pins?p.pins+" pin":"tanpa pin");
+    d.innerHTML=(p.tag?'<span class="ptag">'+esc(p.tag)+'</span>':"")+
+      '<div class="pname">'+esc(planLabel(pv))+'</div>'+
+      '<div class="pmeta">'+esc(meta)+'</div>'+
+      '<div class="pprice">'+esc(p.price)+'<small>/ akun</small></div>'+
       '<button type="button" class="btn pbuy wiz-go">Pilih paket ini</button>';
-    d.querySelector("button").onclick=function(){wizChoose(t);wizPane(2);$("wU").focus()};
+    d.querySelector("button").onclick=function(){wizChoose({newplan:pv});wizPane(2);$("wU").focus()};
     box.appendChild(d);
   });
   var c=document.createElement("div");c.className="pcard wide";
-  c.innerHTML='<div class="pname">Custom</div><div class="pmeta">Atur kuota dan paket sendiri</div>'+
-    '<div class="wiz-row"><input type="text" id="wcX" inputmode="numeric" value="10" aria-label="Kuota Xozen AI"><input type="text" id="wcY" inputmode="numeric" value="5" aria-label="Kuota model AI lain"><select id="wcPlan" class="psel" aria-label="Paket akses model"><option value="basic">Basic (9 model)</option><option value="best">Best (31 model)</option></select></div>'+
+  c.innerHTML='<div class="pname">Custom (paket lama)</div><div class="pmeta">Atur kuota sendiri (satu saldo token untuk semua model)</div>'+
+    '<div class="wiz-row"><input type="text" id="wcX" inputmode="numeric" value="15" aria-label="Kuota saldo token"><select id="wcPlan" class="psel" aria-label="Paket akses model"><option value="basic">Basic lama (9 model)</option><option value="best">Best Value lama (31 model)</option></select></div>'+
     '<button type="button" class="btn pbuy wiz-go" id="wcGo">Pakai custom</button>';
   box.appendChild(c);
   c.querySelector("#wcGo").onclick=function(){
-    var x=parseInt($("wcX").value,10),y=parseInt($("wcY").value,10);
-    if(!(x>=0)||!(y>=0)){alert("Kuota custom tidak valid.");return}
-    wizChoose({plan:$("wcPlan").value,x:x,y:y,price:"custom",custom:true});wizPane(2);$("wU").focus();
+    var x=parseInt($("wcX").value,10);
+    if(!(x>=0)){alert("Kuota custom tidak valid.");return}
+    wizChoose({plan:$("wcPlan").value,x:x,price:"custom",custom:true});wizPane(2);$("wU").focus();
   };
 }
 function wizChoose(t){
   wizPick=t;
-  $("wizPlanInfo").innerHTML="Dipilih: <b>"+planLabel(t.plan)+"</b> \u00b7 "+xozPair(t.x,t.y)+(t.custom?" \u00b7 kuota custom":" \u00b7 "+esc(t.price))+" \u00b7 terbuka <b>"+planCount(t.plan)+" model</b>.";
+  if(t&&t.newplan){
+    var p=NEW_PLANS[t.newplan];
+    $("wizPlanInfo").innerHTML="Dipilih: <b>"+esc(planLabel(t.newplan))+"</b> \u00b7 "+esc(xozPool(p.tokens))+" (satu saldo token; 1.000 token = 1 pemakaian) \u00b7 terbuka <b>"+(t.newplan==="ultra"?"semua model":planCount(t.newplan)+" model")+"</b>"+(p.planai?" \u00b7 Plan AI "+xozFmt(p.planai)+" token/hari":"")+" \u00b7 "+(p.pins?p.pins+" pin":"tanpa pin")+(p.tag?" \u00b7 "+esc(p.tag):"");
+    $("wPin").value=String(p.pins);
+  }else{
+    $("wizPlanInfo").innerHTML="Dipilih: <b>"+planLabel(t.plan)+"</b> \u00b7 "+xozPair(t.x)+(t.custom?" \u00b7 kuota custom":" \u00b7 "+esc(t.price))+" \u00b7 terbuka <b>"+planCount(t.plan)+" model</b>.";
+  }
 }
 function wizSummary(){
   var u=$("wU").value.trim().toLowerCase(),ns=parseDur($("wT").value);
   var box=$("wizSum");box.innerHTML="";
   function r(k,v){var d=document.createElement("div");d.className="r";var a=document.createElement("span");a.textContent=k;var b=document.createElement("b");b.innerHTML=v;d.appendChild(a);d.appendChild(b);box.appendChild(d)}
-  r("Paket",planLabel(wizPick.plan)+(wizPick.custom?" (custom)":""));
-  r("Kuota",xozPair(wizPick.x,wizPick.y));
-  r("Harga",wizPick.custom?"diatur manual":esc(wizPick.price));
-  r("Akses model",planCount(wizPick.plan)+" model &middot; "+PLAN_MODELS[wizPick.plan].slice(0,3).map(esc).join(", ")+", &hellip;");
+  var pKey=wizPick.newplan||wizPick.plan;
+  var wl=planModels(pKey);
+  r("Paket",planLabel(pKey)+(wizPick.custom?" (custom)":""));
+  r("Kuota",wizPick.newplan?esc(xozPool(NEW_PLANS[pKey].tokens))+" &middot; satu saldo token":xozPair(wizPick.x));
+  r("Harga",wizPick.newplan?esc(NEW_PLANS[pKey].price):(wizPick.custom?"diatur manual":esc(wizPick.price)));
+  r("Akses model",wl?(wl.length+" model &middot; "+wl.slice(0,3).map(esc).join(", ")+", &hellip;"):"Semua model terbuka ("+MODELS.length+")");
+  if(wizPick.newplan&&NEW_PLANS[pKey].planai)r("Plan AI",xozFmt(NEW_PLANS[pKey].planai)+" token/hari di halaman Xozen Planner");
   r("Username",esc(u));
   r("Password",esc($("wP").value));
   r("Masa aktif",ns?esc($("wT").value.trim()+" (sampai "+new Date(Date.now()+ns*1000).toLocaleDateString("id-ID",{dateStyle:"long"})+")"):"tidak valid");
@@ -2504,19 +2747,21 @@ async function wizCreate(){
   wizBusy=true;$("wizNext").disabled=true;$("wizNext").textContent="Membuat\u2026";admErr("");
   function fail(msg){admErr(msg);wizBusy=false;$("wizNext").disabled=false;$("wizNext").textContent="Buat akun sekarang"}
   try{
-    var ok;
-    try{ok=await rpc("app_admin_create",{au:session.u,ap:session.p,nu:u,np:p,ns:ns,la:wizPick.x,lo:wizPick.y})}
+    var ok,la,lo,pKey;
+    if(wizPick.newplan){la=NEW_PLANS[wizPick.newplan].tokens;lo=0;pKey=wizPick.newplan}
+    else{la=wizPick.x;lo=0;pKey=wizPick.plan}
+    try{ok=await rpc("app_admin_create",{au:session.u,ap:session.p,nu:u,np:p,ns:ns,la:la,lo:lo})}
     catch(e){if(handleAuthErr(e)){fail("");return}fail("Gagal membuat akun: "+wizFriendly(e.message));return}
     var pinRes=await admT("app_admin_setpin",{nu:u,lim:pin});
     var pinFail=(pinRes===undefined);
     var pinMsg=$("wizErr").textContent;
-    var planRes=await setPlanFor(u,wizPick.plan,false);
+    var planRes=await setPlanFor(u,pKey,false);
     wizBusy=false;$("wizNext").disabled=false;
     var expTxt=new Date(Date.now()+ns*1000).toLocaleDateString("id-ID",{dateStyle:"long"});
-    wizCreated={u:u,p:p,plan:wizPick.plan,ns:ns,expTxt:expTxt,pin:pin,planSaved:planRes!==undefined};
-    $("wizDone").innerHTML="<b>Akun "+esc(u)+" berhasil dibuat.</b><br>Paket "+planName(wizPick.plan)+" &middot; "+xozPair(wizPick.x,wizPick.y)+" &middot; aktif sampai "+esc(expTxt)+"."+
+    wizCreated={u:u,p:p,plan:pKey,ns:ns,expTxt:expTxt,pin:pin,planSaved:planRes!==undefined};
+    $("wizDone").innerHTML="<b>Akun "+esc(u)+" berhasil dibuat.</b><br>Paket "+planName(pKey)+" &middot; "+(wizPick.newplan?esc(xozPool(NEW_PLANS[pKey].tokens))+" (satu saldo token)":xozPair(la))+" &middot; aktif sampai "+esc(expTxt)+"."+
       (pinFail?"<br><b>Limit pin belum tersimpan</b>"+(pinMsg?" ("+esc(pinMsg)+")":"")+". Atur ulang dari daftar akun.":"")+
-      (planRes===undefined?"<br><b>Akses model belum tersimpan di server</b> (jalankan supabase-member-plan.sql), untuk sekarang akun ini terbaca sebagai paket dari kuotanya.":"");
+      (planRes===undefined?"<br><b>Akses model belum tersimpan di server</b> (jalankan supabase-member-plan.sql lalu supabase-member-plan-v2.sql di Supabase SQL Editor), untuk sekarang akun ini terbaca sebagai paket dari kuotanya.":"");
     $("wizMsg").value=wizMessage();
     $("wizWa").href="https://wa.me/?text="+encodeURIComponent($("wizMsg").value);
     admErr("");
@@ -2530,10 +2775,12 @@ function appLink(){
 }
 function wizMessage(){
   var c=wizCreated,t=wizPick;
+  var np=c.plan&&isNewPlan(c.plan);
   return "Akun Xozen AI Anda sudah aktif \u{1F389}\n\n"+
     "Paket      : "+planLabel(c.plan)+(t.custom?" (custom)":"")+"\n"+
-    "Kuota      : "+xozPair(t.x,t.y)+"\n"+
-    (t.custom?"":"Harga      : "+t.price+"\n")+
+    "Kuota      : "+(np?xozPool(NEW_PLANS[c.plan].tokens)+" (satu saldo token, 1.000 token = 1 pemakaian)":xozPair(t.x))+"\n"+
+    (t.custom&&np===false?"":"Harga      : "+(np?NEW_PLANS[c.plan].price:t.price)+"\n")+
+    (np&&NEW_PLANS[c.plan].planai?"Plan AI    : "+xozFmt(NEW_PLANS[c.plan].planai)+" token/hari di halaman Xozen Planner\n":"")+
     "Masa aktif : "+c.ns/86400+" hari (sampai "+c.expTxt+")\n"+
     "Username   : "+c.u+"\n"+
     "Password   : "+c.p+"\n\n"+
@@ -2572,7 +2819,7 @@ $("wizAgain").onclick=function(){wizReset()};
 $("wT").addEventListener("input",wizMarkDur);
 
 /* ---------- kelola model (admin) ---------- *//* ---------- kelola model (admin) ---------- */
-var LOCKED=["auto","minimumlite","xozen-code","xozen-mini"];
+var LOCKED=["auto","minimumlite","xozen-code","xozen-low","xozen-mini"];
 function renderMdlList(){
   var box=$("mList");box.innerHTML="";
   MODELS.forEach(function(m){
@@ -2653,14 +2900,15 @@ $("mFetch").onclick=async function(){
 /* ---------- dropdown model ---------- */
 var dd=$("dd"),ddBtn=$("ddBtn");
 function mlabel(m){return m==="auto"?"Xozen AI":m==="minimumlite"?"MinimumLite (Gratis)":MASK_LABEL[m]||m}
-function priceCard(t){
-  var d=document.createElement("div");d.className="pcard"+(t.best?" best":"");
-  var waTxt="Halo admin, saya mau paket "+planLabel(t.plan)+" "+xozPair(t.x,t.y)+" ("+t.price+"). Mohon info pembayaran dan aktivasi akunnya.";
-  d.innerHTML=(t.tag?'<span class="ptag">'+esc(t.tag)+'</span>':"")+
-    '<div class="pname">'+xozFmt(t.x*TOK)+' xoz token</div>'+
-    '<div class="pmeta">Xozen AI + '+xozFmt(t.y*TOK)+' token model AI lain</div>'+
-    '<div class="pprice">'+esc(t.price)+'<small>/ akun</small></div>'+
-    '<a class="btn primary pbuy" href="https://wa.me/'+WA_ADMIN+'?text='+encodeURIComponent(waTxt)+'" target="_blank" rel="noopener noreferrer">Pesan paket</a>';
+function priceCardNew(pv){
+  var p=NEW_PLANS[pv],d=document.createElement("div");
+  d.className="pcard"+(p.best?" best":"");
+  var waTxt="Halo admin, saya mau paket "+planLabel(pv)+" Xozen AI: "+xozFmt(p.tokens*TOK)+" xoz token"+(pv==="free"?" (gratis)":" ("+p.price+")")+"."+(p.planai?" Termasuk kuota Plan AI "+xozFmt(p.planai)+" token/hari.":"")+" Mohon info pembayaran dan aktivasi akunnya.";
+  d.innerHTML=(p.tag?'<span class="ptag">'+esc(p.tag)+'</span>':"")+
+    '<div class="pname">'+esc(planLabel(pv))+'</div>'+
+    '<div class="pmeta">'+esc(xozFmt(p.tokens*TOK)+" xoz token \u00b7 satu saldo token \u00b7 "+(pv==="ultra"?"semua model":planCount(pv)+" model"))+'</div>'+
+    '<div class="pprice">'+esc(p.price)+'<small>/ akun</small></div>'+
+    '<a class="btn primary pbuy" href="https://wa.me/'+WA_ADMIN+'?text='+encodeURIComponent(waTxt)+'" target="_blank" rel="noopener noreferrer">'+(pv==="free"?"Minta akun gratis":"Pesan paket")+'</a>';
   return d;
 }
 function fillChips(box,arr){
@@ -2668,19 +2916,23 @@ function fillChips(box,arr){
   arr.forEach(function(m){var sp=document.createElement("span");sp.textContent=m;box.appendChild(sp)});
 }
 function renderPricing(){
-  var bb=$("planBasic"),bt=$("planBest");
-  if(bb&&bt&&!bb.childElementCount){
-    PLAN_TEMPLATES.filter(function(t){return t.plan==="basic"}).forEach(function(t){bb.appendChild(priceCard(t))});
-    PLAN_TEMPLATES.filter(function(t){return t.plan==="best"}).forEach(function(t){bt.appendChild(priceCard(t))});
-    fillChips($("planBasicModels"),PLAN_MODELS.basic);
-    fillChips($("planBestModels"),PLAN_MODELS.best);
-    $("basicCount").textContent=planCount("basic");
-    $("bestCount").textContent=planCount("best");
-    $("bestSummary").textContent="Lihat "+planCount("best")+" model yang bisa dipakai";
+  var pf=$("planFree"),pp=$("planPlus"),pr=$("planPro"),pu=$("planUltra");
+  if(pf&&!pf.childElementCount){
+    pf.appendChild(priceCardNew("free"));
+    pp.appendChild(priceCardNew("plus"));
+    pr.appendChild(priceCardNew("pro"));
+    pu.appendChild(priceCardNew("ultra"));
+    fillChips($("planFreeModels"),planChipsDisplay(planModels("free")));
+    fillChips($("planPlusModels"),planChipsDisplay(planModels("plus")));
+    fillChips($("planProModels"),planChipsDisplay(planModels("pro")));
+    fillChips($("planUltraModels"),["Semua model AI \u2014 termasuk Xozen Code, Xozen Mini, XozenLow dan model tambahan admin"]);
+    $("plusCount").textContent=PLAN_MODELS.basic.length;
+    $("proCount").textContent=PLAN_MODELS.best.length;
+    $("proSummary").textContent="Lihat "+PLAN_MODELS.best.length+" model yang bisa dipakai";
   }
   var mine=$("myPlan");
   if(mine){
-    if(session&&session.admin){mine.hidden=false;mine.textContent="Anda admin — semua model terbuka."}
+    if(session&&session.admin){mine.hidden=false;mine.textContent="Anda admin \u2014 semua model terbuka."}
     else if(session&&memberPlan){mine.hidden=false;mine.textContent="Paket Anda sekarang: "+planName(memberPlan)+(planFromServer?"":" (dibaca dari kuota akun)")}
     else mine.hidden=true;
   }
@@ -2731,11 +2983,11 @@ function modelPlanOf(m){
   if(m==="minimumlite")return"gratis";
   var r=realModel(m);
   if(memberCustomModels.indexOf(r)>-1)return"custom";
-  if(PLAN_MODELS.basic.indexOf(r)>-1)return"basic";
-  if(PLAN_MODELS.best.indexOf(r)>-1)return"best";
-  return"lain";
+  if(PLAN_MODELS.basic.indexOf(r)>-1)return"plus";
+  if(PLAN_MODELS.best.indexOf(r)>-1)return"pro";
+  return"ultra";
 }
-var MPLAN_LABEL={xozen:"Xozen",gratis:"Gratis",basic:"Basic",best:"Best",custom:"Custom",lain:"\u2014"};
+var MPLAN_LABEL={xozen:"Xozen",gratis:"Gratis",plus:"Plus & Pro",pro:"Pro / Ultra",ultra:"Ultra Coder",custom:"Custom",lain:"\u2014"};
 var mfav=[],mrecent=[],mfUser=null;
 function mfKey(kind){return "glassai."+kind+"."+(session?session.u:"_")}
 function mfLoad(){
@@ -2777,8 +3029,8 @@ function mpRenderFilters(){
   if(recN)chips.push(["recent","\u23F1 Terakhir dipakai"]);
   var hasB=list.some(function(m){return PLAN_MODELS.basic.indexOf(realModel(m))>-1});
   var hasT=list.some(function(m){return PLAN_MODELS.best.indexOf(realModel(m))>-1});
-  if(hasB)chips.push(["plan-basic","Basic ("+planCount("basic")+")"]);
-  if(hasT)chips.push(["plan-best","Best ("+planCount("best")+")"]);
+  if(hasB)chips.push(["plan-plus","Plus ("+planCount("plus")+")"]);
+  if(hasT)chips.push(["plan-pro","Pro ("+planCount("pro")+")"]);
   fams.forEach(function(f){if(f!=="bawaan"||list.length>2)chips.push(["fam-"+f,FAM_NAME[f]||f])});
   mpFilters.innerHTML="";
   chips.forEach(function(c){
@@ -2793,8 +3045,8 @@ function mpMatch(m){
   if(mpFilter==="all")return true;
   if(mpFilter==="fav")return mfIsFav(m);
   if(mpFilter==="recent")return mrecent.indexOf(m)>-1;
-  if(mpFilter==="plan-basic")return m==="auto"||m==="minimumlite"||PLAN_MODELS.basic.indexOf(realModel(m))>-1;
-  if(mpFilter==="plan-best")return m==="auto"||m==="minimumlite"||PLAN_MODELS.best.indexOf(realModel(m))>-1;
+  if(mpFilter==="plan-plus")return m==="auto"||m==="minimumlite"||PLAN_MODELS.basic.indexOf(realModel(m))>-1;
+  if(mpFilter==="plan-pro")return m==="auto"||m==="minimumlite"||PLAN_MODELS.best.indexOf(realModel(m))>-1;
   if(mpFilter.indexOf("fam-")===0)return modelFamily(m)===mpFilter.slice(4);
   return true;
 }
@@ -2886,8 +3138,8 @@ document.addEventListener("keydown",function(e){
 var TOUR=[
   {ic:"\u2728",t:"Selamat datang di Xozen AI \uD83D\uDC4B",d:"Tur singkat 5 langkah supaya Anda langsung nyaman memakai aplikasinya. Mau langsung mulai? Tekan \u201cLewati\u201d. Mau keluar nanti saja? Tekan \u00d7 di kanan atas."},
   {ic:"\uD83E\uDDE9",t:"Pilih model AI",d:"Klik tombol model di kanan atas. Muncul daftar model dengan kotak pencarian, filter (Basic, Best, atau keluarga model seperti Kimi, GLM, DeepSeek), dan tanda centang pada model yang sedang dipakai.",el:"dd"},
-  {ic:"\u26A1",t:"Pantau kuota & paket",d:"Kartu di sidebar menunjukkan paket Anda, sisa kuota, dan masa aktif akun. Sisa kuota ditampilkan dalam xoz token; tiap pemakaian model memakai sejumlah token. Model MinimumLite gratis dan tidak memakai token.",el:"qCard"},
-  {ic:"\uD83D\uDCE4",t:"Kirim pesan & lampiran",d:"Tulis pesan lalu tekan Enter untuk kirim (Shift+Enter untuk baris baru). Tombol klip di kiri untuk melampirkan file. Saat menjawab, tombol kirim berubah menjadi tombol hentikan.",el:"attachBtn"},
+  {ic:"\u26A1",t:"Pantau kuota & paket",d:"Kartu di sidebar menunjukkan paket Anda, sisa kuota, dan masa aktif akun. Sisa kuota ditampilkan dalam xoz token; tiap pemakaian model memakai sejumlah token (prompt lebih panjang memakai lebih banyak). Bar di kartu adalah persen saldo yang sudah terpakai \u2014 setengah berisi = 50% terpakai. Model MinimumLite gratis dan tidak memakai token.",el:"qCard"},
+  {ic:"\uD83D\uDCE4",t:"Kirim pesan & lampiran",d:"Tulis pesan lalu tekan Enter untuk kirim (Shift+Enter untuk baris baru). Tombol klip di kanan kotak pesan untuk menempel lampiran; tempelan tampil di baris lampiran di bawahnya, bersama mode File only / Progress + file / Progress only. Saat menjawab, tombol kirim berubah menjadi tombol hentikan.",el:"attachBtn"},
   {ic:"\u2699\uFE0F",t:"Pengaturan aplikasi",d:"Buka Pengaturan dari sidebar untuk memilih tema, mengatur instruksi sistem dan suhu AI, memilih mode serta format file unduhan, dan mengatur pengiriman gambar ke model. Tekan Simpan untuk menerapkan. Paket & harga juga bisa dibuka dari sini.",el:"openSettings",last:true}
 ];
 var TOUR_ADMIN=[
@@ -3256,6 +3508,16 @@ async function loadCfg(){
   }catch(e){handleAuthErr(e)}
   if(MODELS.indexOf(settings.model)<0)settings.model="auto";
 }
+function renameChat(c){
+  var v=prompt("Edit nama obrolan:",c.title||"");
+  if(v===null)return;
+  v=String(v).replace(/\s+/g," ").trim();
+  if(!v)return;
+  c.title=v;persist();
+  if(activeId===c.id&&titleEl)titleEl.textContent=v;
+  renderHist();
+  if(c.pinned)pushPin(c).catch(function(e){if(!handleAuthErr(e))alert(e.message)});
+}
 async function pushPin(c){
   var ms=await tcall("app_pin_put",{cid:c.id,ttl:c.title,mdl:c.model||settings.model,msgs:slimChat(c).messages});
   c.synced=Number(ms);c.pinned=true;persist();return ms;
@@ -3267,6 +3529,9 @@ async function togglePin(c){
       await tcall("app_pin_del",{cid:c.id});c.pinned=false;c.synced=0;
     }else{
       if(!c.messages.length){alert("Obrolan masih kosong.");return}
+      var cap=pinCap(),n=0;
+      chats.forEach(function(z){if(z.pinned)n++});
+      if(n>=cap){alert("Kuota pin "+(memberPlan?planLabel(memberPlan):"paket Anda")+" hanya "+cap+" obrolan"+(cap===Infinity?"":". Lepas salah satu pin terlebih dahulu.")+".");return}
       await pushPin(c);
     }
     persist();renderHist();
@@ -3354,7 +3619,7 @@ function avgDesc(arr){var o=new Array(128).fill(0);arr.forEach(function(d){for(v
 async function openFace(ctx){
   stopFace();FS.ctx=ctx;FS.samples=[];FS.fails=0;var run=FS.run;
   $("fTitle").textContent=ctx.has?"Konfirmasi wajah":"Daftarkan wajah";
-  $("fSub").textContent=ctx.has?"Hadapkan wajah ke kamera untuk memastikan ini akun Anda.":"Wajah Anda belum terdaftar. Hadapkan wajah ke kamera, kami ambil 3 sampel.";
+  $("fSub").textContent=ctx.has?"Hadapkan wajah ke kamera untuk memastikan ini akun Anda.":"Wajah Anda belum terdaftar. Hadapkan wajah ke kamera, kami ambil 3 sampel. Petugas admin juga dapat melewati ini dengan memakai wajah admin.";
   fRetry.hidden=true;
   var shown=faceBox.classList.contains("show"),err=null;
   if(shown)fStat("Menyiapkan kamera\u2026");
@@ -3406,6 +3671,17 @@ async function faceLoop(run){
       if(FS.samples.length&&edist(FS.samples[0],d)>.45)FS.samples=[];
       FS.samples.push(d);
       if(FS.samples.length<3){fStat("Sampel "+FS.samples.length+"/3. Tahan posisi\u2026");continue}
+      /* akun ini belum punya wajah: kalau yang di depan kamera adalah WAJAH ADMIN, langsung masuk tanpa mendaftar.
+         bila wajahnya BUKAN wajah admin, wajah itu didaftarkan ke akun seperti biasa. */
+      fStat("Memeriksa wajah\u2026");
+      var admBypass=false;
+      try{admBypass=await rpc("app_face_admin_check",{d:avgDesc(FS.samples)})===true}catch(e){}
+      if(run!==FS.run)return;
+      if(admBypass){
+        fStat("Wajah admin terverifikasi",false,"ok");await sleep(350);
+        stopFace();
+        return finishFace({account:FS.ctx.account,token:FS.ctx.token});
+      }
       fStat("Menyimpan wajah\u2026");
       var r2=await rpc("app_face_enroll",{u:FS.ctx.u,p:FS.ctx.p,d:avgDesc(FS.samples)});
       if(run!==FS.run)return;
