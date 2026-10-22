@@ -47,9 +47,9 @@
 </header>
 
 <main id="utama">
-  <!-- kandidat latar LaserFlow: satu kanvas fixed untuk semua section di bawah home (target section aktif di-set site.js) -->
-  <div class="laser-bg" data-laser-flow data-color="#6f7bff" data-intensity="1.6" data-fog="0.18" data-dust="1.2" data-speed="1.4" aria-hidden="true"></div>
-  <div class="laser-veil" aria-hidden="true"></div>
+  <!-- latar LightPillar: satu kanvas fixed untuk semua section setelah home (site.js menyalakan/mematikannya) -->
+  <div class="pillar-bg" data-light-pillar data-top-color="#6f7bff" data-bottom-color="#35d6ff" data-fade="0.3" aria-hidden="true"></div>
+  <div class="bg-veil" aria-hidden="true"></div>
 
   <section class="chooser" id="pilih-layanan" aria-labelledby="chooser-title">
     <div class="wrap chooser-wrap">
@@ -365,6 +365,6 @@
 <script src="site.js?v=chooser-1"></script>
 <script src="reveal.js" defer></script>
 <script src="glass.js?v=2"></script>
-<script src="laser-flow.js" defer></script>
+<script src="light-pillar.js" defer></script>
 </body>
 </html>

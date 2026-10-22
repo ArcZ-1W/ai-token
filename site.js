@@ -2,6 +2,20 @@
 (function () {
   'use strict';
 
+  function reduceMotion() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+  /* buka konten landing lalu geser ke section (hash apa pun selain chooser) */
+  function scrollToSection(id) {
+    if (!id || id === 'nav' || id === 'utama') return;
+    var el = document.getElementById(id);
+    if (!el || (el.classList && el.classList.contains('chooser'))) return;
+    document.body.classList.remove('awaiting-service');
+    window.setTimeout(function () {
+      el.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+    }, 70);
+  }
+
   /* menu mobile */
   var t = document.querySelector('.nav-toggle');
   var nav = document.getElementById('nav');
@@ -11,7 +25,12 @@
       t.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
     nav.addEventListener('click', function (e) {
-      if (e.target.tagName === 'A') { nav.classList.remove('open'); t.setAttribute('aria-expanded', 'false'); }
+      if (e.target.tagName !== 'A') return;
+      nav.classList.remove('open');
+      t.setAttribute('aria-expanded', 'false');
+      var href = e.target.getAttribute('href') || '';
+      if (href.charAt(0) !== '#') return;
+      scrollToSection(href.slice(1));
     });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') { nav.classList.remove('open'); t.setAttribute('aria-expanded', 'false'); }
@@ -22,7 +41,20 @@
   var chooser = document.querySelector('.chooser');
   if (chooser) {
     function syncServiceChoice() {
-      document.body.classList.toggle('awaiting-service', location.hash !== '#landing-ai');
+      var h = location.hash.replace(/^#/, '');
+      if (!h || h === 'pilih-layanan') {
+        document.body.classList.add('awaiting-service');
+        return;
+      }
+      document.body.classList.remove('awaiting-service');
+      if (h !== 'landing-ai') scrollAfterHash(h);
+    }
+    /* loc pertama (deep link) & saat hash berubah */
+    function scrollAfterHash(h) {
+      window.setTimeout(function () {
+        var el = document.getElementById(h);
+        if (el) el.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+      }, 70);
     }
     syncServiceChoice();
     window.addEventListener('hashchange', syncServiceChoice);
@@ -44,11 +76,13 @@
     });
   });
 
-  /* sorot tautan halaman aktif */
+  /* sorot tautan halaman aktif (lewati tautan section dalam halaman sendiri) */
   var here = location.pathname.replace(/index\.html$/, '');
   Array.prototype.forEach.call(document.querySelectorAll('.nav a'), function (a) {
+    var href = a.getAttribute('href');
+    if (!href || href.charAt(0) === '#') return;
     try {
-      var p = new URL(a.getAttribute('href'), location.href).pathname.replace(/index\.html$/, '');
+      var p = new URL(href, location.href).pathname.replace(/index\.html$/, '');
       if (p === here) a.setAttribute('aria-current', 'page');
     } catch (e) {}
   });
@@ -183,38 +217,36 @@
   }
 })();
 
-/* ============ LaserFlow: cahaya mengikuti section aktif (landing) ============ */
+/* ============ LightPillar: latar semua section setelah home (landing) ============ */
 (function () {
   "use strict";
   function start() {
-    var bg = document.querySelector(".laser-bg");
-    var veil = document.querySelector(".laser-veil");
+    var bg = document.querySelector(".pillar-bg");
+    var veil = document.querySelector(".bg-veil");
     var sections = Array.prototype.slice.call(document.querySelectorAll("body.full-slides main>section"));
-    if (!bg || !sections.length) return;
-    var hero = document.getElementById("landing-ai") || sections[1];
+    if (!bg) return;
+    var hero = document.getElementById("landing-ai");
     var activeIdx = -2;
     function pick() {
-      var lf = bg._laserFlow && bg._laserFlow.setTarget ? bg._laserFlow : null;
+      var lp = bg._lightPillar && bg._lightPillar.show ? bg._lightPillar : null;
       var mid = window.innerHeight * 0.56;
       var idx = -1, i, r;
-      for (i = 0; i < sections.length; i++) {
-        r = sections[i].getBoundingClientRect();
-        if (r.top <= mid && r.bottom > mid) { idx = i; break; }
+      if (sections.length) {
+        for (i = 0; i < sections.length; i++) {
+          r = sections[i].getBoundingClientRect();
+          if (r.top <= mid && r.bottom > mid) { idx = i; break; }
+        }
+        if (idx < 0) idx = sections[sections.length - 1].getBoundingClientRect().top <= mid
+          ? sections.length - 1 : 0;
       }
-      if (idx < 0) idx = sections[sections.length - 1].getBoundingClientRect().top <= mid ? sections.length - 1 : 0;
-      var pastHome = hero.getBoundingClientRect().bottom <= window.innerHeight * 0.72;
+      var pastHome = hero
+        ? hero.getBoundingClientRect().bottom <= window.innerHeight * 0.72
+        : idx >= 1;
       var waiting = document.body.classList.contains("awaiting-service");
       var zone = pastHome && !waiting && idx >= 2;
-      bg.classList.toggle("on", !!(zone && lf));
+      bg.classList.toggle("on", !!(zone && lp));
       if (veil) veil.classList.toggle("on", !!zone);
-      if (lf) {
-        if (zone) {
-          lf.setTarget(sections[idx].querySelector(".wrap") || sections[idx]);
-          lf.show();
-        } else {
-          lf.hide();
-        }
-      }
+      if (lp) { if (zone) lp.show(); else lp.hide(); }
       if (activeIdx !== idx) {
         for (i = 0; i < sections.length; i++) sections[i].classList.toggle("lit", !!(zone && i === idx));
         activeIdx = idx;
