@@ -47,6 +47,22 @@
   var instances = [];
   var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
+  /* ---------------------------------------------------------------- deteksi ponsel */
+  /* Ponsel (pointer kasar + tanpa hover + sisi layar terpendek <= 740 px) tidak
+     memakai filter SVG berat — cukup frosted glass biasa supaya perangkat kecil
+     tidak terbebani. Tablet (iPad mini dsb: sisi terpendek >= 768 px) dan laptop
+     tetap mendapat efek refraction penuh. */
+  function detectPhone() {
+    if (!window.matchMedia) return false;
+    if (!window.matchMedia('(hover: none) and (pointer: coarse)').matches) return false;
+    var w = (window.screen && window.screen.width && window.screen.height)
+      ? Math.min(window.screen.width, window.screen.height)
+      : (window.innerWidth || 1024);
+    return w <= 740;
+  }
+
+  var IS_PHONE = detectPhone();
+
   /* ---------------------------------------------------------------- deteksi dukungan */
   function supportsRefraction() {
     var ua = navigator.userAgent || '';
@@ -139,8 +155,8 @@
 
     el.classList.add('glass-surface');
 
-    if (!CAN_REFRACT) {
-      /* Safari / Firefox / browser tanpa dukungan -> frosted glass saja */
+    if (!CAN_REFRACT || IS_PHONE) {
+      /* Safari / Firefox / ponsel (hemat CPU-GPU) -> frosted glass saja */
       el.classList.add('glass-surface--fallback');
       return;
     }
@@ -263,8 +279,8 @@
     Array.prototype.forEach.call(nodes, function (el) {
       if (el.__glassSurface) return;
       var mode = (el.getAttribute('data-glass') || '').toLowerCase();
-      /* "frost" / "off" -> frosted saja, tanpa filter SVG */
-      if (mode === 'off' || mode === 'none' || mode === 'frost' || mode === 'frosted') {
+      /* ponsel / "frost" / "off" -> frosted saja, tanpa filter SVG berat */
+      if (IS_PHONE || mode === 'off' || mode === 'none' || mode === 'frost' || mode === 'frosted') {
         el.classList.add('glass-surface', 'glass-surface--fallback');
         el.__glassSurface = true;
         return;
@@ -293,6 +309,7 @@
   window.GlassSurface = {
     init: init,
     refraction: CAN_REFRACT,
+    phone: IS_PHONE,
     instances: instances
   };
 })();

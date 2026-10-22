@@ -8,7 +8,9 @@
      (isi panel). glass.js menulis --g-bf = url(#filter) pada elemen ber-
      tanda data-glass="refract", sehingga efek pembelokan PTFE (React Bits)
      menggantikan blur biasa tanpa menimpa gaya komponen.
-   - Tanpa JS / browser tanpa dukungan -> otomatis jadi frosted glass.
+   - Tanpa JS / browser tanpa dukungan / PONSEL -> otomatis jadi frosted glass
+     (ponsel tidak memakai filter SVG berat agar perangkat tidak terbebani;
+     laptop & tablet tetap menerima efek penuh).
 
    File ini hanya dimuat di halaman pemasaran (index, harga, gratis,
    community, blog). Aplikasi AI memakai glass-app.css.
@@ -310,4 +312,23 @@ details.faq,
 @media (prefers-reduced-motion:reduce){
   .glass-surface--svg::before{transition:none}
   .service-option{transition:none}
+}
+
+/* ==========================================================================
+   5. MODE RINGAN PONSEL — glass.js otomatis memakai frosted (tanpa filter SVG)
+   di ponsel; di sini blur dipangkas & animasi dekoratif dimatikan supaya
+   perangkat kecil tidak terbebani. Laptop & tablet tetap efek penuh.
+   ========================================================================== */
+@media (hover:none) and (pointer:coarse) and (max-width:740px){
+  :root{
+    --g-blur:11px;
+    --g-sat:150%;
+    --g-shadow:0 12px 32px -24px rgba(3,7,20,.9);
+    --g-shadow-lg:0 18px 44px -28px rgba(3,7,20,.92);
+  }
+  .site-head{
+    -webkit-backdrop-filter:blur(14px) saturate(150%);
+    backdrop-filter:blur(14px) saturate(150%);
+  }
+  body::after{animation:none}   /* aurora tetap ada, tidak digerakkan */
 }
