@@ -250,11 +250,23 @@ details.faq p{color:var(--dim);font-size:14.5px;margin:0 0 16px}
 @keyframes page-spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.page-loading{transition:none}.page-spinner{animation:none}}
 
-/* ---------- Iridescence (ReactBits, port WebGL2) — latar hero landing ---------- */
-.hero-irid{position:relative;overflow:hidden}
-.hero-irid .irid{position:absolute;inset:0;z-index:0;pointer-events:none}
-.hero-irid .irid canvas{display:block;width:100%;height:100%;opacity:.5}
-.hero-irid .irid-veil{position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(115% 90% at 50% 0%,rgba(8,10,18,.10),rgba(8,10,18,.62) 78%);}
-.hero-irid .wrap{position:relative;z-index:1}
-.hero-irid .irid{-webkit-mask-image:linear-gradient(180deg,#000 62%,transparent 100%);mask-image:linear-gradient(180deg,#000 62%,transparent 100%)}
-@media (prefers-reduced-motion:reduce){.hero-irid .irid{display:none}}
+/* ---------- GradientASCII (ReactBits, port WebGL2) — latar hero landing ---------- */
+.hero-ascii{position:relative;overflow:hidden}
+.hero-ascii .ascii-bg{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hero-ascii .ascii-bg canvas{display:block;width:100%;height:100%}
+.hero-ascii .ascii-veil{position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(115% 90% at 50% 0%,rgba(8,10,18,.12),rgba(8,10,18,.60) 80%)}
+.hero-ascii .wrap{position:relative;z-index:1}
+.hero-ascii .ascii-bg{-webkit-mask-image:linear-gradient(180deg,#000 60%,transparent 100%);mask-image:linear-gradient(180deg,#000 60%,transparent 100%)}
+@media (prefers-reduced-motion:reduce){.hero-ascii .ascii-bg{display:none}}
+
+/* ---------- animasi landing (reveal.js) ---------- */
+html.has-reveal [data-rv]{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);transition-delay:var(--rd,0ms);will-change:opacity,transform}
+html.has-reveal [data-rv].in{opacity:1;transform:none}
+html.has-reveal [data-rv].rv-done{transition:transform .28s cubic-bezier(.2,.7,.3,1),box-shadow .28s ease,border-color .28s ease;transition-delay:0ms;will-change:auto}
+html.has-reveal .card:hover,html.has-reveal .plan:hover,html.has-reveal .post:hover{transform:translateY(-4px);box-shadow:0 12px 32px -14px rgba(6,10,24,.55)}
+html.has-reveal .code-demo.floaty{animation:landingFloat 7s ease-in-out infinite}
+@keyframes landingFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+html.has-reveal .hero-title span{background-size:200% 100%;animation:gradShift 8s linear infinite alternate}
+@keyframes gradShift{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+@media (prefers-reduced-motion:no-preference){html.has-reveal{scroll-behavior:smooth}}
+@media (prefers-reduced-motion:reduce){html.has-reveal [data-rv]{opacity:1;transform:none;transition:none}html.has-reveal .card:hover,html.has-reveal .plan:hover,html.has-reveal .post:hover{transform:none;box-shadow:none}html.has-reveal .code-demo.floaty{animation:none}html.has-reveal .hero-title span{animation:none}}
