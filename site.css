@@ -270,3 +270,11 @@ html.has-reveal .hero-title span{background-size:200% 100%;animation:gradShift 8
 @keyframes gradShift{0%{background-position:0% 50%}100%{background-position:100% 50%}}
 @media (prefers-reduced-motion:no-preference){html.has-reveal{scroll-behavior:smooth}}
 @media (prefers-reduced-motion:reduce){html.has-reveal [data-rv]{opacity:1;transform:none;transition:none}html.has-reveal .card:hover,html.has-reveal .plan:hover,html.has-reveal .post:hover{transform:none;box-shadow:none}html.has-reveal .code-demo.floaty{animation:none}html.has-reveal .hero-title span{animation:none}}
+
+/* ---------- slideshow full-screen: setiap section memenuhi satu layar perangkat ---------- */
+body.full-slides main>section{display:flex;flex-direction:column;justify-content:center;min-height:100vh;min-height:100svh;padding-block:clamp(30px,7vh,72px);scroll-snap-align:start}
+body.full-slides main>section>.wrap{width:100%}
+@supports selector(html:has(body)) {
+  html:has(body.full-slides){scroll-snap-type:y proximity}
+}
+@media (prefers-reduced-motion:reduce){html:has(body.full-slides){scroll-snap-type:none}}
