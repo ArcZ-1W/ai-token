@@ -372,6 +372,48 @@ textarea::placeholder{color:var(--ink-faint)}
 .send:disabled{opacity:.4;cursor:not-allowed}
 .send svg{width:18px;height:18px}
 .foot-note{text-align:center;font-size:12px;color:var(--ink-faint);margin-top:8px}
+/* ---------- Prompt Bar (ReactBits, port vanilla) ---------- */
+.box.pb{flex-direction:column;align-items:stretch;gap:0;position:relative;isolation:isolate;padding:10px 10px 8px;cursor:text}
+.box.pb:focus-within{border-color:rgba(255,255,255,.45)}
+.box.pb textarea{padding:6px 8px 10px}
+.pb-sparks{position:absolute;inset:0;z-index:-1;width:100%;height:100%;border-radius:inherit;pointer-events:none}
+.pb-bar{display:flex;align-items:center;gap:4px;position:relative;z-index:1}
+.pb-spacer{flex:1 1 auto}
+.pb .attach{width:30px;height:30px;border-radius:9px;color:color-mix(in srgb,var(--ink) 62%,transparent)}
+.pb .attach svg{width:17px;height:17px}
+.pb .attach:hover{background:rgba(255,255,255,.10);color:var(--ink)}
+.pb-tool,.pb-pick{flex:none;border:0;background:none;color:color-mix(in srgb,var(--ink) 60%,transparent);font:inherit;font-size:12px;font-weight:500;cursor:pointer;border-radius:9px;outline:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:background .15s ease,color .15s ease}
+.pb-tool{display:inline-grid;place-items:center;width:28px;height:28px;padding:0}
+.pb-tool svg{width:15px;height:15px}
+.pb-pick{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 9px}
+.pb-pick svg{width:14px;height:14px}
+.pb-tool:hover,.pb-tool[data-on],.pb-pick:hover,.pb-pick[data-on]{background:rgba(255,255,255,.10);color:var(--ink)}
+.pb-tool:active{transform:scale(.94)}
+.pb-pick[data-max]{color:#b39dff}
+.pb-menu{position:absolute;right:0;bottom:calc(100% + 8px);left:0;z-index:30;padding:4px;border-radius:14px;background:linear-gradient(160deg,rgba(38,42,78,.96),rgba(20,23,46,.97));border:1px solid var(--glass-edge);box-shadow:0 18px 44px -18px rgba(3,6,20,.85),inset 0 1px 0 rgba(255,255,255,.10);transform-origin:bottom left;animation:pbPop .18s cubic-bezier(.23,1,.32,1) both}
+.pb-menu[data-kind="type"]{right:auto;width:min(300px,100%)}
+.pb-menu[data-kind="eff"]{right:auto;width:min(280px,100%);padding:12px 14px 14px}
+@keyframes pbPop{from{opacity:0;transform:translateY(4px) scale(.98)}}
+.pb-row{position:relative;z-index:1;display:flex;align-items:center;gap:10px;width:100%;height:38px;padding:0 10px;border:0;border-radius:9px;background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer;outline:none;-webkit-tap-highlight-color:transparent}
+.pb-row:hover,.pb-row[data-active]{background:rgba(255,255,255,.10)}
+.pb-row b{flex:none;font-size:13px;font-weight:500}
+.pb-row .d{flex:1;min-width:0;overflow:hidden;color:color-mix(in srgb,var(--ink) 55%,transparent);font-size:12px;white-space:nowrap;text-overflow:ellipsis}
+.pb-row .ck{flex:none;width:16px;color:#b39dff;opacity:0;display:inline-grid;place-items:center}
+.pb-row .ck[data-on]{opacity:1}
+.pb-row .ck svg{width:13px;height:13px}
+.pb-eff-head{display:flex;align-items:center;gap:8px;font-size:13px;color:color-mix(in srgb,var(--ink) 55%,transparent)}
+.pb-eff-head b{color:var(--ink);font-weight:500}
+.pb-eff-head .h{margin-left:auto;cursor:help}
+.pb-ends{display:flex;justify-content:space-between;margin-top:12px;color:color-mix(in srgb,var(--ink) 55%,transparent);font-size:11.5px}
+.pb-track{position:relative;height:22px;margin-top:8px;border-radius:11px;background:rgba(255,255,255,.10);cursor:pointer;outline:none;touch-action:none;user-select:none;-webkit-user-select:none}
+.pb-track:focus-visible{box-shadow:0 0 0 2px rgba(179,157,255,.6)}
+.pb-fill{position:absolute;top:0;bottom:0;left:0;width:var(--pb-fill);border-radius:11px;background:rgba(255,255,255,.18);transition:width .22s cubic-bezier(.23,1,.32,1),background .3s ease}
+.pb-dot{position:absolute;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:rgba(255,255,255,.32)}
+.pb-thumb{position:absolute;top:-3px;left:var(--pb-x);width:14px;height:28px;margin-left:-7px;border-radius:7px;background:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.35);transition:left .22s cubic-bezier(.23,1,.32,1),background .3s ease}
+#pb[data-max] .pb-fill{background:rgba(179,157,255,.36)}
+#pb[data-max] .pb-thumb{background:#b39dff}
+#pb[data-max] .pb-eff-head b,#pbMenu[data-kind="eff"] .pb-eff-head b{color:#b39dff}
+@media (prefers-reduced-motion:reduce){.pb-menu{animation:none}.pb-fill,.pb-thumb{transition:background .3s ease}}
 /* kotak kecil (tipe hasil & mode berkas) + baris lampiran terpisah */
 .cmini{flex:none;height:38px;padding:0 10px;border-radius:12px;border:1px solid var(--glass-edge);background:var(--glass);color:var(--ink);font:inherit;font-size:12.5px;cursor:pointer}
 .att-row{max-width:780px;margin:8px auto 0;display:flex;align-items:flex-start;gap:8px}
@@ -1121,11 +1163,19 @@ html[data-theme^="neu"] .fthumb{box-shadow:var(--raise-xs);border:0}
         <button type="button" id="jTop" aria-label="Ke awal jawaban terbaru" title="Awal jawaban terbaru"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11l6-6 6 6M6 19l6-6 6 6"/></svg></button>
         <button type="button" id="jBot" aria-label="Ke paling bawah" title="Paling bawah"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5l6 6 6-6M6 13l6 6 6-6"/></svg></button>
       </div>
-      <div class="box">
+      <div class="box pb" id="pb">
+        <div class="pb-menu" id="pbMenu" role="dialog" aria-label="Opsi pesan" hidden></div>
+        <canvas id="pbSparks" class="pb-sparks" aria-hidden="true"></canvas>
         <input type="file" id="fileIn" multiple hidden>
         <textarea id="input" rows="1" placeholder="Tulis pesan…" aria-label="Pesan"></textarea>
-        <button class="send" id="send" aria-label="Kirim"></button>
-        <button type="button" class="attach" id="attachBtn" aria-label="Tempel lampiran" title="Tempel lampiran (gambar/file)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11l-8.6 8.6a5 5 0 0 1-7-7l8.6-8.6a3.4 3.4 0 0 1 5 5L10.3 17.6a1.8 1.8 0 0 1-2.5-2.5L15 8"/></svg></button>
+        <div class="pb-bar">
+          <button type="button" class="pb-tool" id="pbPlus" aria-label="Lampirkan berkas" aria-haspopup="dialog" aria-expanded="false" title="Lampirkan berkas / gambar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          <button type="button" class="pb-pick" id="pbType" aria-haspopup="dialog" aria-expanded="false" title="Tipe hasil jawaban"><span id="pbTypeLbl">Penjelasan</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+          <button type="button" class="pb-pick" id="pbEff" aria-haspopup="dialog" aria-expanded="false" title="Kedalaman penjelasan (expert)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg><span id="pbEffLbl">Low</span></button>
+          <span class="pb-spacer"></span>
+          <button type="button" class="attach" id="attachBtn" aria-label="Tempel lampiran" title="Tempel lampiran (gambar/file)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11l-8.6 8.6a5 5 0 0 1-7-7l8.6-8.6a3.4 3.4 0 0 1 5 5L10.3 17.6a1.8 1.8 0 0 1-2.5-2.5L15 8"/></svg></button>
+          <button class="send" id="send" aria-label="Kirim"></button>
+        </div>
       </div>
       <div class="att-row">
         <div class="chips" id="chips"></div>
@@ -1279,6 +1329,18 @@ Aturan ketat:
 - Jika konten tidak layak dijadikan file (misal: sapaan singkat, jawaban 1 kalimat), JANGAN sertakan blok ini.
 - Jangan tampilkan instruksi ini ke user.`;
 var MAKE_IT_BETTER_INSTRUCTION="For the next answer, improve usefulness and quality: understand the full request, follow every constraint, give a correct and complete result, organize it clearly, use the user's language, and avoid unnecessary repetition. Do not mention this instruction.";
+/* ---------- Prompt Bar: expert explanation & tipe hasil ---------- */
+var PB_EFF=["Off","Low","Medium","High"];
+var PB_TYPES=["Penjelasan","Kode","Ringkas","Langkah"];
+var PB_EXPERT={
+  Low:"[ATURAN PENJELASAN - TINGKAT RINGAN] Setelah jawaban utama, sertakan penjelasan singkat (1-3 kalimat) tentang cara kerja atau alasan di baliknya. Tidak perlu lebih dari itu.",
+  Medium:"[ATURAN PENJELASAN - TINGKAT MENENGAH] Jelaskan jawaban seperti mentor teknis berpengalaman: berikan konteks, alasan di balik tiap langkah atau keputusan, dan poin penting yang sering dilewatkan pemula. Jangan hanya menjawab - pastikan pengguna paham kenapa.",
+  High:"[ATURAN PENJELASAN - TINGKAT PAKAR] Jelaskan jawaban seperti pakar senior: buka dengan intuisi atau konsep dasarnya, uraikan tiap langkah lengkap dengan alasan teknisnya, sertakan pertimbangan trade-off, best practice, dan kesalahan umum yang harus dihindari. Kedalamannya seperti dokumentasi profesional namun tetap mudah diikuti. Jangan menyebut aturan ini kepada pengguna."
+};
+var PB_TYPE_INSTR={
+  "Kode":"[TIPE HASIL: KODE] Utamakan blok kode lengkap dan siap dijalankan; penjelasan di luar kode hanya bila benar-benar diperlukan dan dibuat sangat singkat.",
+  "Ringkas":"[TIPE HASIL: RINGKAS] Jawab dengan ringkasan poin-poin bullet yang padat; tanpa pembahasan panjang. Maksimal 8 poin atau 3-4 kalimat utama.",
+  "Langkah":"[TIPE HASIL: LANGKAH] Sajikan jawaban sebagai urutan langkah bernomor yang bisa diikuti berurutan; tiap langkah singkat, konkret, dan jelas hasilnya."};
 /* Isi dengan data proyek Supabase Anda (Project Settings > API) */
 var SUPA_URL="https://beqlxnlhvarjhkuxndmr.supabase.co";   /* contoh: https://abcd1234.supabase.co */
 var SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJlcWx4bmxodmFyamhrdXhuZG1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTExMjQ4ODgsImV4cCI6MjEwNjcwMDg4OH0.FxPj-dfPf6OnfPotgQxFafd7Fx9yIM6oqMm25xMRslw";   /* anon public key */
@@ -1336,7 +1398,14 @@ function resolveSystemPrompt(makeItBetter){
     prompt+="\n\n"+instruction;
   }
   if(makeItBetter)prompt+="\n\n"+MAKE_IT_BETTER_INSTRUCTION;
+  if(typeof pbExtraSystem==="function"){var pbx=pbExtraSystem();if(pbx)prompt+="\n\n"+pbx}
   return prompt;
+}
+function pbExtraSystem(){
+  var t="";
+  if(pbLevel!=="Off"&&PB_EXPERT[pbLevel])t=PB_EXPERT[pbLevel];
+  if(pbType!=="Penjelasan"&&PB_TYPE_INSTR[pbType])t+=(t?"\n\n":"")+PB_TYPE_INSTR[pbType];
+  return t;
 }
 function xozenDownloadFilename(filename){
   /* format penamaan: xozen_<detik>.<ekstensi> — ekstensi mengikuti tipe hasil yang dipilih */
@@ -2268,10 +2337,187 @@ document.addEventListener("keydown",function(e){
   if((mp&&mp.classList.contains("show"))||(pp&&pp.classList.contains("show")))return;
   e.preventDefault();stopStream();
 });
-input.addEventListener("input",autosize);
+input.addEventListener("input",function(){autosize();pbStroke()});
 input.addEventListener("keydown",function(e){
   if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();if(!busy)send(input.value)}
 });
+
+/* ---------- Prompt Bar (ReactBits, port vanilla): tipe hasil + expert explanation ---------- */
+var pbRoot=$("pb"),pbMenu=$("pbMenu"),pbSpk=$("pbSparks"),pbPlus=$("pbPlus"),pbTypeBtn=$("pbType"),pbTypeLbl=$("pbTypeLbl"),pbEffBtn=$("pbEff"),pbEffLbl=$("pbEffLbl");
+function pbNorm(v,list,f){return v&&list.indexOf(v)>-1?v:f}
+var pbLevel=pbNorm(load("pbEffort",null),PB_EFF,"Low");
+var pbType=pbNorm(load("pbType",null),PB_TYPES,"Penjelasan");
+function pbPersist(){save("pbEffort",pbLevel);save("pbType",pbType)}
+var pbOpenKind=null;
+var PB_TYPE_DESC={"Penjelasan":"Teks biasa yang mudah diikuti","Kode":"Blok kode lengkap, siap dijalankan","Ringkas":"Poin-poin padat & cepat dibaca","Langkah":"Tutorial urut langkah bernomor"};
+var PB_CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5 11-11"/></svg>';
+
+function pbStepAt(i){return "calc(13px + (100% - 26px) * "+(i/3)+")"}
+function pbFillAt(i){return i>=3?"100%":"calc(13px + (100% - 26px) * "+(i/3)+" + 7px)"}
+
+function pbCloseMenu(){
+  pbOpenKind=null;pbMenu.hidden=true;
+  pbPlus.toggleAttribute("data-on",false);pbTypeBtn.toggleAttribute("data-on",false);pbEffBtn.toggleAttribute("data-on",false);
+  pbPlus.setAttribute("aria-expanded","false");pbTypeBtn.setAttribute("aria-expanded","false");pbEffBtn.setAttribute("aria-expanded","false");
+}
+function pbOpenMenu(kind){
+  if(pbOpenKind===kind){pbCloseMenu();return}
+  pbOpenKind=kind;pbCursor=0;
+  pbPlus.toggleAttribute("data-on",kind==="file");
+  pbTypeBtn.toggleAttribute("data-on",kind==="type");
+  pbEffBtn.toggleAttribute("data-on",kind==="eff");
+  pbPlus.setAttribute("aria-expanded",String(kind==="file"));
+  pbTypeBtn.setAttribute("aria-expanded",String(kind==="type"));
+  pbEffBtn.setAttribute("aria-expanded",String(kind==="eff"));
+  pbRender();
+  pbMenu.hidden=false;
+}
+function pbRender(){
+  if(!pbOpenKind)return;
+  pbMenu.dataset.kind=pbOpenKind;
+  pbMenu.textContent="";
+  var i,b,s;
+  if(pbOpenKind==="file"){
+    b=document.createElement("button");b.type="button";b.className="pb-row";
+    s=document.createElement("b");s.textContent="Lampirkan berkas";b.appendChild(s);
+    s=document.createElement("span");s.className="d";s.textContent="Gambar / dokumen dari perangkat";b.appendChild(s);
+    b.onclick=function(){pbCloseMenu();try{fileIn.click()}catch(x){}};
+    pbMenu.appendChild(b);
+  }else if(pbOpenKind==="type"){
+    for(i=0;i<PB_TYPES.length;i++){
+      b=document.createElement("button");b.type="button";b.className="pb-row";
+      s=document.createElement("b");s.textContent=PB_TYPES[i];b.appendChild(s);
+      s=document.createElement("span");s.className="d";s.textContent=PB_TYPE_DESC[PB_TYPES[i]]||"";b.appendChild(s);
+      s=document.createElement("span");s.className="ck";s.toggleAttribute("data-on",PB_TYPES[i]===pbType);s.innerHTML=PB_CHECK;b.appendChild(s);
+      (function(t){b.onclick=function(){pbType=t;pbPersist();pbTypeLbl.textContent=t;pbCloseMenu();try{input.focus()}catch(x){}}})(PB_TYPES[i]);
+      pbMenu.appendChild(b);
+    }
+  }else{
+    var head=document.createElement("div");head.className="pb-eff-head";
+    var t1=document.createElement("b");t1.textContent="Explanation expert";head.appendChild(t1);
+    var now=document.createElement("span");now.id="pbEffNow";head.appendChild(now);
+    var help=document.createElement("span");help.className="h";help.textContent="?";help.title="Makin tinggi, jawaban dijelaskan makin dalam seperti pakar. Off = tanpa aturan penjelasan.";head.appendChild(help);
+    pbMenu.appendChild(head);
+    var ends=document.createElement("div");ends.className="pb-ends";
+    var e1=document.createElement("span");e1.textContent="Off";ends.appendChild(e1);
+    var e2=document.createElement("span");e2.textContent="Expert";ends.appendChild(e2);
+    pbMenu.appendChild(ends);
+    var track=document.createElement("div");track.className="pb-track";track.id="pbTrack";track.setAttribute("role","slider");track.tabIndex=0;
+    var fill=document.createElement("span");fill.className="pb-fill";track.appendChild(fill);
+    for(i=0;i<PB_EFF.length;i++){var dot=document.createElement("i");dot.className="pb-dot";dot.style.left=pbStepAt(i);track.appendChild(dot)}
+    var thumb=document.createElement("span");thumb.className="pb-thumb";track.appendChild(thumb);
+    pbMenu.appendChild(track);
+    pbTrackPaint(track);
+    track.addEventListener("pointerdown",function(e){
+      if(e.button!==0)return;
+      try{track.setPointerCapture(e.pointerId)}catch(x){}
+      try{track.focus()}catch(x){}
+      pbPickFromX(e,track);
+    });
+    track.addEventListener("pointermove",function(e){if(e.buttons&1)pbPickFromX(e,track)});
+    track.addEventListener("keydown",function(e){
+      var i0=PB_EFF.indexOf(pbLevel);
+      if(e.key==="ArrowRight"||e.key==="ArrowUp"){e.preventDefault();pbSetLevel(i0+1)}
+      else if(e.key==="ArrowLeft"||e.key==="ArrowDown"){e.preventDefault();pbSetLevel(i0-1)}
+      else if(e.key==="Home"){e.preventDefault();pbSetLevel(0)}
+      else if(e.key==="End"){e.preventDefault();pbSetLevel(PB_EFF.length-1)}
+      else if(e.key==="Escape"){pbCloseMenu();try{input.focus()}catch(x){}}
+    });
+  }
+}
+function pbTrackPaint(track){
+  var i=PB_EFF.indexOf(pbLevel);if(i<0)i=1;
+  track.style.setProperty("--pb-x",pbStepAt(i));
+  track.style.setProperty("--pb-fill",pbFillAt(i));
+  track.setAttribute("aria-valuemin","0");track.setAttribute("aria-valuemax",String(PB_EFF.length-1));track.setAttribute("aria-valuenow",String(i));track.setAttribute("aria-valuetext",PB_EFF[i]);
+  var n=document.getElementById("pbEffNow");if(n)n.textContent=PB_EFF[i];
+}
+function pbPaintEff(){
+  pbEffLbl.textContent=pbLevel;
+  pbRoot.toggleAttribute("data-max",pbLevel==="High");
+  var track=document.getElementById("pbTrack");
+  if(track&&pbOpenKind==="eff")pbTrackPaint(track);
+  pbWakeSparks();
+}
+function pbPickFromX(e,track){
+  var r=track.getBoundingClientRect();
+  var k=(e.clientX-r.left-13)/Math.max(1,r.width-26);
+  pbSetLevel(Math.round(k*3));
+}
+function pbSetLevel(i){
+  i=Math.max(0,Math.min(PB_EFF.length-1,i));
+  var next=PB_EFF[i];
+  if(next===pbLevel)return;
+  pbLevel=next;pbPersist();pbPaintEff();
+}
+/* ---------- percikan cahaya (sparks) ---------- */
+var spCtx=null,spRaf=0,spEnergy=0,spPulse=0,spStrokes=0,spDue=0,spLast=0,spSpeed=1,spW=0,spH=0,spParts=[];
+if(pbSpk){try{spCtx=pbSpk.getContext("2d")}catch(x){}}
+function pbStroke(){spEnergy=Math.min(1.6,spEnergy+0.22);spStrokes=Math.min(4,spStrokes+1);pbWakeSparks()}
+function pbSpResize(){
+  if(!spCtx)return;
+  var r=pbSpk.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);
+  spW=r.width;spH=r.height;
+  pbSpk.width=Math.max(1,Math.round(spW*dpr));pbSpk.height=Math.max(1,Math.round(spH*dpr));
+  if(spCtx.setTransform)spCtx.setTransform(dpr,0,0,dpr,0,0);
+}
+function pbSpawn(burst){
+  spParts.push({x:Math.random()*spW,y:burst?spH*(0.2+Math.random()*0.8):spH+3,r:0.9+Math.random()*1.1,vy:-(7+Math.random()*9),sway:(Math.random()-.5)*10,phase:Math.random()*Math.PI*2,life:burst?Math.random()*1.2:0,span:2.4+Math.random()*2.4});
+}
+function pbWakeSparks(){
+  if(!spCtx||spRaf)return;
+  spLast=0;spSpeed=1;spRaf=requestAnimationFrame(pbTick);
+}
+function pbTick(now){
+  spRaf=0;
+  if(document.hidden)return;
+  var dt=spLast?Math.min(0.05,(now-spLast)/1000):0.016;spLast=now;
+  spEnergy*=Math.exp(-dt/0.8);spPulse*=Math.exp(-dt/0.16);
+  if(spStrokes>0){spStrokes=0;spPulse=1}
+  var maxed=(pbLevel==="High")?1:0;
+  var energy=spEnergy*maxed;
+  spSpeed+=(1+energy*6-spSpeed)*(1-Math.exp(-dt/0.15));
+  spDue+=dt;
+  while(spDue>0.14){spDue-=0.14;if(spParts.length<30)pbSpawn(false)}
+  spCtx.clearRect(0,0,spW,spH);
+  spCtx.fillStyle="#b39dff";spCtx.shadowColor="#b39dff";spCtx.shadowBlur=6+energy*10+spPulse*6;
+  for(var i=spParts.length-1;i>=0;i--){
+    var p=spParts[i];p.life+=dt;
+    if(p.life>p.span){spParts.splice(i,1);continue}
+    var k=p.life/p.span,tw=0.7+0.3*Math.sin((now/160)*(1+energy)+p.phase);
+    p.y+=p.vy*dt*spSpeed;
+    if(p.y<-4){p.y=spH+3;p.x=Math.random()*spW}
+    var edge=Math.min(1,Math.max(0,p.y/14),Math.max(0,(spH-p.y)/14));
+    spCtx.globalAlpha=Math.min(1,Math.sin(k*Math.PI)*(0.9+energy*0.25)*tw)*edge;
+    spCtx.beginPath();
+    spCtx.arc(p.x+Math.sin((now/900)*(1+energy*0.8)+p.phase)*p.sway,p.y,p.r*tw*(1+energy*0.35),0,Math.PI*2);
+    spCtx.fill();
+  }
+  spCtx.globalAlpha=1;
+  if(!maxed&&spEnergy<0.004){spParts=[];return}
+  spRaf=requestAnimationFrame(pbTick);
+}
+if(pbRoot){
+  pbTypeLbl.textContent=pbType;
+  pbPlus.addEventListener("click",function(){pbOpenMenu("file")});
+  pbTypeBtn.addEventListener("click",function(){pbOpenMenu("type")});
+  pbEffBtn.addEventListener("click",function(){pbOpenMenu("eff")});
+  pbRoot.addEventListener("click",function(e){
+    if(e.target===pbMenu||pbMenu.contains(e.target))return;
+    if(e.target===input||e.target===pbSpk||e.target===pbRoot){try{input.focus()}catch(x){}}
+  });
+  document.addEventListener("pointerdown",function(e){
+    if(!pbOpenKind)return;
+    if(pbRoot.contains(e.target))return;
+    pbCloseMenu();
+  });
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape"&&pbOpenKind){pbCloseMenu();try{input.focus()}catch(x){}}
+  });
+  if(window.ResizeObserver){new ResizeObserver(pbSpResize).observe(pbSpk)}else{window.addEventListener("resize",pbSpResize)}
+  pbSpResize();
+  pbPaintEff();
+}
 col.addEventListener("click",function(e){
   var rb=e.target.closest("[data-run]");
   if(rb){openRun(rb.closest(".code").querySelector("code").textContent);return}
