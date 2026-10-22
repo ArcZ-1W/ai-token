@@ -2610,7 +2610,7 @@ async function admRefresh(){
         if(ipi&&ipi.value.trim()){
           var iv=(ipi.value.trim().toLowerCase()==="maks"||ipi.value.trim()==="\u221e")?-1:parseInt(ipi.value,10);
           if(isNaN(iv)||iv<-1){admErr("Kuota Plan AI: angka, 0, atau 'maks' (tanpa batas).");return}
-          if(await admT("app_planai_set_daily",{nu:a.username,daily:iv})===undefined)return;
+          if(await admCall("app_planai_set_daily",{nu:a.username,daily:iv})===undefined)return;
         }
         /* satu saldo token: limit_other diset 0; kuota lama otomatis masuk ke limit saldo */
         if(await admCall("app_admin_update",{nu:a.username,la:x,lo:0,ns:ns,reset:false,np:null})===undefined)return;
