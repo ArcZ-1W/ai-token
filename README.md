@@ -9,6 +9,7 @@ Situs statis (HTML/CSS/JS biasa). Tidak perlu build tool: cukup unggah berkasnya
 |---|---|---|
 | `/` | `index.html` | Pemilih layanan; Xozen AI membuka landing page AI yang ada, ArcZ Community membuka halaman chat, Xozen Planner membuka Plan AI |
 | `/ai/` | `ai/index.html` | **Aplikasi AI** (chat, login, verifikasi wajah, wizard admin, paket Basic/Plus/Pro/Ultra Coder + Plan AI) |
+| `/admin/` | `admin/index.html` | **Dashboard Admin** (halaman terpisah): ringkasan, kelola akun member, **Rasuk account**, model AI, buat akun, pengaturan |
 | `/community/` | `community/index.html` | **ArcZ Community** (akun email/password terpisah dari login Xozen AI dan chat realtime) |
 | `/plan/` | `plan/index.html` | **Xozen Planner (Plan AI)** — ubah ide fitur jadi rencana siap build; masuk lewat akun Xozen AI, kuota harian Pro/Ultra Coder |
 | `/free/` | `free/index.html` | Chat gratis MinimumLite dengan akun sementara anonim |
@@ -57,6 +58,7 @@ glass.js
 glass-app.css
 robots.txt
 ai/              (aplikasi AI)
+admin/           (dashboard admin — halaman terpisah)
 community/       (chat ArcZ Community)
 plan/            (Xozen Planner / Plan AI)
 free/            (MinimumLite gratis)
@@ -71,6 +73,7 @@ blog/
 | `supabase-member-plan.sql` | skrip database (tidak untuk publik) |
 | `supabase-member-plan-v2.sql` | skrip database v2 — paket baru + kuota Plan AI (tidak untuk publik) |
 | `supabase-member-models.sql` | skrip database (tidak untuk publik) |
+| `supabase-rasuk-account.sql` | skrip database — fungsi rasuk account (tidak untuk publik) |
 | `community/schema.sql` | skrip database (tidak untuk publik) |
 | `_internal/` | arsip lama, tangkapan layar, dan skrip uji lokal |
 
@@ -124,6 +127,48 @@ Untuk mengizinkan model tambahan pada akun member, jalankan `supabase-member-mod
 sekali di SQL Editor. Admin perlu menambahkan ID model lewat bagian **Model AI** di
 dashboard, lalu memilih **Model custom** pada baris akun member. Model yang ditetapkan
 muncul hanya pada akun tersebut dan memakai kuota **Model lain**.
+
+## Dashboard Admin (`/admin/`)
+
+Halaman admin kini **terpisah** dari aplikasi chat. Tombol **Admin** di sidebar `/ai/`
+membuka `/admin/index.html` (bukan lagi dialog di dalam aplikasi).
+
+| Tab | Isi |
+|---|---|
+| Ringkasan | Statistik akun, sebaran paket, daftar "perlu perhatian", status fungsi server |
+| Akun member | Cari/filter/urutkan akun, ubah paket, limit saldo token, pin, masa aktif, model custom, reset wajah, ganti password, hapus, **Rasuk** |
+| Rasuk account | Sesi rasuk aktif + pemulihan password asli |
+| Model AI | Daftar model, ambil dari API, Base URL + API key |
+| Buat akun | Wizard 4 langkah (paket → data akun → ringkasan → pesan WhatsApp) |
+| Pengaturan | Tema, instruksi sistem, suhu, info sesi |
+
+Sesi dashboard memakai kunci localStorage `xozadmin.session`. Saat login, sesi juga
+ditulis ke `glassai.auth` supaya tombol **Buka aplikasi** langsung masuk tanpa login ulang.
+
+### Rasuk account (paksa masuk ke akun member)
+
+Fitur baru: admin bisa masuk sebagai member **tanpa perlu tahu password-nya**.
+
+Cara kerja:
+
+1. Admin menekan **Rasuk** pada baris akun.
+2. Server membaca baris akun apa adanya (`to_jsonb`), menyimpannya sebagai cadangan di
+   `public.rasuk_sessions`, lalu mengganti kolom password dengan password sementara
+   yang di-hash **meniru format lama** (bcrypt / md5 / sha1 / sha256 / plaintext).
+3. Dashboard menampilkan password sementara + tombol **Buka aplikasi**, yang membuka
+   `/ai/index.html?login=<password>,<username>` — aplikasi auto-login ke akun itu.
+4. Setelah selesai, tekan **Pulihkan** (atau **Pulihkan semua**): nilai password lama
+   ditulis kembali dari cadangan, akun member kembali seperti semula.
+
+Batas pengaman:
+
+- Akun **admin tidak bisa dirasuk** (ditolak server).
+- Satu akun hanya boleh punya satu sesi rasuk aktif; pulihkan dulu sebelum membuka yang baru.
+- Format password `argon2` tidak bisa ditiru oleh PostgreSQL standar → server menolak
+  dengan pesan jelas; pakai tombol **Ganti pass** biasa untuk akun seperti itu.
+- Tabel `rasuk_sessions` dikunci RLS dan tidak diberi akses ke `anon`.
+
+Aktifkan sekali di Supabase SQL Editor: **`supabase-rasuk-account.sql`**.
 
 ### ArcZ Community
 

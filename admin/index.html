@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dashboard Admin — Xozen AI</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0b1020">
+<link rel="icon" type="image/png" href="https://i.ibb.co.com/8gqQS0t0/xozen.png">
+<meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<script>try{var __o=JSON.parse(localStorage.getItem("glassai.settings")||"{}")||{},__t=__o.themeV===2?__o.theme:null;document.documentElement.setAttribute("data-theme",["glass","glassold","glasswhite","neu","neulight"].indexOf(__t)>-1?__t:"glassold")}catch(e){document.documentElement.setAttribute("data-theme","glassold")}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@400..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- ==================== LOGIN ADMIN ==================== -->
+<div class="gate" id="gate" hidden>
+  <form class="gate-card" id="gateForm" autocomplete="on" novalidate>
+    <div class="gate-brand"><span class="dot"></span> Xozen <b>Admin</b></div>
+    <p class="gate-sub">Masuk dengan akun admin Xozen AI. Halaman ini hanya untuk pengelola.</p>
+    <label class="fld">
+      <span>Username</span>
+      <input type="text" id="gUser" autocapitalize="off" spellcheck="false" autocomplete="username" placeholder="admin">
+    </label>
+    <label class="fld">
+      <span>Password</span>
+      <input type="password" id="gPass" autocomplete="current-password" placeholder="••••••••">
+    </label>
+    <div class="gate-err" id="gErr" role="alert"></div>
+    <button class="btn primary wide" id="gGo" type="submit">Masuk</button>
+    <a class="gate-link" href="../ai/index.html">← Kembali ke aplikasi</a>
+  </form>
+</div>
+
+<!-- ==================== SHELL ==================== -->
+<div class="shell" id="shell" hidden>
+  <aside class="nav" id="nav">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <div><b>Xozen</b><small>Admin Console</small></div>
+    </div>
+    <nav>
+      <button class="nav-btn on" data-view="ringkasan"><i class="ic-ov"></i><span>Ringkasan</span></button>
+      <button class="nav-btn" data-view="akun"><i class="ic-ac"></i><span>Akun member</span><b class="nav-count" id="navCount">0</b></button>
+      <button class="nav-btn" data-view="rasuk"><i class="ic-rs"></i><span>Rasuk account</span><b class="nav-count hot" id="navRasuk" hidden>0</b></button>
+      <button class="nav-btn" data-view="model"><i class="ic-md"></i><span>Model AI</span></button>
+      <button class="nav-btn" data-view="buat"><i class="ic-nw"></i><span>Buat akun</span></button>
+      <button class="nav-btn" data-view="set"><i class="ic-st"></i><span>Pengaturan</span></button>
+    </nav>
+    <div class="nav-foot">
+      <a class="nav-btn ghost" href="../ai/index.html"><i class="ic-ap"></i><span>Buka aplikasi</span></a>
+      <button class="nav-btn ghost" id="btnLogout"><i class="ic-out"></i><span>Keluar</span></button>
+      <div class="whoami"><span id="whoName">—</span><small id="whoRole">admin</small></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="top">
+      <button class="icon-btn menu" id="menuBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+      </button>
+      <h1 id="viewTitle">Ringkasan</h1>
+      <div class="top-right">
+        <span class="pill" id="pillApi" title="Status penyimpanan paket per akun">paket per akun</span>
+        <button class="btn" id="btnRefresh">Muat ulang</button>
+      </div>
+    </header>
+
+    <div class="scroll" id="scroll">
+
+      <!-- ============ RINGKASAN ============ -->
+      <section class="view" id="v-ringkasan">
+        <div class="stats" id="stats"></div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-h"><h2>Sebaran paket</h2></div>
+            <div class="bars" id="planBars"></div>
+          </div>
+          <div class="card">
+            <div class="card-h"><h2>Perlu perhatian</h2></div>
+            <div class="attn" id="attn"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h"><h2>Akun terbaru</h2><button class="btn mini" data-goto="akun">Lihat semua</button></div>
+          <div class="mini-list" id="recentList"></div>
+        </div>
+
+        <div class="card note-card">
+          <div class="card-h"><h2>Status server</h2></div>
+          <div class="note" id="serverNote">Memeriksa…</div>
+        </div>
+      </section>
+
+      <!-- ============ AKUN ============ -->
+      <section class="view" id="v-akun" hidden>
+        <div class="toolbar">
+          <input type="search" id="acSearch" class="search" placeholder="Cari username…" aria-label="Cari akun">
+          <select id="acPlan" class="sel" aria-label="Filter paket">
+            <option value="">Semua paket</option>
+            <option value="admin">Admin</option>
+            <option value="free">Basic (gratis)</option>
+            <option value="plus">Plus</option>
+            <option value="pro">Pro</option>
+            <option value="ultra">Ultra Coder</option>
+            <option value="basic">Basic (lama)</option>
+            <option value="best">Best Value (lama)</option>
+            <option value="none">Paket belum diset</option>
+          </select>
+          <select id="acSort" class="sel" aria-label="Urutkan">
+            <option value="name">Nama A–Z</option>
+            <option value="name-desc">Nama Z–A</option>
+            <option value="exp">Masa aktif terdekat</option>
+            <option value="use">Pemakaian tertinggi</option>
+          </select>
+          <span class="count" id="acCount"></span>
+        </div>
+        <div class="adm-note" id="planNote"></div>
+        <div class="acct-list" id="acctList"></div>
+        <div class="empty" id="acEmpty" hidden>Tidak ada akun yang cocok.</div>
+      </section>
+
+      <!-- ============ RASUK ============ -->
+      <section class="view" id="v-rasuk" hidden>
+        <div class="card rasuk-hero">
+          <div class="rasuk-hero-txt">
+            <span class="tag-hot">fitur baru</span>
+            <h2>Rasuk account</h2>
+            <p>Masuk ke akun member <b>tanpa perlu tahu password-nya</b>. Password asli dicadangkan dulu di server, diganti sementara, lalu dipulihkan persis seperti semula saat Anda menekan <b>Pulihkan</b>. Semua sesi tercatat.</p>
+            <ol class="steps-inline">
+              <li>Pilih akun → <b>Rasuk</b></li>
+              <li>Aplikasi terbuka di tab baru sebagai member itu</li>
+              <li>Tekan <b>Pulihkan</b> setelah selesai</li>
+            </ol>
+          </div>
+          <div class="rasuk-hero-act">
+            <button class="btn primary" id="btnRasukPick">Rasuk akun…</button>
+            <button class="btn" id="btnRestoreAll">Pulihkan semua</button>
+          </div>
+        </div>
+
+        <div class="card" id="rasukInstall" hidden>
+          <div class="card-h"><h2>Server belum siap</h2></div>
+          <div class="note bad">
+            Fitur rasuk butuh fungsi database. Jalankan <code>supabase-rasuk-account.sql</code> sekali di
+            <b>Supabase → SQL Editor</b>, lalu tekan <b>Muat ulang</b>. Tanpa itu, tombol Rasuk akan ditolak server.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h"><h2>Sesi rasuk aktif</h2><span class="count" id="rasukCount"></span></div>
+          <div class="rasuk-list" id="rasukList"></div>
+          <div class="empty" id="rasukEmpty">Tidak ada sesi rasuk aktif. Akun member dalam keadaan normal.</div>
+        </div>
+      </section>
+
+      <!-- ============ MODEL ============ -->
+      <section class="view" id="v-model" hidden>
+        <div class="card">
+          <div class="card-h">
+            <h2>Model AI</h2>
+            <div class="row">
+              <button class="btn mini" id="mFetch">Ambil semua dari API</button>
+              <button class="btn mini danger" id="mClear">Hapus semua</button>
+            </div>
+          </div>
+          <div class="m-pick">
+            <select id="mOneSelect" class="sel" disabled><option value="">Muat daftar model dulu</option></select>
+            <button class="btn mini" id="mOneFetch">Muat daftar</button>
+            <button class="btn mini" id="mOneAdd" disabled>Tambah satu</button>
+          </div>
+          <div class="chips" id="mList"></div>
+          <p class="hint">Model bawaan (Xozen AI, MinimumLite, Xozen Code, XozenLow, Xozen Mini) tidak bisa dihapus. Daftar ini dipakai semua member.</p>
+        </div>
+        <div class="card">
+          <div class="card-h"><h2>Koneksi API model</h2></div>
+          <div class="cfg-grid">
+            <label class="fld"><span>Base URL</span><input type="text" id="cBase" spellcheck="false" autocomplete="off" placeholder="https://…/v1"></label>
+            <label class="fld"><span>API key</span><input type="password" id="cKey" spellcheck="false" autocomplete="off" placeholder="sk-…"></label>
+          </div>
+          <div class="row end"><button class="btn primary" id="cSave">Simpan koneksi</button></div>
+        </div>
+      </section>
+
+      <!-- ============ BUAT AKUN ============ -->
+      <section class="view" id="v-buat" hidden>
+        <div class="card">
+          <ol class="wiz-steps" id="wizSteps">
+            <li data-s="1" class="on">1. Paket</li><li data-s="2">2. Data akun</li><li data-s="3">3. Ringkasan</li><li data-s="4">4. Selesai</li>
+          </ol>
+
+          <div class="wiz-pane" data-pane="1">
+            <p class="hint">Pilih template harga — kuota dan harga langsung terisi.</p>
+            <div class="pgrid" id="wizPlans"></div>
+            <p class="hint" id="wizPlanInfo"></p>
+          </div>
+
+          <div class="wiz-pane" data-pane="2" hidden>
+            <div class="wiz-grid">
+              <label class="fld"><span>Username</span><input type="text" id="wU" autocapitalize="off" spellcheck="false" placeholder="mis. budi"></label>
+              <label class="fld"><span>Password</span>
+                <div class="row"><input type="text" id="wP" spellcheck="false" placeholder="panjang bebas"><button class="btn mini" id="wGen" type="button">Acak</button></div>
+              </label>
+              <label class="fld"><span>Masa aktif (s m h d y)</span><input type="text" id="wT" value="30d" placeholder="30d, 12h, 1y"></label>
+              <label class="fld"><span>Limit pin (obrolan)</span><input type="text" id="wPin" value="1" inputmode="numeric"></label>
+            </div>
+            <div class="chips" id="wDur"></div>
+            <p class="hint" id="wizAccInfo"></p>
+          </div>
+
+          <div class="wiz-pane" data-pane="3" hidden>
+            <div class="wiz-sum" id="wizSum"></div>
+            <div class="note bad" id="wizWarn" hidden></div>
+          </div>
+
+          <div class="wiz-pane" data-pane="4" hidden>
+            <div class="wiz-done" id="wizDone"></div>
+            <label class="fld"><span>Template pesan untuk pembeli</span><textarea id="wizMsg" rows="12" spellcheck="false"></textarea></label>
+            <div class="row">
+              <button class="btn" id="wizCopy" type="button">Salin pesan</button>
+              <a class="btn primary" id="wizWa" target="_blank" rel="noopener noreferrer">Kirim via WhatsApp</a>
+              <button class="btn" id="wizAgain" type="button">Buat akun lagi</button>
+            </div>
+          </div>
+
+          <div class="adm-err" id="wizErr" role="alert"></div>
+          <div class="wiz-foot">
+            <button class="btn" id="wizBack" type="button">Kembali</button>
+            <button class="btn primary" id="wizNext" type="button">Lanjut</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PENGATURAN ============ -->
+      <section class="view" id="v-set" hidden>
+        <div class="card">
+          <div class="card-h"><h2>Tampilan</h2></div>
+          <div class="themes" id="themePick"></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h2>Asisten AI (berlaku di aplikasi)</h2></div>
+          <label class="fld"><span>Instruksi sistem</span><textarea id="sSys" rows="4" placeholder="Contoh: Jawab singkat dalam bahasa Indonesia."></textarea></label>
+          <label class="fld"><span>Suhu: <b id="tempVal">0.7</b></span><input type="range" id="sTemp" min="0" max="1.5" step="0.1"></label>
+          <div class="row end"><button class="btn primary" id="sSave">Simpan pengaturan</button></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h2>Sesi admin</h2></div>
+          <div class="note" id="sessNote"></div>
+          <div class="row">
+            <button class="btn" id="btnLogout2">Keluar dari dashboard</button>
+            <a class="btn" href="../ai/index.html">Buka aplikasi</a>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h2>Berkas server</h2></div>
+          <div class="note">
+            <b>supabase-rasuk-account.sql</b> — fungsi rasuk account (wajib untuk fitur baru).<br>
+            <b>supabase-member-plan.sql</b> + <b>supabase-member-plan-v2.sql</b> — paket per akun &amp; kuota Plan AI.<br>
+            <b>supabase-member-models.sql</b> — model custom per akun.<br>
+            <b>supabase-face-admin.sql</b> — wajah admin bisa membuka akun mana pun.
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+  <div class="scrim" id="scrim"></div>
+</div>
+
+<!-- ==================== MODAL ==================== -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="modal-h"><h3 id="mTitle">—</h3><button class="icon-btn" id="mX" aria-label="Tutup">✕</button></div>
+    <div class="modal-body" id="mBody"></div>
+    <div class="modal-foot" id="mFoot"></div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="admin.js"></script>
+</body>
+</html>

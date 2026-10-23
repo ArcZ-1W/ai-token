@@ -1145,7 +1145,7 @@ html[data-theme^="neu"] .fthumb{box-shadow:var(--raise-xs);border:0}
       <a class="btn" id="homeLink" href="../index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg><span>Beranda</span></a>
       <button class="btn" id="openSettings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg><span>Pengaturan</span></button>
       <button class="btn" id="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4"/></svg><span>Keluar</span></button>
-      <button class="btn" id="adminBtn" style="display:none" title="Dashboard Admin" aria-label="Dashboard Admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg><span>Admin</span></button>
+      <button class="btn" id="adminBtn" style="display:none" title="Dashboard Admin (/admin/)" aria-label="Dashboard Admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg><span>Admin</span></button>
     </div>
   </aside>
   <div class="scrim" id="scrim"></div>
@@ -2887,7 +2887,7 @@ function admFilterRows(){
   $("admCount").textContent=visible+" dari "+rows.length+" akun";
 }
 $("admSearch").addEventListener("input",admFilterRows);
-$("adminBtn").onclick=function(){closeSide();admErr();admDlg.showModal();renderMdlList();wizReset();admRefresh()};
+$("adminBtn").onclick=function(){closeSide();location.href="../admin/index.html"};
 $("admClose").onclick=function(){admDlg.close()};
 
 /* ---------- wizard buat akun ---------- */
