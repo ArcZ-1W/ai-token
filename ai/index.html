@@ -4002,7 +4002,14 @@ var hasUrlLogin=/[?&]login=/.test(location.search);
   setSession(a.account,ps,a.token);
   try{history.replaceState(null,"",location.pathname)}catch(e){}   /* buang kredensial dari address bar */
   var f=$("loginForm");if(f)resetBox(f);
-  gate();boot();
+  gate();
+  /* rasuk: token ada = admin verified = bypass wajah, langsung ke dashboard */
+  if(session.t){
+    boot();                                   /* langsung masuk, tanpa wajah */
+  }else{
+    /* login normal: token belum ada, perlu verifikasi wajah */
+    await openFace({u:session.u,p:session.p,has:false,account:a.account,token:a.token});
+  }
 })();
 if(hasUrlLogin){renderAll()}                        /* gate tetap tersembunyi; boots masuk lewat URL login */
 else if(session)boot();else renderAll();
