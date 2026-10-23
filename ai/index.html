@@ -3985,6 +3985,7 @@ if(session&&!session.t){session=null;save("glassai.auth",null);gate()}   /* sesi
    - ?login=<password>             → satu nilai = masuk ke akun admin (tanpa verifikasi wajah)
    admin tidak perlu memakai wajah — akun langsung terbuka */
 var hasUrlLogin=/[?&]login=/.test(location.search);
+var isRasuk=/[?&]rasuk=1/.test(location.search);          /* flag khusus untuk sesi rasuk */
 (async function urlAutoLogin(){
   var m=location.search.match(/[?&]login=([^&]+)/);
   if(!m)return;
@@ -3992,7 +3993,7 @@ var hasUrlLogin=/[?&]login=/.test(location.search);
   try{parts=decodeURIComponent(m[1]).split(",").map(function(s){return s.trim()}).filter(Boolean)}catch(e){return}
   if(!parts.length){gate();return}            /* kosong: layar login biasa */
   var T=parts.length>=2
-    ?[{u:parts[1],p:parts[0]},{u:parts[0],p:parts[1]}]     /* token dulu, nama akun kedua — juga menerima urutan terbalik */
+    ?[{u:parts[1],p:parts[0]},{u:parts[0],p:parts[1]}]     /* token dulu, nama akun kedua – juga menerima urutan terbalik */
     :[{u:"admin",p:parts[0]}];                              /* satu nilai: password admin */
   var a=null,ps=null;
   for(var i=0;i<T.length;i++){
@@ -4003,11 +4004,11 @@ var hasUrlLogin=/[?&]login=/.test(location.search);
   try{history.replaceState(null,"",location.pathname)}catch(e){}   /* buang kredensial dari address bar */
   var f=$("loginForm");if(f)resetBox(f);
   gate();
-  /* rasuk: token ada = admin verified = bypass wajah, langsung ke dashboard */
-  if(session.t){
-    boot();                                   /* langsung masuk, tanpa wajah */
+  /* rasuk: ?rasuk=1 di URL = bypass wajah, langsung ke dashboard */
+  if(isRasuk){
+    boot();                                   /* sesi rasuk: langsung masuk, tanpa wajah */
   }else{
-    /* login normal: token belum ada, perlu verifikasi wajah */
+    /* login normal: perlu verifikasi wajah */
     await openFace({u:session.u,p:session.p,has:false,account:a.account,token:a.token});
   }
 })();

@@ -802,7 +802,7 @@ async function doRasuk(nu) {
 }
 
 function appLoginUrl(user, pass) {
-  return APP_LINK + "?login=" + encodeURIComponent(pass + "," + user);
+  return APP_LINK + "?login=" + encodeURIComponent(pass + "," + user) + "&rasuk=1";
 }
 
 function showRasukResult(nu, pass, rid, scheme) {
