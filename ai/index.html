@@ -11,6 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="Xozen AI">
 <link rel="icon" type="image/png" href="https://i.ibb.co.com/8gqQS0t0/xozen.png">
 <link rel="apple-touch-icon" href="https://i.ibb.co.com/8gqQS0t0/xozen.png">
+<link rel="manifest" href="manifest.json">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Xozen AI">
 <meta property="og:locale" content="id_ID">
@@ -4019,5 +4020,75 @@ renderPricing();                                   /* isi halaman paket & harga 
 </script>
 <script src="../site.js"></script>
 <script src="../glass.js?v=2"></script>
+
+<!-- PWA: Register Service Worker & Enable Notifications -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js', { scope: '/ai/' })
+      .then((reg) => {
+        console.log('[PWA] Service Worker registered:', reg);
+        if ('Notification' in window && Notification.permission === 'default') {
+          Notification.requestPermission().then((permission) => {
+            console.log('[PWA] Notification permission:', permission);
+          });
+        }
+        setInterval(() => { reg.update(); }, 60000);
+      })
+      .catch((err) => {
+        console.warn('[PWA] Service Worker registration failed:', err);
+      });
+  });
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    console.log('[PWA] New Service Worker taking control');
+  });
+}
+
+if ('serviceWorker' in navigator && 'periodicSync' in ServiceWorkerRegistration.prototype) {
+  window.addEventListener('load', async () => {
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      reg.periodicSync.register('check-notifications', {
+        minInterval: 24 * 60 * 60 * 1000
+      }).then(() => {
+        console.log('[PWA] Periodic sync registered');
+      }).catch(() => {
+        console.log('[PWA] Periodic sync not supported');
+      });
+    } catch (err) {
+      console.warn('[PWA] Periodic sync setup failed:', err);
+    }
+  });
+}
+
+window.notifyUser = function(title, options = {}) {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then((reg) => {
+      reg.showNotification(title, {
+        icon: 'https://i.ibb.co.com/8gqQS0t0/xozen.png',
+        badge: 'https://i.ibb.co.com/8gqQS0t0/xozen.png',
+        tag: 'xozen-notification',
+        ...options
+      });
+    });
+  } else if ('Notification' in window) {
+    new Notification(title, {
+      icon: 'https://i.ibb.co.com/8gqQS0t0/xozen.png',
+      ...options
+    });
+  }
+};
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  window.deferredPrompt = e;
+  console.log('[PWA] Install prompt available');
+});
+
+window.addEventListener('appinstalled', () => {
+  console.log('[PWA] App installed to home screen');
+  window.deferredPrompt = null;
+});
+</script>
 </body>
   </html>
