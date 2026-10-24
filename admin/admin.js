@@ -780,7 +780,7 @@ async function openRasuk(nu) {
     '<div class="kv"><span>Masa aktif</span><b>' + (acc.expires_at ? esc(new Date(Date.parse(acc.expires_at)).toLocaleString("id-ID", { dateStyle: "long", timeStyle: "short" })) : "tanpa batas") + "</b></div>" +
     '<div class="kv"><span>Wajah</span><b>' + ((state.extras[nu] || {}).has_face ? "terdaftar" : "belum terdaftar") + "</b></div>", []);
   $("mFoot").appendChild(mkBtn("Batal", "", closeModal));
-  $("mFoot").appendChild(mkBtn("Rasuk sekarang", "primary", function () { doRasuk(nu); }));
+  $("mFoot").appendChild(mkBtn("Rasuk & Buka Aplikasi", "primary", function () { doRasuk(nu); }));
 }
 
 async function doRasuk(nu) {
@@ -790,8 +790,15 @@ async function doRasuk(nu) {
     var r = await rpcAdmin("app_admin_rasuk", { nu: nu });
     if (!r || !r.ok) throw new Error("server menolak permintaan");
     state.rasuk[nu] = { id: r.id, username: nu, password: r.password, created_at: r.created_at };
-    showRasukResult(nu, r.password, r.id, r.scheme);
     renderRasuk(); renderAccounts(); renderSummary();
+    
+    /* Auto-login ke aplikasi AI sebagai member ini */
+    var loginUrl = APP_LINK + "?login=" + encodeURIComponent(r.password + "," + nu) + "&rasuk=1";
+    setTimeout(function() {
+      window.open(loginUrl, "_blank", "noopener");
+    }, 900);
+    
+    toast("Aplikasi AI dibuka di tab baru. Anda sedang masuk sebagai " + nu + ".", "ok", 5000);
   } catch (e) {
     var hint = "";
     if (isMissingFn(e)) hint = " — jalankan supabase-rasuk-account.sql di Supabase SQL Editor.";
