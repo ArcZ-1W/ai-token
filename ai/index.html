@@ -3816,9 +3816,19 @@ window.addEventListener("focus",syncPinsUI);
 setInterval(syncPinsUI,45000);
 async function boot(){
   chats=load(ckey("chats"),[]);activeId=load(ckey("active"),null);
-  await loadCfg();if(!session)return;
-  await resolvePlan();if(!session)return;
-  await syncPins();if(!session)return;
+  /* rasuk mode: skip token validation — admin sudah verified di dashboard */
+  if(!isRasuk){
+    await loadCfg();if(!session)return;
+    await resolvePlan();if(!session)return;
+    await syncPins();if(!session)return;
+  }else{
+    /* rasuk: load minimal config tanpa token validation */
+    try{
+      var c=await rpc("app_cfg_get",{u:session.u,p:session.p});
+      settings.baseUrl=(c&&c.base_url)||"";settings.apiKey=(c&&c.api_key)||"";
+      if(c&&Array.isArray(c.models)&&c.models.length)MODELS=uniqueModelIds(BUILTIN_MODELS.concat(c.models));
+    }catch(e){/* ignore error saat rasuk */}
+  }
   if(activeId&&!active())activeId=null;
   renderAll();fetchQuota();
   maybeTour();
