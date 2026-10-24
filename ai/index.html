@@ -4001,7 +4001,8 @@ var isRasuk=/[?&]rasuk=1/.test(location.search);          /* flag khusus untuk s
     try{a=await rpc("app_login",{u:T[i].u,p:T[i].p});if(a){ps=T[i].p;break}}catch(e){}
   }
   if(!a||a.expired){gate();return}            /* gagal diam-diam: cukup layar login biasa */
-  setSession(a.account,ps,a.token);
+  var acc=a.account||a;                       /* app_login bisa return {account:{...}} atau {...} langsung */
+  setSession(acc,ps,a.token);
   try{history.replaceState(null,"",location.pathname)}catch(e){}   /* buang kredensial dari address bar */
   var f=$("loginForm");if(f)resetBox(f);
   gate();
