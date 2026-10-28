@@ -1,0 +1,55 @@
+/* Slide Animation System */
+body.slide-mode {
+  overflow-x: hidden;
+}
+
+.slide-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  scroll-snap-align: start;
+}
+
+.slide-section.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Smooth scroll snapping */
+main {
+  scroll-snap-type: y mandatory;
+}
+
+/* Hero tagline styling */
+.hero-tagline {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #38bdf8;
+  margin: 0 0 1.5rem 0;
+  letter-spacing: 0.02em;
+}
+
+/* Animation delays for staggered effects */
+.slide-section[data-slide="1"] { transition-delay: 0s; }
+.slide-section[data-slide="2"] { transition-delay: 0.1s; }
+.slide-section[data-slide="3"] { transition-delay: 0.15s; }
+.slide-section[data-slide="4"] { transition-delay: 0.2s; }
+.slide-section[data-slide="5"] { transition-delay: 0.25s; }
+.slide-section[data-slide="6"] { transition-delay: 0.3s; }
+.slide-section[data-slide="7"] { transition-delay: 0.35s; }
+.slide-section[data-slide="8"] { transition-delay: 0.4s; }
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .hero-tagline {
+    font-size: 1.4rem;
+  }
+  
+  .slide-section {
+    min-height: auto;
+    padding: 3rem 0;
+  }
+}

@@ -16,8 +16,8 @@
 --      langsung lewat API publik; hanya lewat fungsi di atas.
 --
 --  Efek di aplikasi:
---    * paket basic -> dropdown model hanya berisi 9 model Basic (+ Xozen AI & MinimumLite)
---    * paket best  -> dropdown model berisi 31 model Best  (+ Xozen AI & MinimumLite)
+--    * paket basic -> dropdown model hanya berisi 9 model Basic (+ Xozen AI)
+--    * paket best  -> dropdown model berisi 31 model Best  (+ Xozen AI)
 --    * tanpa file ini aplikasi tetap jalan, hanya saja paket ditebak dari kuota akun
 --      (lihat catatan di dashboard admin).
 -- ============================================================================

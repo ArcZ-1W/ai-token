@@ -1,5 +1,5 @@
 -- ============================================================================
---  Xozen AI — Paket member v2 (Basic gratis / Plus / Pro / Ultra Coder) + Plan AI
+--  Xozen AI — Paket member v2 (Plus / Pro / Ultra Coder) + Plan AI
 --  Cara pakai: buka Supabase > SQL Editor > New query > tempel semua isi file ini
 --              > Run.  Cukup SEKALI (aman dijalankan ulang).
 --
@@ -9,9 +9,8 @@
 --  Yang dibuat file ini:
 --    1) Perluas nilai paket di public.member_plans:
 --         lama : 'basic' (9 model), 'best' (31 model)   -> tetap didukung
---         baru : 'free'  (Basic gratis: Xozen AI + MinimumLite + XozenLow),
---                'plus' ("daftar model Basic lama"), 'pro' ("daftar Best Value
---                lama" + Plan AI harian), 'ultra' (semua model + Plan AI harian)
+--         baru : 'plus' (9 model pilihan), 'pro' (31 model + Plan AI harian),
+--                'ultra' (semua model + Plan AI harian)
 --    2) Kolom pelacakan Plan AI harian (reset tengah malam WIB, Asia/Jakarta)
 --    3) app_plan_set  : terima paket baru + atur kuota Plan AI per paket
 --    4) app_plan_get  : hasil kaya (plan + kuota Plan AI per akun)
@@ -29,7 +28,7 @@
 alter table public.member_plans drop constraint if exists member_plans_plan_check;
 alter table public.member_plans
   add constraint member_plans_plan_check
-  check (plan in ('basic','best','free','plus','pro','ultra'));
+  check (plan in ('basic','best','plus','pro','ultra'));
 
 -- ------------------------------------------------- 2) kolom pelacakan Plan AI
 alter table public.member_plans
@@ -47,7 +46,6 @@ stable
 as $$
 begin
   case lower(trim(coalesce(plan,'')))
-    when 'free'   then return jsonb_build_object('pins',0,'planai_daily',0);
     when 'plus'   then return jsonb_build_object('pins',1,'planai_daily',0);
     when 'pro'    then return jsonb_build_object('pins',1,'planai_daily',5000);
     when 'ultra'  then return jsonb_build_object('pins',3,'planai_daily',15000);
@@ -75,7 +73,7 @@ begin
   target := lower(trim(coalesce(nu, '')));
   val    := lower(trim(coalesce(plan, '')));
   if target = '' then raise exception 'username kosong'; end if;
-  if val not in ('basic','best','free','plus','pro','ultra') then
+  if val not in ('basic','best','plus','pro','ultra') then
     raise exception 'paket tidak dikenal: %', plan;
   end if;
 

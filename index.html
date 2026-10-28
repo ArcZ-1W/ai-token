@@ -3,30 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Xozen AI — Web Ai Coding</title>
+<title>Xozen AI — Your Favorite AI For Coding</title>
 <meta name="google-site-verification" content="RFxijifTySFezAt85Z_hsK0HgODLS0Cj2B83uxFlPXg" />
-<meta name="description" content="Xozen AI menyatukan model kimi, glm, deepseek, gpt, dan lainnya dalam satu aplikasi chat. Paket mulai gratis (Basic 7.000 xoz token), kirim gambar langsung ke model, plus Plan AI di Xozen Planner.">
+<meta name="description" content="Xozen AI - Your favorite AI for coding. Chat dengan model kimi, glm, deepseek, gpt, dan lainnya dalam satu aplikasi.">
 <meta name="theme-color" content="#070b18">
 <link rel="icon" type="image/png" href="https://i.ibb.co.com/8gqQS0t0/xozen.png">
 <link rel="apple-touch-icon" href="https://i.ibb.co.com/8gqQS0t0/xozen.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Xozen AI">
 <meta property="og:locale" content="id_ID">
-<meta property="og:title" content="Xozen AI — Banyak Model AI dalam Satu Aplikasi">
-<meta property="og:description" content="Chat dengan 30+ model AI, kirim gambar, dan kelola kuota dari satu tempat. Paket mulai gratis (Basic 7.000 xoz token).">
+<meta property="og:title" content="Xozen AI — Your Favorite AI For Coding">
+<meta property="og:description" content="Your favorite AI for coding. Chat dengan 30+ model AI dalam satu tempat.">
 <meta property="og:image" content="https://i.ibb.co.com/8gqQS0t0/xozen.png">
 <meta property="og:image:alt" content="Logo Xozen AI">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Xozen AI — Banyak Model AI dalam Satu Aplikasi">
-<meta name="twitter:description" content="Chat dengan 30+ model AI, kirim gambar, dan kelola kuota dari satu tempat.">
+<meta name="twitter:title" content="Xozen AI — Your Favorite AI For Coding">
+<meta name="twitter:description" content="Your favorite AI for coding. Chat dengan 30+ model AI dalam satu tempat.">
 <meta name="twitter:image" content="https://i.ibb.co.com/8gqQS0t0/xozen.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@400..800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css">
 <link rel="stylesheet" href="glass.css">
+<link rel="stylesheet" href="slide-animations.css">
 </head>
-<body class="awaiting-service full-slides">
+<body class="slide-mode">
 <a class="skip" href="#utama">Lewati ke konten</a>
 
 <header class="site-head">
@@ -38,9 +39,7 @@
       <a href="#harga">Model &amp; Harga</a>
       <a href="#cara">Cara pakai</a>
       <a href="plan/index.html">Plan AI</a>
-      <a href="free/">Gratis</a>
       <a href="pricing/index.html">Harga</a>
-      <a href="blog/index.html">Blog</a>
       <a class="btn primary sm head-cta" href="ai/index.html">Buka AI</a>
     </nav>
   </div>
@@ -51,33 +50,8 @@
   <div class="pillar-bg" data-light-pillar data-top-color="#6f7bff" data-bottom-color="#35d6ff" data-fade="0.3" aria-hidden="true"></div>
   <div class="bg-veil" aria-hidden="true"></div>
 
-  <section class="chooser" id="pilih-layanan" aria-labelledby="chooser-title">
-    <div class="wrap chooser-wrap">
-      <p class="eyebrow">ArcZ by Xozen</p>
-      <h1 id="chooser-title">Kamu sedang mencari apa?</h1>
-      <p class="chooser-lead">Pilih ruang yang ingin kamu buka.</p>
-      <div class="service-options">
-        <a class="service-option xozen-option" data-glass="refract" href="#landing-ai">
-          <img src="https://i.ibb.co.com/8gqQS0t0/xozen.png" alt="" width="48" height="48">
-          <span class="service-copy"><strong>Xozen AI</strong><span>Lihat landing page, fitur, model, dan paket AI.</span></span>
-          <span class="service-arrow" aria-hidden="true">&#8599;</span>
-        </a>
-        <a class="service-option community-option" data-glass="refract" href="community/">
-          <span class="community-mark" aria-hidden="true">AC</span>
-          <span class="service-copy"><strong>ArcZ Community</strong><span>Masuk ke ruang chat komunitas dengan akun Community.</span></span>
-          <span class="service-arrow" aria-hidden="true">&#8599;</span>
-        </a>
-        <a class="service-option community-option" data-glass="refract" href="plan/">
-          <span class="community-mark" aria-hidden="true" style="background:linear-gradient(135deg,#6d5efc,#22d3ee)">XP</span>
-          <span class="service-copy"><strong>Xozen Planner</strong><span>Plan AI: ubah ide fitur jadi rencana siap build. Paket Pro &amp; Ultra Coder.</span></span>
-          <span class="service-arrow" aria-hidden="true">&#8599;</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= LANDING PAGE XOZEN AI ================= -->
-  <section class="hero hero-ascii" id="landing-ai">
+  <!-- ================= XOZEN AI HOME ================= -->
+  <section class="hero hero-ascii slide-section" id="home" data-slide="1">
     <div class="ascii-bg" aria-hidden="true" data-gradient-ascii
          data-colors="#1e3fd8,#f6f8ff,#a5d8ff,#38bdf8" data-shape="horizon"
          data-characters=" =+*xzXZ0O#@" data-cell-size="16" data-density="0.8"
@@ -86,12 +60,11 @@
     <div class="ascii-veil" aria-hidden="true"></div>
     <div class="wrap">
       <div>
-        <h1 class="hero-title">Semua model AI favoritmu, <span>dalam satu aplikasi</span>.</h1>
-        <p class="lead">Xozen AI menyatukan kimi, glm, deepseek, gpt, mimo, sampai model vision dalam satu tempat. Ganti model sesuai tugas, kirim gambar, dan pantau kuota &mdash; tanpa install, langsung dari browser.</p>
+        <h1 class="hero-title">Xozen AI</h1>
+        <p class="lead hero-tagline">Your Favorite AI For Coding</p>
+        <p class="lead">Pilih AI favoritmu &mdash; XozenLite, Xozen Code, Xozen Vox, atau Xozen Thinking &mdash; lalu atur effort level sesuai kebutuhan: dari jawaban singkat sampai penjelasan sedalam pakar. Kirim gambar, pantau usage, tanpa install, langsung dari browser.</p>
         <div class="hero-cta">
           <a class="btn primary lg" href="ai/index.html">Mulai pakai sekarang</a>
-          <a class="btn lg ghost" href="free/">Coba MinimumLite gratis</a>
-          <a class="btn lg ghost" href="pricing/index.html">Lihat paket &amp; harga</a>
         </div>
         <div class="hero-note">
           <span>&#10003; Tanpa install</span>
@@ -106,31 +79,31 @@
           <span class="cd-live">contoh</span>
         </div>
         <div class="cd-body" id="cdBody">
-          <div class="cd-msg u">buatkan html landing page untuk kedai kopi, simpel &amp; rapi</div>
-          <div class="cd-msg a">Baik, berikut HTML-nya:</div>
+          <div class="cd-msg u">buatkan fungsi JavaScript untuk validasi email dengan regex</div>
+          <div class="cd-msg a">Berikut fungsi validasi email:</div>
           <div class="cd-msg code">
-            <div class="cd-code-head">index.html</div>
-            <pre class="cd-pre"><span class="ln">&lt;!DOCTYPE html&gt;</span><span class="ln">&lt;html lang="id"&gt;</span><span class="ln">&lt;head&gt;</span><span class="ln">  &lt;meta charset="UTF-8"&gt;</span><span class="ln">  &lt;title&gt;Kopi Senja&lt;/title&gt;</span><span class="ln">  &lt;link rel="stylesheet" href="style.css"&gt;</span><span class="ln">&lt;/head&gt;</span><span class="ln">&lt;body&gt;</span><span class="ln">  &lt;header&gt;</span><span class="ln">    &lt;h1&gt;Kopi Senja&lt;/h1&gt;</span><span class="ln">    &lt;p&gt;Kopi hangat, teman kerja.&lt;/p&gt;</span><span class="ln">  &lt;/header&gt;</span><span class="ln">&lt;/body&gt;</span><span class="ln">&lt;/html&gt;</span></pre>
+            <div class="cd-code-head">validateEmail.js</div>
+            <pre class="cd-pre"><span class="ln">function validateEmail(email) {</span><span class="ln">  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;</span><span class="ln">  return regex.test(email);</span><span class="ln">}</span><span class="ln"></span><span class="ln">// Contoh penggunaan:</span><span class="ln">console.log(validateEmail('user@example.com')); // true</span><span class="ln">console.log(validateEmail('invalid.email')); // false</span></pre>
           </div>
         </div>
         <div class="cd-foot"><span>Animasi contoh percakapan</span><span>Enter kirim &middot; Shift+Enter baris baru</span></div>
-        <p class="cd-sr">Contoh: pengguna meminta dibuatkan halaman HTML, lalu Xozen AI menuliskan kodenya.</p>
+        <p class="cd-sr">Contoh: pengguna meminta fungsi validasi email, lalu Xozen AI menuliskan kodenya.</p>
       </div>
     </div>
   </section>
 
   <!-- ================= STATISTIK ================= -->
-  <section class="tight">
+  <section class="tight slide-section" data-slide="2">
     <div class="wrap grid g4">
-      <div class="card"><div class="stat">31 <small>model di paket Pro</small></div><p>Dari model cepat untuk percakapan sampai model penalaran untuk kode.</p></div>
-      <div class="card"><div class="stat">7.000 <small>xoz token di paket Basic</small></div><p>Paket Basic gratis — cukup minta akun lewat WhatsApp admin.</p></div>
-      <div class="card"><div class="stat">7 <small>keluarga model</small></div><p>Kimi, GLM, DeepSeek, GPT, MiMo, XozenLow, dan Step.</p></div>
+      <div class="card"><div class="stat">4 <small>model powerful</small></div><p>Dari model ringan untuk chat cepat sampai model thinking untuk coding kompleks.</p></div>
+      <div class="card"><div class="stat">15.000 <small>xoz token di paket Plus</small></div><p>Paket terjangkau dengan 3 model untuk berbagai kebutuhan.</p></div>
+      <div class="card"><div class="stat">Vision <small>support</small></div><p>Xozen Vox mendukung gambar dan vision untuk analisis visual.</p></div>
       <div class="card"><div class="stat">0 <small>instalasi</small></div><p>Cukup buka dari browser HP atau komputer, lalu login.</p></div>
     </div>
   </section>
 
   <!-- ================= FITUR ================= -->
-  <section id="fitur">
+  <section id="fitur" class="slide-section" data-slide="3">
     <div class="wrap">
       <div class="sec-head">
         <div class="eyebrow">Fitur</div>
@@ -149,7 +122,7 @@
   </section>
 
   <!-- ================= CARA PAKAI ================= -->
-  <section id="cara">
+  <section id="cara" class="slide-section" data-slide="4">
     <div class="wrap">
       <div class="sec-head">
         <div class="eyebrow">Cara pakai</div>
@@ -165,162 +138,96 @@
   </section>
 
   <!-- ================= HARGA RINGKAS ================= -->
-  <section id="harga">
+  <section id="harga" class="slide-section" data-slide="5">
     <div class="wrap">
       <div class="sec-head">
         <div class="eyebrow">Harga &amp; model</div>
         <h2>Bayar sekali, kuota langsung aktif</h2>
-        <p>Harga dalam Rupiah, Basic bisa dimulai gratis. Kartu kecil di setiap paket menunjukkan model yang bisa dipakai. Pembayaran dan aktivasi akun diproses manual oleh admin melalui WhatsApp.</p>
+        <p>Harga dalam Rupiah. Kartu kecil di setiap paket menunjukkan model yang bisa dipakai. Pembayaran dan aktivasi akun diproses manual oleh admin melalui WhatsApp.</p>
       </div>
-      <div class="plans grid g4">
-        <div class="plan">
-          <h3>Basic</h3>
-          <div class="quota">7.000 xoz token &middot; gratis</div>
-          <div class="price">Gratis<small>/ akun</small></div>
-          <ul>
-            <li>Xozen AI + MinimumLite + XozenLow</li>
-            <li>Satu saldo token 7.000 xoz</li>
-            <li>Riwayat obrolan tersimpan</li>
-          </ul>
-          <div class="pm-label">Model di paket ini</div>
-          <div class="pm-models">
-            <div class="mcard"><b>Xozen AI</b><span>Mode otomatis</span></div>
-            <div class="mcard"><b>MinimumLite</b><span>Ringan &amp; hemat</span></div>
-            <div class="mcard"><b>XozenLow</b><span>Cepat</span></div>
-          </div>
-          <a class="btn" href="https://wa.me/6289523042979?text=Halo%20admin%2C%20saya%20mau%20akun%20gratis%20Xozen%20AI%20(paket%20Basic%3A%207.000%20xoz%20token%2C%20Xozen%20AI%20%2B%20MinimumLite%20%2B%20XozenLow)" target="_blank" rel="noopener noreferrer">Minta akun gratis</a>
-        </div>
+      <div class="plans grid g3">
         <div class="plan">
           <h3>Plus</h3>
           <div class="quota">15.000 xoz token</div>
           <div class="price">Rp 5.000<small>/ akun</small></div>
           <ul>
-            <li>9 model pilihan</li>
+            <li>3 model powerful</li>
             <li>Satu saldo token 15.000 xoz</li>
             <li>Pin obrolan &amp; riwayat</li>
           </ul>
           <div class="pm-label">Model di paket ini</div>
           <div class="pm-models">
-            <div class="mcard"><b>Xozen AI</b><span>Otomatis</span></div>
-            <div class="mcard"><b>Xozen Mini</b><span>Brand Xozen</span></div>
-            <div class="mcard"><b>XozenLow</b><span>Brand Xozen</span></div>
-            <div class="mcard"><b>glm-5.3</b><span>Umum</span></div>
-            <div class="mcard"><b>kimi-k2.7-code</b><span>Kode</span></div>
-            <div class="mcard"><b>deepseek-v4-pro</b><span>Penalaran</span></div>
-            <a class="mcard more" href="pricing/index.html#plus"><b>+6 lainnya</b><span>Semua model Plus</span></a>
+            <div class="mcard"><b>XozenLite</b><span>Ringan &amp; cepat</span></div>
+            <div class="mcard"><b>Xozen Code</b><span>Auto coding</span></div>
+            <div class="mcard"><b>Xozen Vox</b><span>Vision support</span></div>
           </div>
-          <a class="btn primary" href="https://wa.me/6289523042979?text=Halo%20admin%2C%20saya%20mau%20paket%20Plus%20Xozen%20AI%20(15.000%20xoz%20token%2C%209%20model%2C%20Rp%205.000)" target="_blank" rel="noopener noreferrer">Pesan paket ini</a>
+          <a class="btn primary" href="https://wa.me/6289523042979?text=Halo%20admin%2C%20saya%20mau%20paket%20Plus%20Xozen%20AI%20(15.000%20xoz%20token%2C%203%20model%2C%20Rp%205.000)" target="_blank" rel="noopener noreferrer">Pesan paket ini</a>
         </div>
         <div class="plan featured" data-glass="refract">
           <span class="tag">Terpopuler</span>
           <h3>Pro</h3>
-          <div class="quota">30.000 xoz token</div>
-          <div class="price">Rp 10.000<small>/ akun</small></div>
+          <div class="quota">30.000 xoz token + 2.000/hari</div>
+          <div class="price"><s style="opacity:0.5;font-size:0.7em">Rp 30.000</s> Rp 15.000<small>/ akun</small></div>
           <ul>
-            <li><b>31 model</b> termasuk vision</li>
+            <li><b>4 model</b> termasuk vision &amp; thinking</li>
+            <li>🎁 Bonus +2.000 xoz setiap hari</li>
             <li>Plan AI 5.000 token/hari</li>
             <li>Satu saldo token 30.000 xoz</li>
           </ul>
           <div class="pm-label">Model di paket ini</div>
           <div class="pm-models">
-            <div class="mcard"><b>glm-5.3-flashx</b><span>Flash</span></div>
-            <div class="mcard"><b>gpt-5.6</b><span>Unggulan</span></div>
-            <div class="mcard"><b>kimi-k2.8</b><span>Kode</span></div>
-            <div class="mcard"><b>mimo-v2.6-pro</b><span>Kode</span></div>
-            <div class="mcard"><b>deepseek-v4-pro</b><span>Penalaran</span></div>
-            <div class="mcard"><b>v4-flash-vision-exp</b><span>Vision</span></div>
-            <a class="mcard more" href="pricing/index.html#pro"><b>+25 lainnya</b><span>Daftar 31 model</span></a>
+            <div class="mcard"><b>XozenLite</b><span>Ringan</span></div>
+            <div class="mcard"><b>Xozen Code</b><span>Auto</span></div>
+            <div class="mcard"><b>Xozen Vox</b><span>Vision</span></div>
+            <div class="mcard"><b>Xozen Thinking</b><span>Advanced</span></div>
           </div>
-          <a class="btn primary" href="https://wa.me/6289523042979?text=Halo%20admin%2C%20saya%20mau%20paket%20Pro%20Xozen%20AI%20(30.000%20xoz%20token%2C%2031%20model%2C%20Plan%20AI%205.000%20token%2Fhari%2C%20Rp%2010.000)" target="_blank" rel="noopener noreferrer">Pesan paket ini</a>
+          <a class="btn primary" href="https://wa.me/6289523042979?text=Halo%20admin%2C%20saya%20mau%20paket%20Pro%20Xozen%20AI%20(30.000%20xoz%20token%20%2B%202.000%2Fhari%2C%204%20model%2C%20Plan%20AI%205.000%20token%2Fhari%2C%20Rp%2015.000)" target="_blank" rel="noopener noreferrer">Pesan paket ini</a>
         </div>
         <div class="plan">
           <h3>Ultra Coder</h3>
-          <div class="quota">50.000 xoz token</div>
-          <div class="price">Rp 20.000<small>/ akun</small></div>
+          <div class="quota">50.000 xoz token + 5.000/hari</div>
+          <div class="price"><s style="opacity:0.5;font-size:0.7em">Rp 55.000</s> Rp 40.000<small>/ akun</small></div>
           <ul>
-            <li>Semua model dibuka</li>
+            <li>Semua model + thinking</li>
+            <li>🎁 Bonus +5.000 xoz setiap hari</li>
             <li>Plan AI 15.000 token/hari</li>
             <li>Tiga pin obrolan aktif</li>
           </ul>
           <div class="pm-label">Model di paket ini</div>
           <div class="pm-models">
-            <div class="mcard"><b>Xozen Code</b><span>Kode</span></div>
-            <div class="mcard"><b>gpt-5.6</b><span>Unggulan</span></div>
-            <div class="mcard"><b>glm-5.3-flashx-mod</b><span>Flash</span></div>
-            <div class="mcard"><b>deepseek-v4.1-flash</b><span>Cepat</span></div>
-            <div class="mcard"><b>kimi-k3-mod</b><span>Varian</span></div>
-            <a class="mcard more" href="pricing/index.html#ultracoder"><b>Semua model</b><span>41+ terbuka</span></a>
+            <div class="mcard"><b>XozenLite</b><span>Cepat</span></div>
+            <div class="mcard"><b>Xozen Code</b><span>Auto</span></div>
+            <div class="mcard"><b>Xozen Vox</b><span>Vision</span></div>
+            <div class="mcard"><b>Xozen Thinking</b><span>Premium</span></div>
           </div>
-          <a class="btn" href="https://wa.me/6289523042979?text=Halo%20admin%2C%20saya%20mau%20paket%20Ultra%20Coder%20Xozen%20AI%20(50.000%20xoz%20token%2C%20semua%20model%2C%203%20pin%2C%20Plan%20AI%2015.000%20token%2Fhari%2C%20Rp%2020.000)" target="_blank" rel="noopener noreferrer">Pesan paket ini</a>
+          <a class="btn" href="https://wa.me/6289523042979?text=Halo%20admin%2C%20saya%20mau%20paket%20Ultra%20Coder%20Xozen%20AI%20(50.000%20xoz%20token%20%2B%205.000%2Fhari%2C%204%20model%2C%203%20pin%2C%20Plan%20AI%2015.000%20token%2Fhari%2C%20Rp%2040.000)" target="_blank" rel="noopener noreferrer">Pesan paket ini</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ================= BLOG ================= -->
-  <section id="blog">
-    <div class="wrap">
-      <div class="sec-head">
-        <div class="eyebrow">Blog</div>
-        <h2>Panduan singkat memakai AI</h2>
-        <p>Tulisan praktis: cara menulis prompt, memilih model, dan menghemat kuota.</p>
-      </div>
-      <div class="posts">
-        <article class="post">
-          <div class="thumb">Prompt</div>
-          <div class="body">
-            <div class="meta"><span>Panduan</span><span>6 menit baca</span></div>
-            <h3><a href="blog/cara-menulis-prompt.html">Cara menulis prompt agar jawaban AI tepat sasaran</a></h3>
-            <p>Lima pola prompt yang bisa langsung dipakai: dari meminta ringkasan sampai menyusun kode.</p>
-            <a class="btn sm" href="blog/cara-menulis-prompt.html">Baca artikel</a>
-          </div>
-        </article>
-        <article class="post">
-          <div class="thumb">Model</div>
-          <div class="body">
-            <div class="meta"><span>Perbandingan</span><span>7 menit baca</span></div>
-            <h3><a href="blog/memilih-model-coding.html">Kimi, DeepSeek, atau GLM untuk coding?</a></h3>
-            <p>Kapan memakai model cepat, kapan butuh model penalaran, dan bagaimana menghemat kuota saat ngoding.</p>
-            <a class="btn sm" href="blog/memilih-model-coding.html">Baca artikel</a>
-          </div>
-        </article>
-        <article class="post">
-          <div class="thumb">Vision</div>
-          <div class="body">
-            <div class="meta"><span>Fitur</span><span>5 menit baca</span></div>
-            <h3><a href="blog/model-vision-gambar.html">Kenapa AI sekarang bisa membaca gambar Anda</a></h3>
-            <p>Cara kerja model vision, kenapa gambar dikecilkan dulu, dan tips mengirim gambar agar hasilnya akurat.</p>
-            <a class="btn sm" href="blog/model-vision-gambar.html">Baca artikel</a>
-          </div>
-        </article>
-      </div>
-      <p class="center" style="margin-top:20px"><a class="btn" href="blog/index.html">Semua artikel</a></p>
-    </div>
-  </section>
-
   <!-- ================= FAQ ================= -->
-  <section id="faq">
+  <section id="faq" class="slide-section" data-slide="6">
     <div class="wrap" style="max-width:820px">
       <div class="sec-head">
         <div class="eyebrow">FAQ</div>
         <h2>Pertanyaan yang sering muncul</h2>
       </div>
-      <details class="faq" open><summary>Apakah harus punya akun?</summary><p>Akun paket dibuat admin setelah pembayaran dikonfirmasi. Untuk mencoba gratis, buka <a href="free/">MinimumLite</a> dan buat sesi akun sementara tanpa email atau password.</p></details>
+      <details class="faq" open><summary>Apakah harus punya akun?</summary><p>Ya, akun paket dibuat admin setelah pembayaran dikonfirmasi. Hubungi admin melalui WhatsApp untuk pemesanan paket.</p></details>
       <details class="faq"><summary>Apa bedanya &ldquo;Xozen AI&rdquo; dan model lain?</summary><p>Pada pilihan model, <b>Xozen AI</b> adalah mode otomatis: sistem memilih model yang cepat dan hemat untuk pertanyaan Anda. &ldquo;Model lain&rdquo; berarti Anda memilih sendiri model tertentu (Kimi, GLM, DeepSeek, GPT, dan seterusnya). Kuota keduanya dihitung terpisah. Ada juga <b>Xozen Code</b> dan <b>Xozen Mini</b>: nama lain untuk model tertentu, dan model aslinya juga tetap bisa dipilih sendiri.</p></details>
       <details class="faq"><summary>Apakah aman mengirim gambar?</summary><p>Gambar dikecilkan di perangkat Anda sebelum dikirim ke model. Untuk lampiran besar, file diunggah ke layanan berbagi sementara supaya bisa dibuka lewat tautan. Jangan kirim data sensitif (KTP, kartu bank, dokumen rahasia) ke layanan AI apa pun.</p></details>
-      <details class="faq"><summary>Bagaimana kalau kuota habis?</summary><p>Sisa kuota terlihat di sidebar. Kalau habis, Anda bisa membeli paket tambahan (kuota ditambahkan tanpa menghapus akun) atau memakai model MinimumLite yang gratis.</p></details>
+      <details class="faq"><summary>Bagaimana kalau kuota habis?</summary><p>Sisa kuota terlihat di sidebar. Kalau habis, Anda bisa membeli paket tambahan (kuota ditambahkan tanpa menghapus akun) dengan menghubungi admin melalui WhatsApp.</p></details>
       <details class="faq"><summary>Bisa dipakai di HP?</summary><p>Bisa. Antarmukanya dibuat responsif: di HP sidebar berubah menjadi menu geser, dan pemilih model muncul dari bawah layar.</p></details>
     </div>
   </section>
 
   <!-- ================= CTA ================= -->
-  <section class="tight">
+  <section class="tight slide-section" data-slide="7">
     <div class="wrap">
       <div class="band" data-glass="refract">
         <h2>Siap mencoba Xozen AI?</h2>
-        <p>Buka aplikasinya, pilih model, dan mulai dari pertanyaan pertama Anda. Butuh paket lebih besar? Admin siap membantu lewat WhatsApp.</p>
+        <p>Buka aplikasinya, pilih AI favoritmu, atur effort level, dan mulai coding. Butuh bantuan? Admin siap membantu lewat WhatsApp.</p>
         <a class="btn primary lg" href="ai/index.html">Buka aplikasi AI</a>
-        <a class="btn lg ghost" href="pricing/index.html">Lihat harga</a>
       </div>
     </div>
   </section>
@@ -341,13 +248,6 @@
         <a href="index.html#faq">FAQ</a>
       </div>
       <div>
-        <h4>Blog</h4>
-        <a href="blog/index.html">Semua artikel</a>
-        <a href="blog/cara-menulis-prompt.html">Menulis prompt</a>
-        <a href="blog/memilih-model-coding.html">Model untuk coding</a>
-        <a href="blog/model-vision-gambar.html">Model vision</a>
-      </div>
-      <div>
         <h4>Bantuan</h4>
         <a href="https://wa.me/6289523042979?text=Halo%20admin%2C%20saya%20mau%20tanya%20tentang%20Xozen%20AI" target="_blank" rel="noopener noreferrer">WhatsApp admin</a>
         <a href="pricing/index.html#ultracoder">Paket Ultra Coder</a>
@@ -362,6 +262,7 @@
 </footer>
 
 <script src="gradient-ascii.js"></script>
+<script src="slide-animations.js"></script>
 <script src="site.js?v=chooser-1"></script>
 <script src="reveal.js" defer></script>
 <script src="glass.js?v=2"></script>

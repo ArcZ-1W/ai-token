@@ -9,11 +9,16 @@
 <link rel="icon" type="image/png" href="https://i.ibb.co.com/8gqQS0t0/xozen.png">
 <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
-<script>try{var __o=JSON.parse(localStorage.getItem("glassai.settings")||"{}")||{},__t=__o.themeV===2?__o.theme:null;document.documentElement.setAttribute("data-theme",["glass","glassold","glasswhite","neu","neulight"].indexOf(__t)>-1?__t:"glassold")}catch(e){document.documentElement.setAttribute("data-theme","glassold")}</script>
+<script>
+  // Initialize theme
+  const savedTheme = localStorage.getItem('xozen-admin-theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@400..800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="admin-modern.css">
+<script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
 
@@ -44,29 +49,65 @@
       <div><b>Xozen</b><small>Admin Console</small></div>
     </div>
     <nav>
-      <button class="nav-btn on" data-view="ringkasan"><i class="ic-ov"></i><span>Ringkasan</span></button>
-      <button class="nav-btn" data-view="akun"><i class="ic-ac"></i><span>Akun member</span><b class="nav-count" id="navCount">0</b></button>
-      <button class="nav-btn" data-view="rasuk"><i class="ic-rs"></i><span>Rasuk account</span><b class="nav-count hot" id="navRasuk" hidden>0</b></button>
-      <button class="nav-btn" data-view="model"><i class="ic-md"></i><span>Model AI</span></button>
-      <button class="nav-btn" data-view="buat"><i class="ic-nw"></i><span>Buat akun</span></button>
-      <button class="nav-btn" data-view="set"><i class="ic-st"></i><span>Pengaturan</span></button>
+      <button class="nav-btn on" data-view="ringkasan">
+        <i data-lucide="layout-dashboard"></i>
+        <span>Ringkasan</span>
+      </button>
+      <button class="nav-btn" data-view="akun">
+        <i data-lucide="users"></i>
+        <span>Akun member</span>
+        <b class="nav-count" id="navCount">0</b>
+      </button>
+      <button class="nav-btn" data-view="rasuk">
+        <i data-lucide="key-round"></i>
+        <span>Rasuk account</span>
+        <b class="nav-count hot" id="navRasuk" hidden>0</b>
+      </button>
+      <button class="nav-btn" data-view="model">
+        <i data-lucide="cpu"></i>
+        <span>Model AI</span>
+      </button>
+      <button class="nav-btn" data-view="buat">
+        <i data-lucide="user-plus"></i>
+        <span>Buat akun</span>
+      </button>
+      <button class="nav-btn" data-view="set">
+        <i data-lucide="settings"></i>
+        <span>Pengaturan</span>
+      </button>
     </nav>
     <div class="nav-foot">
-      <a class="nav-btn ghost" href="../ai/index.html"><i class="ic-ap"></i><span>Buka aplikasi</span></a>
-      <button class="nav-btn ghost" id="btnLogout"><i class="ic-out"></i><span>Keluar</span></button>
-      <div class="whoami"><span id="whoName">—</span><small id="whoRole">admin</small></div>
+      <a class="nav-btn ghost" href="../ai/index.html">
+        <i data-lucide="rocket"></i>
+        <span>Buka aplikasi</span>
+      </a>
+      <button class="nav-btn ghost" id="btnLogout">
+        <i data-lucide="log-out"></i>
+        <span>Keluar</span>
+      </button>
+      <div class="whoami">
+        <span id="whoName">—</span>
+        <small id="whoRole">admin</small>
+      </div>
     </div>
   </aside>
 
   <main class="main">
     <header class="top">
       <button class="icon-btn menu" id="menuBtn" aria-label="Menu">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+        <i data-lucide="menu"></i>
       </button>
       <h1 id="viewTitle">Ringkasan</h1>
       <div class="top-right">
         <span class="pill" id="pillApi" title="Status penyimpanan paket per akun">paket per akun</span>
-        <button class="btn" id="btnRefresh">Muat ulang</button>
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">
+          <i data-lucide="sun" class="sun-icon"></i>
+          <i data-lucide="moon" class="moon-icon" hidden></i>
+        </button>
+        <button class="btn" id="btnRefresh">
+          <i data-lucide="refresh-cw"></i>
+          Muat ulang
+        </button>
       </div>
     </header>
 
@@ -285,5 +326,53 @@
 <div class="toasts" id="toasts" aria-live="polite"></div>
 
 <script src="admin.js"></script>
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+  
+  // Theme toggle functionality
+  const themeToggle = document.getElementById('themeToggle');
+  const html = document.documentElement;
+  const sunIcon = themeToggle?.querySelector('.sun-icon');
+  const moonIcon = themeToggle?.querySelector('.moon-icon');
+  
+  function updateThemeIcon() {
+    const currentTheme = html.getAttribute('data-theme');
+    if (sunIcon && moonIcon) {
+      if (currentTheme === 'light') {
+        sunIcon.hidden = true;
+        moonIcon.hidden = false;
+      } else {
+        sunIcon.hidden = false;
+        moonIcon.hidden = true;
+      }
+    }
+  }
+  
+  updateThemeIcon();
+  
+  themeToggle?.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('xozen-admin-theme', newTheme);
+    updateThemeIcon();
+  });
+  
+  // Mobile menu toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const nav = document.getElementById('nav');
+  const scrim = document.getElementById('scrim');
+  
+  menuBtn?.addEventListener('click', () => {
+    nav?.classList.toggle('open');
+    scrim?.classList.toggle('active');
+  });
+  
+  scrim?.addEventListener('click', () => {
+    nav?.classList.remove('open');
+    scrim?.classList.remove('active');
+  });
+</script>
 </body>
 </html>
